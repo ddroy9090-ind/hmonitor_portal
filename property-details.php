@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/includes/config.php';
@@ -326,6 +327,7 @@ $developerStats = array_values(array_filter([
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/css/countrySelect.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="assets/css/properties.css">
 </head>
 
@@ -338,9 +340,7 @@ $developerStats = array_values(array_filter([
         <div class="hh-property-hero-top">
             <a href="offplan-properties.php" class="hh-property-hero-back">← Back to Listings</a>
             <div class="hh-property-hero-top-actions">
-                <!-- <button type="button" aria-label="Save" class="hh-iconbtn">♡</button>
-                <button type="button" aria-label="Share" class="hh-iconbtn">⇪</button> -->
-                <button type="button" class="hh-primarypill" onclick="openPopup()">☎ Contact Agent</button>
+                <button type="button" class="hh-primarypill" onclick="openPopup()"><img width="14" src="assets/flaticons/phone.png" alt=""> Contact Agent</button>
             </div>
         </div>
         <div class="container">
@@ -358,7 +358,7 @@ $developerStats = array_values(array_filter([
                                 <?php endif; ?>
                             </div>
                         <?php endif; ?>
-                        <h1><?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?></h1>
+                        <h1 ><?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?></h1>
                         <?php if (!empty($property['project_name'])): ?>
                             <p class="text-white fw-semibold mb-2 d-none">Project Name: <?= htmlspecialchars($property['project_name'], ENT_QUOTES, 'UTF-8') ?></p>
                         <?php endif; ?>
@@ -406,26 +406,26 @@ $developerStats = array_values(array_filter([
             <!-- Header -->
             <div class="row">
                 <div class="col-12">
-                        <div class="hh-gallery-01-head">
-                            <h3>Property Gallery</h3>
-                            <div class="hh-gallery-01-head-actions">
-                                <button type="button" class="ghost" data-action="view-all">
+                    <div class="hh-gallery-01-head">
+                        <h3>Property Gallery</h3>
+                        <div class="hh-gallery-01-head-actions">
+                            <button type="button" class="ghost" data-action="view-all">
+                                <svg width="18" height="18" viewBox="0 0 24 24">
+                                    <path d="M4 5h7v6H4zM13 5h7v6h-7zM4 13h7v6H4zM13 13h7v6h-7z" fill="currentColor" />
+                                </svg>
+                                View All (<?= $galleryCount ?>)
+                            </button>
+                            <?php if ($videoLink !== ''): ?>
+                                <button type="button" class="solid" data-action="video" data-video="<?= htmlspecialchars($videoLink, ENT_QUOTES, 'UTF-8') ?>">
                                     <svg width="18" height="18" viewBox="0 0 24 24">
-                                        <path d="M4 5h7v6H4zM13 5h7v6h-7zM4 13h7v6H4zM13 13h7v6h-7z" fill="currentColor" />
+                                        <path d="M4 5h11a2 2 0 0 1 2 2v1.5l3-2v11l-3-2V17a2 2 0 0 1-2 2H4z"
+                                            fill="currentColor" />
                                     </svg>
-                                    View All (<?= $galleryCount ?>)
+                                    Video Tour
                                 </button>
-                                <?php if ($videoLink !== ''): ?>
-                                    <button type="button" class="solid" data-action="video" data-video="<?= htmlspecialchars($videoLink, ENT_QUOTES, 'UTF-8') ?>">
-                                        <svg width="18" height="18" viewBox="0 0 24 24">
-                                            <path d="M4 5h11a2 2 0 0 1 2 2v1.5l3-2v11l-3-2V17a2 2 0 0 1-2 2H4z"
-                                                fill="currentColor" />
-                                        </svg>
-                                        Video Tour
-                                    </button>
-                                <?php endif; ?>
-                            </div>
+                            <?php endif; ?>
                         </div>
+                    </div>
                 </div>
             </div>
 
@@ -813,18 +813,7 @@ $developerStats = array_values(array_filter([
                                     <textarea rows="4" placeholder="Any specific questions or requirements…"></textarea>
                                 </label>
 
-                                <!-- <div class="switches">
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <img src="assets/icons/circle.png" width="14" alt="">
-                                        <span>Subscribe to our newsletter for latest property updates</span>
-                                    </label>
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <img src="assets/icons/circle.png" width="14" alt="">
-                                        <span>Receive SMS updates about this property</span>
-                                    </label>
-                                </div> -->
+                                <div class="g-recaptcha" data-sitekey="6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM"></div>
 
                                 <button type="button" class="send">Send Message</button>
                             </form>
@@ -877,8 +866,8 @@ $developerStats = array_values(array_filter([
                             <div class="plan-list">
                                 <?php foreach ($paymentSchedule as $item): ?>
                                     <?php
-                                        $percentageText = trim((string)($item['percentage'] ?? ''));
-                                        $amountText = trim((string)($item['amount'] ?? ''));
+                                    $percentageText = trim((string)($item['percentage'] ?? ''));
+                                    $amountText = trim((string)($item['amount'] ?? ''));
                                     ?>
                                     <div class="plan-item">
                                         <?php if ($percentageText !== ''): ?>
@@ -1353,7 +1342,7 @@ $developerStats = array_values(array_filter([
                     </div>
 
                     <div class="form-group">
-                        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+                        <div class="g-recaptcha" data-sitekey="6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM"></div>
                     </div>
 
                     <div class="form-group">
@@ -1402,7 +1391,7 @@ $developerStats = array_values(array_filter([
                     </div>
 
                     <div class="form-group">
-                        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+                        <div class="g-recaptcha" data-sitekey="6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM"></div>
                     </div>
 
                     <div class="form-group">
@@ -1422,6 +1411,8 @@ $developerStats = array_values(array_filter([
     <script src="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/js/countrySelect.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <!-- reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
     <script>

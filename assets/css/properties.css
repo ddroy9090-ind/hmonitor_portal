@@ -608,13 +608,20 @@ p {
 }
 
 .hh-primarypill {
-    background: #004a44;
-    color: #fff;
+    background: #edbb68;
+    color: #111;
     border: none;
     padding: 8px 18px;
     border-radius: 10px;
     font-weight: 400;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hh-primarypill img {
+    filter: brightness(0);
 }
 
 /* INFO block bottom-left */
@@ -2618,8 +2625,8 @@ p {
     height: 44px;
     border-radius: 8px;
     border: 0;
-    background: #ffffff;
-    color: #004a44;
+    background: #edbb68;
+    color: #222;
     font-weight: 500;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(0, 0, 0, .10);
@@ -3464,16 +3471,20 @@ body.no-scroll {
         width: 300px;
         top: 42px;
     }
-    .hh-details-01{
+
+    .hh-details-01 {
         padding-bottom: 20px;
     }
-    .footer-section-five{
+
+    .footer-section-five {
         padding: 40px 0 40px;
     }
-    .hh-property-hero::before{
-            background: rgba(0, 0, 0, 0.5);
+
+    .hh-property-hero::before {
+        background: rgba(0, 0, 0, 0.5);
     }
-    .hh-property-hero-tags span{
+
+    .hh-property-hero-tags span {
         font-size: 12px;
     }
 }

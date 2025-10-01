@@ -261,35 +261,35 @@ foreach ($amenitiesRaw as $amenity) {
 $resolveAmenityIcon = static function (string $label): string {
     $normalized = trim($label);
     if ($normalized === '') {
-        return 'fa-solid fa-circle-check';
+        return 'bi bi-check-circle';
     }
 
     $lower = function_exists('mb_strtolower') ? mb_strtolower($normalized) : strtolower($normalized);
 
     $iconMap = [
-        ['keywords' => ['pool', 'swim'], 'icon' => 'fa-solid fa-person-swimming'],
-        ['keywords' => ['gym', 'fitness'], 'icon' => 'fa-solid fa-dumbbell'],
-        ['keywords' => ['parking'], 'icon' => 'fa-solid fa-square-parking'],
-        ['keywords' => ['security', 'guard'], 'icon' => 'fa-solid fa-shield-halved'],
-        ['keywords' => ['park', 'garden', 'green'], 'icon' => 'fa-solid fa-tree'],
-        ['keywords' => ['bbq', 'barbecue', 'grill'], 'icon' => 'fa-solid fa-fire'],
-        ['keywords' => ['play area', 'playground', 'kids', 'children'], 'icon' => 'fa-solid fa-children'],
-        ['keywords' => ['spa', 'wellness'], 'icon' => 'fa-solid fa-spa'],
-        ['keywords' => ['beach'], 'icon' => 'fa-solid fa-umbrella-beach'],
-        ['keywords' => ['shopping', 'mall', 'retail'], 'icon' => 'fa-solid fa-cart-shopping'],
-        ['keywords' => ['school', 'education'], 'icon' => 'fa-solid fa-school'],
-        ['keywords' => ['hospital', 'clinic', 'medical'], 'icon' => 'fa-solid fa-hospital'],
-        ['keywords' => ['wifi', 'internet'], 'icon' => 'fa-solid fa-wifi'],
-        ['keywords' => ['clubhouse', 'club house', 'community hall'], 'icon' => 'fa-solid fa-house'],
-        ['keywords' => ['lobby'], 'icon' => 'fa-solid fa-door-open'],
-        ['keywords' => ['air condition', 'ac'], 'icon' => 'fa-solid fa-snowflake'],
-        ['keywords' => ['sauna', 'steam'], 'icon' => 'fa-solid fa-temperature-three-quarters'],
-        ['keywords' => ['cinema', 'theatre', 'theater'], 'icon' => 'fa-solid fa-film'],
-        ['keywords' => ['tennis'], 'icon' => 'fa-solid fa-table-tennis-paddle-ball'],
-        ['keywords' => ['basketball'], 'icon' => 'fa-solid fa-basketball'],
-        ['keywords' => ['golf'], 'icon' => 'fa-solid fa-golf-ball-tee'],
-        ['keywords' => ['jogging', 'running', 'cycle'], 'icon' => 'fa-solid fa-person-running'],
-        ['keywords' => ['elevator', 'lift'], 'icon' => 'fa-solid fa-up-down'],
+        ['keywords' => ['pool', 'swim'], 'icon' => 'bi bi-water'],
+        ['keywords' => ['gym', 'fitness'], 'icon' => 'bi bi-activity'],
+        ['keywords' => ['parking'], 'icon' => 'bi bi-p-square'],
+        ['keywords' => ['security', 'guard'], 'icon' => 'bi bi-shield-check'],
+        ['keywords' => ['park', 'garden', 'green'], 'icon' => 'bi bi-tree'],
+        ['keywords' => ['bbq', 'barbecue', 'grill'], 'icon' => 'bi bi-fire'],
+        ['keywords' => ['play area', 'playground', 'kids', 'children'], 'icon' => 'bi bi-emoji-smile'],
+        ['keywords' => ['spa', 'wellness'], 'icon' => 'bi bi-flower1'],
+        ['keywords' => ['beach'], 'icon' => 'bi bi-sun'],
+        ['keywords' => ['shopping', 'mall', 'retail'], 'icon' => 'bi bi-bag'],
+        ['keywords' => ['school', 'education'], 'icon' => 'bi bi-mortarboard'],
+        ['keywords' => ['hospital', 'clinic', 'medical'], 'icon' => 'bi bi-hospital'],
+        ['keywords' => ['wifi', 'internet'], 'icon' => 'bi bi-wifi'],
+        ['keywords' => ['clubhouse', 'club house', 'community hall'], 'icon' => 'bi bi-house'],
+        ['keywords' => ['lobby'], 'icon' => 'bi bi-door-open'],
+        ['keywords' => ['air condition', 'ac'], 'icon' => 'bi bi-snow'],
+        ['keywords' => ['sauna', 'steam'], 'icon' => 'bi bi-thermometer-half'],
+        ['keywords' => ['cinema', 'theatre', 'theater'], 'icon' => 'bi bi-film'],
+        ['keywords' => ['tennis'], 'icon' => 'bi bi-tennis-ball'],
+        ['keywords' => ['basketball'], 'icon' => 'bi bi-basketball'],
+        ['keywords' => ['golf'], 'icon' => 'bi bi-flag'],
+        ['keywords' => ['jogging', 'running', 'cycle'], 'icon' => 'bi bi-person-running'],
+        ['keywords' => ['elevator', 'lift'], 'icon' => 'bi bi-arrow-down-up'],
     ];
 
     foreach ($iconMap as $entry) {
@@ -300,7 +300,7 @@ $resolveAmenityIcon = static function (string $label): string {
         }
     }
 
-    return 'fa-solid fa-circle-check';
+    return 'bi bi-check-circle';
 };
 
 $aboutProjectParagraphs = $extractParagraphs($property['about_project'] ?? null);
@@ -373,7 +373,7 @@ $developerStats = array_values(array_filter([
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/properties.css">
 </head>
 

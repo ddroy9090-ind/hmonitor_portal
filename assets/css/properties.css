@@ -6,7 +6,7 @@ body {
     font-size: 16px;
     color: inherit;
     font-family: "Hind Madurai", sans-serif !important;
-    
+
 
 }
 
@@ -3291,13 +3291,25 @@ body.no-scroll {
     font-size: 16px;
     color: #333;
     font-weight: 500;
+    gap: 6px;
 }
 
-.amenities-list li img {
+.amenities-list li i {
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: #e9f6f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+/* .amenities-list li img {
     width: 15px;
     height: 15px;
     margin-right: 8px;
-}
+} */
 
 
 @media only screen and (max-width:767px) {

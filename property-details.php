@@ -262,7 +262,7 @@ $resolveAmenityIcon = static function (string $label): string {
     $normalized = trim($label);
     if ($normalized === '') {
         return 'bi bi-check-circle';
-    }
+    } 
 
     $lower = function_exists('mb_strtolower') ? mb_strtolower($normalized) : strtolower($normalized);
 
@@ -286,7 +286,7 @@ $resolveAmenityIcon = static function (string $label): string {
         ['keywords' => ['sauna', 'steam'], 'icon' => 'bi bi-thermometer-half'],
         ['keywords' => ['cinema', 'theatre', 'theater'], 'icon' => 'bi bi-film'],
         ['keywords' => ['tennis'], 'icon' => 'bi bi-tennis-ball'],
-        ['keywords' => ['basketball'], 'icon' => 'bi bi-basketball'],
+        ['keywords' => ['basketball'], 'icon' => 'fa-regular fa-person-basketball'],
         ['keywords' => ['golf'], 'icon' => 'bi bi-flag'],
         ['keywords' => ['jogging', 'running', 'cycle'], 'icon' => 'bi bi-person-running'],
         ['keywords' => ['elevator', 'lift'], 'icon' => 'bi bi-arrow-down-up'],
@@ -374,6 +374,7 @@ $developerStats = array_values(array_filter([
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="assets/css/properties.css">
 </head>
 

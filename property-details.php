@@ -335,7 +335,7 @@ $developerStats = array_values(array_filter([
 
 
     <!-- parent: .hh-property-hero -->
-    <div class="hh-property-hero" style="background-image: url('<?= htmlspecialchars($primaryImage, ENT_QUOTES, 'UTF-8') ?>');">
+    <div class="hh-property-hero animate-on-scroll" data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut" style="background-image: url('<?= htmlspecialchars($primaryImage, ENT_QUOTES, 'UTF-8') ?>');">
         <!-- Top bar fixed at top of hero -->
         <div class="hh-property-hero-top">
             <a href="offplan-properties.php" class="hh-property-hero-back">← Back to Listings</a>
@@ -347,7 +347,7 @@ $developerStats = array_values(array_filter([
             <div class="row">
                 <div class="col-12">
                     <!-- Info block -->
-                    <div class="hh-property-hero-info">
+                    <div class="hh-property-hero-info animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
                         <?php if (!empty($property['project_status']) || !empty($property['property_type'])): ?>
                             <div class="hh-property-hero-tags">
                                 <?php if (!empty($property['project_status'])): ?>
@@ -389,7 +389,7 @@ $developerStats = array_values(array_filter([
                     </div>
 
                     <!-- Bottom CTA buttons -->
-                    <div class="hh-property-hero-ctas">
+                    <div class="hh-property-hero-ctas animate-on-scroll" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
                         <button type="button" class="cta-solid" onclick="openPopup()">Enquire Now</button>
                         <button type="button" class="cta-outline" onclick="Brochurepopup()">Download Brochure</button>
                     </div>
@@ -400,13 +400,13 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-gallery-01 -->
-    <div class="hh-gallery-01">
+    <div class="hh-gallery-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
         <div class="container">
 
             <!-- Header -->
             <div class="row">
                 <div class="col-12">
-                    <div class="hh-gallery-01-head">
+                    <div class="hh-gallery-01-head animate-on-scroll" data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp">
                         <h3>Property Gallery</h3>
                         <div class="hh-gallery-01-head-actions">
                             <button type="button" class="ghost" data-action="view-all">
@@ -433,7 +433,7 @@ $developerStats = array_values(array_filter([
             <div class="row">
                 <!-- Left: Gallery -->
                 <div class="col-12 col-lg-8">
-                    <div class="hh-gallery-01-wrap">
+                    <div class="hh-gallery-01-wrap animate-on-scroll" data-animation-in="animate__fadeInLeft" data-animation-out="animate__fadeOutLeft">
 
                         <!-- Main swiper -->
                         <div class="swiper hh-gallery-01-main">
@@ -482,7 +482,7 @@ $developerStats = array_values(array_filter([
 
                 <!-- Right: Agent panel -->
                 <div class="col-12 col-lg-4">
-                    <aside class="hh-gallery-01-agent">
+                    <aside class="hh-gallery-01-agent animate-on-scroll" data-animation-in="animate__flipInY" data-animation-out="animate__flipOutY">
                         <div class="card-head">
                             <div class="avatar">
                                 <svg width="28" height="28" viewBox="0 0 24 24">
@@ -545,12 +545,12 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-details-01 -->
-    <div class="hh-details-01">
+    <div class="hh-details-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
         <div class="container">
             <!-- Body -->
             <div class="row">
                 <div class="col-12 col-lg-8">
-                    <nav class="hh-tabs" role="tablist" aria-label="Property details tabs">
+                    <nav class="hh-tabs animate-on-scroll" data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp" role="tablist" aria-label="Property details tabs">
                         <ul>
                             <li>
                                 <button id="hh-tab-overview-btn" type="button" class="active" role="tab"
@@ -591,7 +591,7 @@ $developerStats = array_values(array_filter([
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-12 p-0">
-                                        <div class="project-overview">
+                                        <div class="project-overview animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
                                             <div class="project-header">
                                                 <h3><?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?></h3>
                                                 <?php if (!empty($property['property_location'])): ?>
@@ -612,7 +612,7 @@ $developerStats = array_values(array_filter([
                         <div id="hh-tab-features" class="tab-pane fade" role="tabpanel"
                             aria-labelledby="hh-tab-features-btn">
                             <!-- parent: .hh-amenities-01 -->
-                            <div class="hh-amenities-01">
+                            <div class="hh-amenities-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
                                 <div class="container-fluid">
                                     <h3>Key Features & Amenities</h3>
                                     <?php if ($amenitiesList): ?>
@@ -637,7 +637,7 @@ $developerStats = array_values(array_filter([
 
                         <!-- Floor Plan -->
                         <div id="hh-tab-floor" class="tab-pane fade" role="tabpanel" aria-labelledby="hh-tab-floor-btn">
-                            <div class="hh-floorplans-01">
+                            <div class="hh-floorplans-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
                                 <div class="container-fluid">
                                     <?php if ($floorPlans): ?>
                                         <div class="row">
@@ -697,7 +697,7 @@ $developerStats = array_values(array_filter([
                                             <h4>About the Developer</h4>
                                         </div>
                                         <div class="col-12">
-                                            <section class="dev-card">
+                                            <section class="dev-card animate-on-scroll" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
                                                 <div class="dev-head">
                                                     <div class="dev-ico">
                                                         <img src="assets/flaticons/residential.png" width="25" alt="">
@@ -749,7 +749,7 @@ $developerStats = array_values(array_filter([
                 <div class="col-12 col-lg-4">
                     <aside>
                         <!-- Contact Agent card -->
-                        <div class="agent-card">
+                        <div class="agent-card animate-on-scroll" data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut">
                             <div class="agent-title">Contact Agent</div>
 
                             <div class="agent-head">
@@ -825,14 +825,14 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-invest-01 -->
-    <div class="hh-invest-01">
+    <div class="hh-invest-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
         <div class="container">
             <div class="row">
                 <!-- LEFT: Highlights + Payment Plan -->
                 <div class="col-12 col-lg-8">
 
                     <!-- Investment Highlights -->
-                    <section class="inv-high">
+                    <section class="inv-high animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
                         <header>
                             <span><img src="assets/icons/growth-chart.png" alt="" width="25"></span>
                             <h4>Investment Highlights</h4>
@@ -856,7 +856,7 @@ $developerStats = array_values(array_filter([
                     </section>
 
                     <!-- Flexible Payment Plan -->
-                    <section class="pay-plan">
+                    <section class="pay-plan animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
                         <header>
                             <span><img src="assets/icons/wallet.png" alt="" width="25"></span>
                             <h4>Flexible Payment Plan</h4>
@@ -895,8 +895,8 @@ $developerStats = array_values(array_filter([
                 </div>
 
                 <!-- RIGHT: Mortgage Calculator -->
-                <div class="col-12 col-lg-4">
-                    <aside class="mort-card">
+                <div class="col-12 col-lg-4 animate-on-scroll" data-animation-in="animate__fadeInRight" data-animation-out="animate__fadeOutRight">
+                    <aside class="mort-card animate-on-scroll" data-animation-in="animate__flipInY" data-animation-out="animate__flipOutY">
                         <header>
                             <img src="assets/icons/mortgage.png" alt="" width="20">
                             <h5>Mortgage Calculator</h5>
@@ -976,13 +976,13 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-location-01 -->
-    <div class="hh-location-01">
+    <div class="hh-location-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
         <div class="container">
 
             <!-- Heading -->
             <div class="row">
                 <div class="col-12">
-                    <div>
+                    <div class="animate-on-scroll" data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp">
                         <div class="hh-location-01-head">
                             <img src="assets/icons/location.png" alt="" />
                             <h3>Prime Location &amp; Connectivity</h3>
@@ -997,11 +997,11 @@ $developerStats = array_values(array_filter([
             <!-- Main grid -->
             <div class="row">
                 <!-- LEFT: Map + Landmarks (col-lg-8) -->
-                <div class="col-12 col-lg-8">
+                <div class="col-12 col-lg-8 animate-on-scroll" data-animation-in="animate__fadeInLeft" data-animation-out="animate__fadeOutLeft">
                     <div class="row">
                         <!-- Map card -->
                         <div class="col-12 col-md-6">
-                            <div class="hh-location-01-map">
+                            <div class="hh-location-01-map animate-on-scroll" data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut">
                                 <?php if ($locationMap !== ''): ?>
                                     <?php if (stripos($locationMap, '<iframe') !== false): ?>
                                         <?= $locationMap ?>
@@ -1016,7 +1016,7 @@ $developerStats = array_values(array_filter([
 
                         <!-- Landmarks list -->
                         <div class="col-12 col-md-6">
-                            <div class="hh-location-01-landmarks">
+                            <div class="hh-location-01-landmarks animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
 
                                 <?php if ($locationAccess): ?>
                                     <?php foreach ($locationAccess as $item): ?>
@@ -1046,48 +1046,48 @@ $developerStats = array_values(array_filter([
                 </div>
 
                 <!-- RIGHT: Permit + Quick Contact (col-lg-4) -->
-                <div class="col-12 col-lg-4">
-                    <div class="hh-location-01-side">
+                <div class="col-12 col-lg-4 animate-on-scroll" data-animation-in="animate__fadeInRight" data-animation-out="animate__fadeOutRight">
+                    <div class="hh-location-01-side animate-on-scroll" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
 
-                        <!-- Permit card -->
-                        <div class="hh-location-01-permit">
-                            <div class="head">
-                                <strong>Property Permit</strong>
-                            </div>
+                    <!-- Permit card -->
+                    <div class="hh-location-01-permit animate-on-scroll" data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut">
+                        <div class="head">
+                            <strong>Property Permit</strong>
+                        </div>
 
-                            <div class="qr-row">
-                                <?php if ($permitBarcode): ?>
-                                    <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>" alt="Permit QR" />
+                        <div class="qr-row">
+                            <?php if ($permitBarcode): ?>
+                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>" alt="Permit QR" />
+                            <?php endif; ?>
+                            <div class="permit-box">
+                                <span>Permit Number</span>
+                                <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                <?php if ($completionDate): ?>
+                                    <em>Completion: <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
                                 <?php endif; ?>
-                                <div class="permit-box">
-                                    <span>Permit Number</span>
-                                    <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                    <?php if ($completionDate): ?>
-                                        <em>Completion: <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                    <?php endif; ?>
-                                </div>
                             </div>
                         </div>
-
-                        <!-- Quick contact -->
-                        <div class="hh-location-01-contact">
-                            <div class="head">
-                                <strong>Quick Contact</strong>
-                            </div>
-
-                            <button type="button" class="call" onclick="window.location.href='tel:+971 42554683'">
-                                <img src="assets/flaticons/phone.png" alt="" />
-                                <span>Call Now: +971 42554683</span>
-                            </button>
-
-                            <button type="button" class="email" onclick="openPopup()">
-                                <img src="assets/flaticons/email.png" alt="" />
-                                <span>Email Agent</span>
-                            </button>
-                        </div>
-
                     </div>
+
+                    <!-- Quick contact -->
+                    <div class="hh-location-01-contact animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
+                        <div class="head">
+                            <strong>Quick Contact</strong>
+                        </div>
+
+                        <button type="button" class="call" onclick="window.location.href='tel:+971 42554683'">
+                            <img src="assets/flaticons/phone.png" alt="" />
+                            <span>Call Now: +971 42554683</span>
+                        </button>
+
+                        <button type="button" class="email" onclick="openPopup()">
+                            <img src="assets/flaticons/email.png" alt="" />
+                            <span>Email Agent</span>
+                        </button>
+                    </div>
+
                 </div>
+            </div>
             </div>
 
         </div>
@@ -1095,12 +1095,12 @@ $developerStats = array_values(array_filter([
 
 
     <!-- parent: .hh-cta-01 -->
-    <div class="hh-cta-01">
+    <div class="hh-cta-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
         <div class="container">
             <div class="row">
                 <div class="col-12">
 
-                    <div class="cta-banner">
+                    <div class="cta-banner animate-on-scroll" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
                         <h3>Ready to Invest in Your Future?</h3>
                         <p>Contact our property specialists today for exclusive pricing.</p>
 
@@ -1117,12 +1117,12 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-register-01 -->
-    <div class="hh-register-01">
+    <div class="hh-register-01 animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown">
         <div class="container">
             <div class="row">
                 <div class="col-12">
 
-                    <form class="reg-card" action="#" method="post" novalidate>
+                    <form class="reg-card animate-on-scroll" data-animation-in="animate__fadeInUp" data-animation-out="animate__fadeOutDown" action="#" method="post" novalidate>
                         <input type="hidden" name="property_id" value="<?= (int)$propertyId ?>">
                         <input type="hidden" name="property_title" value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                         <div class="reg-head">
@@ -1413,6 +1413,97 @@ $developerStats = array_values(array_filter([
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <!-- reCAPTCHA script -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = Array.from(document.querySelectorAll('.animate-on-scroll[data-animation-in]'));
+
+            if (!animatedElements.length) {
+                return;
+            }
+
+            const ensureBaseClasses = (el) => {
+                if (!el.classList.contains('animate__animated')) {
+                    el.classList.add('animate__animated');
+                }
+            };
+
+            const handleAnimationEnd = (event) => {
+                const el = event.currentTarget;
+                if (event.target !== el) {
+                    return;
+                }
+
+                const inClass = el.dataset.animationIn;
+                const outClass = el.dataset.animationOut;
+
+                if (inClass && el.classList.contains(inClass)) {
+                    el.classList.remove(inClass);
+                }
+
+                if (outClass && el.classList.contains(outClass)) {
+                    el.classList.remove(outClass);
+                    el.classList.remove('animate-scroll-visible');
+                }
+            };
+
+            animatedElements.forEach((el) => {
+                el.addEventListener('animationend', handleAnimationEnd);
+            });
+
+            if (!('IntersectionObserver' in window)) {
+                animatedElements.forEach((el) => {
+                    ensureBaseClasses(el);
+                    el.classList.add('animate-scroll-visible');
+                    const inClass = el.dataset.animationIn;
+                    if (inClass) {
+                        el.classList.add(inClass);
+                    }
+                });
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    const el = entry.target;
+                    const inClass = el.dataset.animationIn;
+                    const outClass = el.dataset.animationOut;
+
+                    ensureBaseClasses(el);
+
+                    if (entry.isIntersecting) {
+                        el.classList.add('animate-scroll-visible');
+                        if (outClass) {
+                            el.classList.remove(outClass);
+                        }
+                        if (inClass) {
+                            el.classList.remove(inClass);
+                            // Force reflow to restart the animation
+                            void el.offsetWidth;
+                            el.classList.add(inClass);
+                        }
+                    } else {
+                        if (outClass) {
+                            if (inClass) {
+                                el.classList.remove(inClass);
+                            }
+                            el.classList.add(outClass);
+                        } else {
+                            el.classList.remove('animate-scroll-visible');
+                            if (inClass) {
+                                el.classList.remove(inClass);
+                            }
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: '0px 0px -10% 0px'
+            });
+
+            animatedElements.forEach((el) => observer.observe(el));
+        });
+    </script>
 
 
     <script>

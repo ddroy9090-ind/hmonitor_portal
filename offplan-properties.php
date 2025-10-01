@@ -29,6 +29,7 @@ $sanitizeNumericString = static function ($value): string {
 
 $filters = [
     'q' => trim((string)(filter_input(INPUT_GET, 'q', FILTER_UNSAFE_RAW) ?? '')),
+    'project_name' => trim((string)(filter_input(INPUT_GET, 'project_name', FILTER_UNSAFE_RAW) ?? '')),
     'location' => trim((string)(filter_input(INPUT_GET, 'location', FILTER_UNSAFE_RAW) ?? '')),
     'property_type' => trim((string)(filter_input(INPUT_GET, 'property_type', FILTER_UNSAFE_RAW) ?? '')),
     'bedrooms' => trim((string)(filter_input(INPUT_GET, 'bedrooms', FILTER_UNSAFE_RAW) ?? '')),
@@ -146,6 +147,11 @@ try {
     if ($filters['q'] !== '') {
         $filterClauses[] = '(project_name LIKE :search OR property_title LIKE :search)';
         $queryParams[':search'] = '%' . $filters['q'] . '%';
+    }
+
+    if ($filters['project_name'] !== '') {
+        $filterClauses[] = 'project_name LIKE :project_name_filter';
+        $queryParams[':project_name_filter'] = '%' . $filters['project_name'] . '%';
     }
 
     if ($filters['location'] !== '') {
@@ -286,7 +292,7 @@ $maxPriceOptions = [
 ];
 
 $filterQueryParams = [];
-foreach (['q', 'location', 'property_type', 'bedrooms', 'location_query', 'completion_year', 'min_price', 'max_price'] as $key) {
+foreach (['q', 'project_name', 'location', 'property_type', 'bedrooms', 'location_query', 'completion_year', 'min_price', 'max_price'] as $key) {
     $value = $filters[$key] ?? '';
     if ($value !== '' && $value !== null) {
         $filterQueryParams[$key] = (string)$value;
@@ -367,6 +373,28 @@ include 'includes/navbar.php';
 
                             </div>
 
+                            <!-- Project Name -->
+                            <div class="col-lg-3">
+
+                                <label>
+                                    <span>
+                                        <!-- blueprint -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-layout-dashboard">
+                                            <rect x="3" y="3" width="7" height="9" rx="1" />
+                                            <rect x="14" y="3" width="7" height="5" rx="1" />
+                                            <rect x="14" y="10" width="7" height="11" rx="1" />
+                                            <rect x="3" y="15" width="7" height="6" rx="1" />
+                                        </svg>
+                                        Project Name
+                                    </span>
+                                    <input type="search" name="project_name" placeholder="Enter Project Name" value="<?= htmlspecialchars($filters['project_name'], ENT_QUOTES, 'UTF-8') ?>">
+                                </label>
+
+                            </div>
+
                             <!-- Location -->
                             <div class="col-lg-3">
                                 <label>
@@ -409,8 +437,11 @@ include 'includes/navbar.php';
                                 </label>
                             </div>
 
+                        </div>
+
+                        <div class="row align-items-center">
                             <!-- Bedrooms -->
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <label>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bed w-4 h-4" data-lov-id="src/components/PropertyCard.tsx:71:14" data-lov-name="Bed" data-component-path="src/components/PropertyCard.tsx" data-component-line="71" data-component-file="PropertyCard.tsx" data-component-name="Bed" data-component-content="%7B%22className%22%3A%22w-4%20h-4%22%7D">
@@ -424,15 +455,12 @@ include 'includes/navbar.php';
                                     <select class="select-dropDownClass" name="bedrooms">
                                         <option value="">All Bedrooms</option>
                                         <?php foreach ($filterOptions['bedrooms'] as $bedroomValue => $bedroomLabel): ?>
-                                            <option value="<?= htmlspecialchars((string)$bedroomValue, ENT_QUOTES, 'UTF-8') ?>" <?= (string)$filters['bedrooms'] === (string)$bedroomValue ? 'selected' : '' ?>><?= htmlspecialchars($bedroomLabel, ENT_QUOTES, 'UTF-8') ?></option>
+                                            <option value="<?= htmlspecialchars((string)$bedroomValue, ENT_QUOTES, 'UTF-8') ?>"<?= (string)$filters['bedrooms'] === (string)$bedroomValue ? 'selected' : '' ?>><?= htmlspecialchars($bedroomLabel, ENT_QUOTES, 'UTF-8') ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </label>
                             </div>
 
-                        </div>
-
-                        <div class="row align-items-center">
                             <!-- Search input -->
                             <div class="col-lg-3">
 
@@ -476,7 +504,7 @@ include 'includes/navbar.php';
                             </div>
 
                             <!-- Price Range -->
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <label>
                                     <span>
                                         <!-- dollar icon -->
@@ -498,7 +526,7 @@ include 'includes/navbar.php';
                                 </label>
                             </div>
 
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <label>
                                     <span>
                                         <!-- dollar icon -->

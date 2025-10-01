@@ -220,7 +220,10 @@ render_head('All Properties', 'dashboard-body');
                       </td>
                       <td class="text-end">
                         <div class="btn-group" role="group" aria-label="Property Actions">
-                          <a class="btn btn-sm btn-outline-primary" href="add_property.php?edit=<?= urlencode((string)$property['id']); ?>" title="Edit">
+                          <a
+                            class="btn btn-sm btn-outline-primary"
+                            href="<?= 'add_property.php?edit=' . urlencode((string)$property['id']); ?>"
+                            title="Edit">
                             <i class="bi bi-pencil-square"></i>
                           </a>
                           <form method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this property?');">

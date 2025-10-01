@@ -959,12 +959,15 @@ render_sidebar('add-property');
                 </div>
               </div>
               <?php if ($isEditing && ($existingFiles['hero_banner'] ?? '') !== ''): ?>
-                <p class="form-text mt-2">
-                  Current:
+                <div class="existing-media-preview mt-2">
+                  <p class="form-text mb-2">Current:</p>
                   <a href="<?= htmlspecialchars($existingFiles['hero_banner'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">
-                    <?= htmlspecialchars(basename((string)$existingFiles['hero_banner']), ENT_QUOTES, 'UTF-8') ?>
+                    <img
+                      src="<?= htmlspecialchars($existingFiles['hero_banner'], ENT_QUOTES, 'UTF-8') ?>"
+                      alt="Current hero banner"
+                      class="existing-media-preview-img">
                   </a>
-                </p>
+                </div>
               <?php endif; ?>
             </div>
             <div class="col-lg-4">
@@ -1008,17 +1011,22 @@ render_sidebar('add-property');
                 </div>
               </div>
               <?php if ($isEditing && $existingGalleryPaths !== []): ?>
-                <div class="mt-2">
-                  <p class="form-text mb-1">Current gallery images:</p>
-                  <ul class="mb-0 ps-3 small">
-                    <?php foreach ($existingGalleryPaths as $galleryPath): ?>
-                      <li>
-                        <a href="<?= htmlspecialchars($galleryPath, ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">
-                          <?= htmlspecialchars(basename((string)$galleryPath), ENT_QUOTES, 'UTF-8') ?>
-                        </a>
-                      </li>
+                <div class="existing-gallery-preview mt-2">
+                  <p class="form-text mb-2">Current gallery images:</p>
+                  <div class="gallery-preview-grid">
+                    <?php foreach ($existingGalleryPaths as $index => $galleryPath): ?>
+                      <a
+                        href="<?= htmlspecialchars($galleryPath, ENT_QUOTES, 'UTF-8') ?>"
+                        target="_blank"
+                        rel="noopener"
+                        class="gallery-preview-link">
+                        <img
+                          src="<?= htmlspecialchars($galleryPath, ENT_QUOTES, 'UTF-8') ?>"
+                          alt="Gallery image <?= (int)($index + 1) ?>"
+                          class="gallery-preview-img">
+                      </a>
                     <?php endforeach; ?>
-                  </ul>
+                  </div>
                 </div>
               <?php endif; ?>
             </div>
@@ -1038,12 +1046,15 @@ render_sidebar('add-property');
                 </div>
               </div>
               <?php if ($isEditing && ($existingFiles['developer_logo'] ?? '') !== ''): ?>
-                <p class="form-text mt-2">
-                  Current:
+                <div class="existing-media-preview mt-2">
+                  <p class="form-text mb-2">Current:</p>
                   <a href="<?= htmlspecialchars($existingFiles['developer_logo'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">
-                    <?= htmlspecialchars(basename((string)$existingFiles['developer_logo']), ENT_QUOTES, 'UTF-8') ?>
+                    <img
+                      src="<?= htmlspecialchars($existingFiles['developer_logo'], ENT_QUOTES, 'UTF-8') ?>"
+                      alt="Current developer logo"
+                      class="existing-media-preview-img">
                   </a>
-                </p>
+                </div>
               <?php endif; ?>
             </div>
             <div class="col-lg-8">
@@ -1062,12 +1073,15 @@ render_sidebar('add-property');
                 </div>
               </div>
               <?php if ($isEditing && ($existingFiles['permit_barcode'] ?? '') !== ''): ?>
-                <p class="form-text mt-2">
-                  Current:
+                <div class="existing-media-preview mt-2">
+                  <p class="form-text mb-2">Current:</p>
                   <a href="<?= htmlspecialchars($existingFiles['permit_barcode'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">
-                    <?= htmlspecialchars(basename((string)$existingFiles['permit_barcode']), ENT_QUOTES, 'UTF-8') ?>
+                    <img
+                      src="<?= htmlspecialchars($existingFiles['permit_barcode'], ENT_QUOTES, 'UTF-8') ?>"
+                      alt="Current permit barcode"
+                      class="existing-media-preview-img">
                   </a>
-                </p>
+                </div>
               <?php endif; ?>
             </div>
       </div>

@@ -274,7 +274,7 @@ body {
 }
 
 .gallery-preview-img {
-  width: 120px;
+  width: 100px;
   height: 90px;
   object-fit: cover;
   border-radius: 10px;

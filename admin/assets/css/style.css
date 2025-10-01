@@ -261,6 +261,9 @@ body {
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 12px;
+  position: absolute;
+  left: 35%;
+  top: 32%;
 }
 
 .gallery-preview-grid {
@@ -287,4 +290,3 @@ body {
   transform: scale(1.03);
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
 }
-

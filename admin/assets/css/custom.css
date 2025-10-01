@@ -322,6 +322,7 @@ table td {
     border-radius: 18px;
     padding: 28px;
     background: #f9fdfc;
+    position: relative;
 }
 
 .section-header {

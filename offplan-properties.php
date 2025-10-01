@@ -134,7 +134,7 @@ include 'includes/navbar.php';
             </div>
         </div>
 
-        <!-- Floating search panel -->
+        <!-- Property Details Filter Sections -->
         <div class="row">
             <div class="col-12">
                 <form>

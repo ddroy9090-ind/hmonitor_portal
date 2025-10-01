@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/includes/config.php';
@@ -138,10 +139,29 @@ include 'includes/navbar.php';
             <div class="col-12">
                 <form>
                     <div class="container">
-                        <div class="row">
+                        <div class="row align-items-center mb-4">
+                            <!-- Search input -->
+                            <div class="col-lg-3">
+
+                                <label>
+                                    <span>
+                                        <!-- building -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-building">
+                                            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                            <path d="M9 22V12h6v10"></path>
+                                        </svg>
+                                        Property Name
+                                    </span>
+                                    <input type="search" placeholder="Enter Property Name">
+                                </label>
+
+                            </div>
 
                             <!-- Location -->
-                            <div class="col-12 col-md">
+                            <div class="col-lg-3">
                                 <label>
                                     <span>
                                         <!-- location pin -->
@@ -152,15 +172,22 @@ include 'includes/navbar.php';
                                         Location
                                     </span>
                                     <select class="select-dropDownClass">
+                                        <option selected disabled>Select Location</option>
+                                        <option>Dubai Hills Estate</option>
+                                        <option>Emirates Living</option>
+                                        <option>Jumeirah Village Circle</option>
+                                        <option>Jumeirah Village Triangle</option>
                                         <option>Downtown Dubai</option>
-                                        <option>Dubai Marina</option>
                                         <option>Business Bay</option>
+                                        <option>Dubai Marina</option>
+                                        <option>Dubai Creek Harbour</option>
                                     </select>
+
                                 </label>
                             </div>
 
                             <!-- Type -->
-                            <div class="col-12 col-md">
+                            <div class="col-lg-3">
                                 <label>
                                     <span>
                                         <!-- home -->
@@ -171,16 +198,20 @@ include 'includes/navbar.php';
                                         Type
                                     </span>
                                     <select id="property-type" class="select-dropDownClass">
-                                        <option>Villa</option>
+                                        <option selected disabled>Property Type</option>
                                         <option>Apartment</option>
-                                        <option>Townhouse</option>
                                         <option>Penthouse</option>
+                                        <option>Villa</option>
+                                        <option>Land</option>
+                                        <option>Townhouse</option>
+                                        <option>Duplex</option>
                                     </select>
+
                                 </label>
                             </div>
 
                             <!-- Bedrooms -->
-                            <div class="col-12 col-md">
+                            <div class="col-lg-3">
                                 <label>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bed w-4 h-4" data-lov-id="src/components/PropertyCard.tsx:71:14" data-lov-name="Bed" data-component-path="src/components/PropertyCard.tsx" data-component-line="71" data-component-file="PropertyCard.tsx" data-component-name="Bed" data-component-content="%7B%22className%22%3A%22w-4%20h-4%22%7D">
@@ -192,37 +223,24 @@ include 'includes/navbar.php';
                                         Bedrooms
                                     </span>
                                     <select class="select-dropDownClass">
+                                        <option>All</option>
                                         <option>Studio</option>
                                         <option>1 Bed</option>
-                                        <option selected>2 Beds</option>
+                                        <option>2 Beds</option>
                                         <option>3 Beds</option>
-                                        <option>4+ Beds</option>
+                                        <option>4 Beds</option>
+                                        <option>5 Beds</option>
+                                        <option>6 Beds</option>
+                                        <option>7+ Beds</option>
                                     </select>
                                 </label>
                             </div>
 
-                            <!-- Price Range -->
-                            <div class="col-12 col-md">
-                                <label>
-                                    <span>
-                                        <!-- dollar -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign w-4 h-4" data-lov-id="src/components/SearchFilters.tsx:69:12" data-lov-name="DollarSign" data-component-path="src/components/SearchFilters.tsx" data-component-line="69" data-component-file="SearchFilters.tsx" data-component-name="DollarSign" data-component-content="%7B%22className%22%3A%22w-4%20h-4%22%7D">
-                                            <line x1="12" x2="12" y1="2" y2="22"></line>
-                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                        </svg>
-                                        Price Range
-                                    </span>
-                                    <select class="select-dropDownClass">
-                                        <option>Budget</option>
-                                        <option>Mid</option>
-                                        <option>Premium</option>
-                                        <option>Ultra</option>
-                                    </select>
-                                </label>
-                            </div>
+                        </div>
 
+                        <div class="row align-items-center">
                             <!-- Search input -->
-                            <div class="col-12 col-lg">
+                            <div class="col-lg-3">
 
                                 <label>
                                     <span>
@@ -230,20 +248,107 @@ include 'includes/navbar.php';
                                         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M21 21 15.8 15.8M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" fill="none" stroke="currentColor" stroke-width="2" />
                                         </svg>
-                                        Search
+                                        Search Location
                                     </span>
-                                    <input type="search" placeholder="Search properties…">
+                                    <input type="search" placeholder="Enter Property Location..">
+                                </label>
+                            </div>
+
+                            <!-- Completion Year -->
+                            <div class="col-lg-2">
+                                <label>
+                                    <span>
+                                        <!-- Completion Year pin -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-calendar w-4 h-4 mr-1">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg>
+                                        Completion Year
+                                    </span>
+                                    <select class="select-dropDownClass">
+                                        <option selected disabled>Completion Year</option>
+                                        <option>2025</option>
+                                        <option>2026</option>
+                                        <option>2027</option>
+                                        <option>2028</option>
+                                        <option>2029</option>
+                                        <option>2030</option>
+                                        <option>2031</option>
+                                        <option>2032</option>
+                                        <option>2033</option>
+                                        <option>2034</option>
+                                        <option>2035</option>
+                                    </select>
+
+
+                                </label>
+                            </div>
+
+                            <!-- Price Range -->
+                            <div class="col-lg-3">
+                                <label>
+                                    <span>
+                                        <!-- dollar icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-dollar-sign w-4 h-4">
+                                            <line x1="12" x2="12" y1="2" y2="22"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                        Min Price
+                                    </span>
+                                    <select class="select-dropDownClass">
+                                        <option selected disabled>Select Min</option>
+                                        <option>AED 300,000</option>
+                                        <option>AED 500,000</option>
+                                        <option>AED 1,000,000</option>
+                                        <option>AED 5,000,000</option>
+                                        <option>AED 10,000,000</option>
+                                        <option>AED 20,000,000</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label>
+                                    <span>
+                                        <!-- dollar icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-dollar-sign w-4 h-4">
+                                            <line x1="12" x2="12" y1="2" y2="22"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                        Max Price
+                                    </span>
+                                    <select class="select-dropDownClass">
+                                        <option selected disabled>Select Max</option>
+                                        <option>AED 1,000,000</option>
+                                        <option>AED 5,000,000</option>
+                                        <option>AED 10,000,000</option>
+                                        <option>AED 20,000,000</option>
+                                        <option>AED 30,000,000</option>
+                                        <option>AED 50,000,000+</option>
+                                    </select>
                                 </label>
                             </div>
 
                             <!-- Actions -->
-                            <div class="col-12 col-lg-auto">
-                                <div class="mt-3">
+                            <div class="col-lg-1">
+                                <div class="mt-4">
                                     <button type="submit">Search</button>
                                 </div>
                             </div>
 
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -314,46 +419,46 @@ include 'includes/navbar.php';
             <?php if ($offplanProperties): ?>
                 <?php foreach ($offplanProperties as $property): ?>
                     <?php
-                        $heroBanner = $normalizeImagePath($property['hero_banner'] ?? null) ?? '';
-                        $galleryImages = [];
-                        if (!empty($property['gallery_images'])) {
-                            $decodedGallery = json_decode((string)$property['gallery_images'], true);
-                            if (is_array($decodedGallery)) {
-                                foreach ($decodedGallery as $imagePath) {
-                                    $normalized = $normalizeImagePath(is_string($imagePath) ? $imagePath : null);
-                                    if ($normalized !== null) {
-                                        $galleryImages[] = $normalized;
-                                    }
+                    $heroBanner = $normalizeImagePath($property['hero_banner'] ?? null) ?? '';
+                    $galleryImages = [];
+                    if (!empty($property['gallery_images'])) {
+                        $decodedGallery = json_decode((string)$property['gallery_images'], true);
+                        if (is_array($decodedGallery)) {
+                            foreach ($decodedGallery as $imagePath) {
+                                $normalized = $normalizeImagePath(is_string($imagePath) ? $imagePath : null);
+                                if ($normalized !== null) {
+                                    $galleryImages[] = $normalized;
                                 }
                             }
                         }
+                    }
 
-                        $primaryImage = $heroBanner !== '' ? $heroBanner : ($galleryImages[0] ?? 'assets/images/offplan/breez-by-danube.webp');
-                        $projectName = trim((string)($property['project_name'] ?? ''));
+                    $primaryImage = $heroBanner !== '' ? $heroBanner : ($galleryImages[0] ?? 'assets/images/offplan/breez-by-danube.webp');
+                    $projectName = trim((string)($property['project_name'] ?? ''));
 
-                        $specs = [];
-                        if (!empty($property['bedroom'])) {
-                            $specs[] = ['icon' => 'assets/icons/bed.png', 'text' => trim((string)$property['bedroom']) . ' Beds'];
-                        }
-                        if (!empty($property['bathroom'])) {
-                            $specs[] = ['icon' => 'assets/icons/bathroom.png', 'text' => trim((string)$property['bathroom']) . ' Baths'];
-                        }
-                        if (!empty($property['total_area'])) {
-                            $specs[] = ['icon' => 'assets/icons/area.png', 'text' => trim((string)$property['total_area'])];
-                        }
+                    $specs = [];
+                    if (!empty($property['bedroom'])) {
+                        $specs[] = ['icon' => 'assets/icons/bed.png', 'text' => trim((string)$property['bedroom']) . ' Beds'];
+                    }
+                    if (!empty($property['bathroom'])) {
+                        $specs[] = ['icon' => 'assets/icons/bathroom.png', 'text' => trim((string)$property['bathroom']) . ' Baths'];
+                    }
+                    if (!empty($property['total_area'])) {
+                        $specs[] = ['icon' => 'assets/icons/area.png', 'text' => trim((string)$property['total_area'])];
+                    }
 
-                        $priceCurrency = '';
-                        $priceValue = '';
-                        $rawPrice = trim((string)($property['starting_price'] ?? ''));
-                        if ($rawPrice !== '') {
-                            $priceDisplay = stripos($rawPrice, 'aed') === false ? 'AED ' . $rawPrice : $rawPrice;
-                            if (stripos($priceDisplay, 'aed') === 0) {
-                                $priceCurrency = 'AED';
-                                $priceValue = trim(substr($priceDisplay, 3));
-                            } else {
-                                $priceValue = $priceDisplay;
-                            }
+                    $priceCurrency = '';
+                    $priceValue = '';
+                    $rawPrice = trim((string)($property['starting_price'] ?? ''));
+                    if ($rawPrice !== '') {
+                        $priceDisplay = stripos($rawPrice, 'aed') === false ? 'AED ' . $rawPrice : $rawPrice;
+                        if (stripos($priceDisplay, 'aed') === 0) {
+                            $priceCurrency = 'AED';
+                            $priceValue = trim(substr($priceDisplay, 3));
+                        } else {
+                            $priceValue = $priceDisplay;
                         }
+                    }
                     ?>
                     <div class="col-12 col-md-6 col-lg-4">
                         <a href="property-details.php?id=<?= (int)($property['id'] ?? 0) ?>" class="property-link">

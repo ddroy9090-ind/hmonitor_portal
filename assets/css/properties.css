@@ -69,7 +69,7 @@ p {
     padding-top: 150px;
     padding-bottom: 100px;
     overflow: visible;
-    margin-bottom: 50px;
+    margin-bottom: 150px;
 }
 
 .hh-hero-01::before {
@@ -129,7 +129,7 @@ p {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -150px;
+    bottom: -260px;
     /* float over white area */
 }
 

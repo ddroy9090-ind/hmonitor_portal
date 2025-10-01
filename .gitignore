@@ -1,49 +1,24 @@
-# Ignore vendor and node_modules
-/vendor
-/node_modules
-
-# Environment files
-.env
-.env.backup
-
-# Laravel specific
-/public/storage
-/storage/*.key
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
-/storage/logs/*
-
-# Logs and debug
-*.log
-*.sql
-*.sqlite
-
-# Archives and compressed
+# Archives
 *.zip
 *.rar
 *.tar
 *.gz
+*.7z
 
-# Media files (large)
+# Videos
 *.mp4
 *.avi
 *.mkv
 *.mov
+*.flv
+*.wmv
+
+# Audio
 *.mp3
 *.wav
+*.ogg
+*.flac
+*.aac
 
-# Design source files
-*.psd
-*.ai
-*.eps
-
-# Documents you don’t want
+# Documents
 *.pdf
-*.docx
-*.xlsx
-*.pptx
-
-# System files
-.DS_Store
-Thumbs.db

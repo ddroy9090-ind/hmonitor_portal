@@ -22,3 +22,6 @@
 
 # Documents
 *.pdf
+
+# Ignore all gif files
+*.gif

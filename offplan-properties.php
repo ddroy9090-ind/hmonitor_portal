@@ -561,7 +561,7 @@ include 'includes/navbar.php';
                                     <button
                                         type="button"
                                         class="btn btn-danger"
-                                        style="background-color: #d01f28; border: none;"
+                                        style="background-color: #d01f28; border: none; height: 48px; padding: 0 24px;"
                                         onclick="window.location.href='offplan-properties.php';"
                                     >
                                         Reset

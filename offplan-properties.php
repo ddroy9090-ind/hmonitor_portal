@@ -360,9 +360,9 @@ include 'includes/navbar.php';
                                             <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
                                             <path d="M9 22V12h6v10"></path>
                                         </svg>
-                                        Property Name
+                                        Project Name
                                     </span>
-                                    <input type="search" name="q" placeholder="Enter Property Name" value="<?= htmlspecialchars($filters['q'], ENT_QUOTES, 'UTF-8') ?>">
+                                    <input type="search" name="q" placeholder="Enter Project Name" value="<?= htmlspecialchars($filters['q'], ENT_QUOTES, 'UTF-8') ?>">
                                 </label>
 
                             </div>

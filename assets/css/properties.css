@@ -53,7 +53,7 @@ h6 {
 }
 
 p {
-    font-size: 16px !important;
+    font-size: 16px;
     font-family: "Hind Madurai", sans-serif !important;
     line-height: 1.4 !important;
 }
@@ -760,18 +760,6 @@ p {
     color: #fff;
 }
 
-/* Responsive */
-@media (max-width: 767.98px) {
-    .hh-property-hero h1 {
-        font-size: 28px;
-    }
-
-    .hh-property-hero-ctas {
-        flex-direction: column;
-        gap: 12px;
-        bottom: 20px;
-    }
-}
 
 
 .hh-gallery-01 {
@@ -3300,4 +3288,192 @@ body.no-scroll {
     width: 15px;
     height: 15px;
     margin-right: 8px;
+}
+
+
+@media only screen and (max-width:767px) {
+    body {
+        font-size: 14px !important;
+    }
+
+    .hh-hero-01 form {
+        position: relative;
+        bottom: -20px;
+    }
+
+    .hh-hero-01 {
+        padding-bottom: 100px;
+    }
+
+    .hh-hero-01 header p {
+        max-width: 100%;
+    }
+
+    .hh-hero-01 label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .hh-properties-01 {
+        padding: 0px 0;
+    }
+
+    .hh-properties-01-head h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .hh-property-hero-top {
+        padding: 0 12px;
+    }
+
+    .hh-primarypill {
+        font-size: 14px;
+    }
+
+    .hh-property-hero>.container {
+        position: relative;
+        z-index: 1;
+        bottom: 100px;
+        left: 0px;
+    }
+
+    .hh-property-hero h1 {
+        font-size: 24px;
+    }
+
+    .hh-property-hero-ctas {
+        flex-direction: column;
+        gap: 12px;
+        left: 45%;
+        top: 113%;
+        max-width: 240px;
+        padding: 0 15px;
+    }
+
+    .hh-property-hero-ctas .cta-solid,
+    .hh-property-hero-ctas .cta-outline {
+        font-size: 14px;
+        padding: 10px 10px;
+    }
+
+    .popup-content {
+        flex-direction: column;
+    }
+
+    .popup-form {
+        width: 100%;
+        padding: 30px;
+        position: relative;
+    }
+
+    .hh-gallery-01-head {
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        align-items: start;
+    }
+
+    .hh-gallery-01-head-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .hh-gallery-01 {
+        padding: 20px 0;
+    }
+
+    .hh-gallery-01-head h3 {
+        font-size: 20px;
+    }
+
+    .hh-details-01 .hh-tabs {
+        padding: 14px 20px;
+    }
+
+    .hh-details-01 h3 {
+        margin: 8px 0 10px;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .project-header h6 {
+        font-size: 16px;
+        /* font-weight: 500; */
+        color: #009688;
+        margin-bottom: 20px;
+    }
+
+    .hh-invest-01 .hi-grid strong {
+        font-size: 18px;
+    }
+
+    .hh-invest-01 h4 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .hh-invest-01 .plan-item .amt b {
+
+        font-size: 16px;
+
+    }
+
+    .hh-location-01 .hh-location-01-head h3 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .hh-location-01 .hh-location-01-landmarks {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px 8px;
+    }
+
+    .hh-location-01 .hh-location-01-permit {
+        margin-top: 10px;
+    }
+
+    .hh-cta-01 .cta-banner h3 {
+        font-size: 20px;
+    }
+
+    .hh-cta-01 .cta-banner p {
+        font-size: 16px;
+    }
+
+    .hh-location-01 {
+        padding-bottom: 20px;
+    }
+
+    .hh-register-01 {
+        padding: 20px 0;
+    }
+
+    .hh-register-01 .reg-card {
+        margin: 0;
+    }
+
+    .iti__country-list {
+        width: 332px;
+        top: 47px;
+    }
+
+    .country-select .country-list {
+        width: 300px;
+        top: 42px;
+    }
+    .hh-details-01{
+        padding-bottom: 20px;
+    }
+    .footer-section-five{
+        padding: 40px 0 40px;
+    }
+    .hh-property-hero::before{
+            background: rgba(0, 0, 0, 0.5);
+    }
+    .hh-property-hero-tags span{
+        font-size: 12px;
+    }
 }

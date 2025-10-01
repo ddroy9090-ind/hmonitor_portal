@@ -4499,14 +4499,7 @@ nav.navbar-custom {
 }
 
 
-button#callBtn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 50px !important;
-    height: 50px;
-    z-index: 1;
-}
+
 
 
 /* ---- Select box UI ---- */
@@ -4641,7 +4634,8 @@ button#callBtn {
 }
 
 .blog-pagination a:hover {
-    background-color: #004a44; /* your theme color */
+    background-color: #004a44;
+    /* your theme color */
     color: #fff;
     border-color: #004a44;
 }
@@ -4654,7 +4648,14 @@ button#callBtn {
     border-radius: 4px;
 }
 
-
+button#callBtn {
+    position: fixed;
+    bottom: 20px;
+    /* left: 20px; */
+    width: 50px !important;
+    height: 50px;
+    z-index: 1;
+}
 
 
 /* Responsive */

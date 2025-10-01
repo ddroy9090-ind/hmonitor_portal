@@ -354,11 +354,10 @@ include 'includes/navbar.php';
                     <div class="container">
                         <div class="row align-items-center mb-4">
                             <!-- Search input -->
-                            <div class="col-lg-3">
+                            <!-- <div class="col-lg-3">
 
                                 <label>
                                     <span>
-                                        <!-- building -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -371,7 +370,7 @@ include 'includes/navbar.php';
                                     <input type="search" name="q" placeholder="Enter Project Name" value="<?= htmlspecialchars($filters['q'], ENT_QUOTES, 'UTF-8') ?>">
                                 </label>
 
-                            </div>
+                            </div> -->
 
                             <!-- Project Name -->
                             <div class="col-lg-3">
@@ -437,11 +436,8 @@ include 'includes/navbar.php';
                                 </label>
                             </div>
 
-                        </div>
-
-                        <div class="row align-items-center">
                             <!-- Bedrooms -->
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <label>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bed w-4 h-4" data-lov-id="src/components/PropertyCard.tsx:71:14" data-lov-name="Bed" data-component-path="src/components/PropertyCard.tsx" data-component-line="71" data-component-file="PropertyCard.tsx" data-component-name="Bed" data-component-content="%7B%22className%22%3A%22w-4%20h-4%22%7D">
@@ -461,6 +457,10 @@ include 'includes/navbar.php';
                                 </label>
                             </div>
 
+                        </div>
+
+                        <div class="row align-items-center">
+
                             <!-- Search input -->
                             <div class="col-lg-3">
 
@@ -477,7 +477,7 @@ include 'includes/navbar.php';
                             </div>
 
                             <!-- Completion Year -->
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <label>
                                     <span>
                                         <!-- Completion Year pin -->
@@ -552,6 +552,13 @@ include 'includes/navbar.php';
                             <div class="col-lg-1">
                                 <div class="mt-4">
                                     <button type="submit">Search</button>
+                                </div>
+                            </div>
+
+                            <!-- Reset Button -->
+                            <div class="col-lg-1">
+                                <div class="mt-4">
+                                    <button class="btn btn-danger" type="submit" style="background-color: #d01f28; border: none;">Reset</button>
                                 </div>
                             </div>
 

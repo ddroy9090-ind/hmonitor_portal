@@ -17,6 +17,79 @@ $currentPage = (int)filter_input(
     ]
 );
 
+$sanitizeNumericString = static function ($value): string {
+    if (!is_string($value)) {
+        return '';
+    }
+
+    $value = trim($value);
+
+    return $value !== '' && ctype_digit($value) ? $value : '';
+};
+
+$filters = [
+    'q' => trim((string)(filter_input(INPUT_GET, 'q', FILTER_UNSAFE_RAW) ?? '')),
+    'location' => trim((string)(filter_input(INPUT_GET, 'location', FILTER_UNSAFE_RAW) ?? '')),
+    'property_type' => trim((string)(filter_input(INPUT_GET, 'property_type', FILTER_UNSAFE_RAW) ?? '')),
+    'bedrooms' => trim((string)(filter_input(INPUT_GET, 'bedrooms', FILTER_UNSAFE_RAW) ?? '')),
+    'location_query' => trim((string)(filter_input(INPUT_GET, 'location_query', FILTER_UNSAFE_RAW) ?? '')),
+    'completion_year' => filter_input(INPUT_GET, 'completion_year', FILTER_VALIDATE_INT) ?: '',
+    'min_price' => $sanitizeNumericString(filter_input(INPUT_GET, 'min_price', FILTER_UNSAFE_RAW)),
+    'max_price' => $sanitizeNumericString(filter_input(INPUT_GET, 'max_price', FILTER_UNSAFE_RAW)),
+];
+
+$minPriceValue = $filters['min_price'] !== '' ? (float)$filters['min_price'] : null;
+$maxPriceValue = $filters['max_price'] !== '' ? (float)$filters['max_price'] : null;
+$effectiveMinPrice = $minPriceValue;
+$effectiveMaxPrice = $maxPriceValue;
+if ($effectiveMinPrice !== null && $effectiveMaxPrice !== null && $effectiveMinPrice > $effectiveMaxPrice) {
+    $temp = $effectiveMinPrice;
+    $effectiveMinPrice = $effectiveMaxPrice;
+    $effectiveMaxPrice = $temp;
+}
+
+$parsePriceToNumber = static function ($price) {
+    if (!is_string($price)) {
+        return null;
+    }
+
+    $normalized = strtoupper($price);
+    $normalized = str_replace(['AED', 'DHS'], '', $normalized);
+    $normalized = str_replace([',', ' '], '', $normalized);
+    $normalized = preg_replace('/[^0-9MK\.]/', '', $normalized);
+
+    if (!is_string($normalized)) {
+        return null;
+    }
+
+    if ($normalized === '') {
+        return null;
+    }
+
+    $multiplier = 1;
+    if (str_ends_with($normalized, 'M')) {
+        $multiplier = 1000000;
+        $normalized = substr($normalized, 0, -1);
+    } elseif (str_ends_with($normalized, 'K')) {
+        $multiplier = 1000;
+        $normalized = substr($normalized, 0, -1);
+    }
+
+    if ($normalized === '' || !is_numeric($normalized)) {
+        return null;
+    }
+
+    return (float)$normalized * $multiplier;
+};
+
+$filterOptions = [
+    'locations' => [],
+    'property_types' => [],
+    'bedrooms' => [],
+    'completion_years' => [],
+];
+
+$bedroomOptionMap = [];
 $offplanProperties = [];
 $propertyCount = 0;
 $totalPages = 1;
@@ -25,30 +98,128 @@ $offset = 0;
 try {
     $pdo = hh_db();
 
-    $countStmt = $pdo->query('SELECT COUNT(*) FROM properties_list');
-    $propertyCount = (int)($countStmt->fetchColumn() ?: 0);
+    $filterOptions['locations'] = array_values(array_filter(array_map(
+        static fn($value) => is_string($value) ? trim($value) : '',
+        $pdo->query('SELECT DISTINCT property_location FROM properties_list WHERE property_location IS NOT NULL AND TRIM(property_location) <> "" ORDER BY property_location ASC')->fetchAll(\PDO::FETCH_COLUMN)
+    )));
 
-    if ($propertyCount > 0) {
+    $filterOptions['property_types'] = array_values(array_filter(array_map(
+        static fn($value) => is_string($value) ? trim($value) : '',
+        $pdo->query('SELECT DISTINCT property_type FROM properties_list WHERE property_type IS NOT NULL AND TRIM(property_type) <> "" ORDER BY property_type ASC')->fetchAll(\PDO::FETCH_COLUMN)
+    )));
+
+    $rawBedrooms = $pdo->query('SELECT DISTINCT bedroom FROM properties_list WHERE bedroom IS NOT NULL AND TRIM(bedroom) <> ""')->fetchAll(\PDO::FETCH_COLUMN);
+    if ($rawBedrooms) {
+        foreach ($rawBedrooms as $value) {
+            if (!is_string($value)) {
+                continue;
+            }
+
+            $value = trim($value);
+            if ($value === '') {
+                continue;
+            }
+
+            $label = $value;
+            $lower = strtolower($value);
+            if ($lower === 'studio') {
+                $label = 'Studio';
+            } elseif (is_numeric($value)) {
+                $label = (int)$value === 1 ? '1 Bed' : $value . ' Beds';
+            }
+
+            $bedroomOptionMap[$value] = $label;
+        }
+
+        ksort($bedroomOptionMap, SORT_NATURAL);
+        $filterOptions['bedrooms'] = $bedroomOptionMap;
+    }
+
+    $filterOptions['completion_years'] = array_values(array_filter(array_map(
+        static fn($value) => $value !== null ? (int)$value : null,
+        $pdo->query('SELECT DISTINCT YEAR(completion_date) AS completion_year FROM properties_list WHERE completion_date IS NOT NULL AND completion_date <> "0000-00-00" ORDER BY completion_year ASC')->fetchAll(\PDO::FETCH_COLUMN)
+    ), static fn($value) => $value !== null && $value > 0));
+
+    $filterClauses = [];
+    $queryParams = [];
+
+    if ($filters['q'] !== '') {
+        $filterClauses[] = '(project_name LIKE :search OR property_title LIKE :search)';
+        $queryParams[':search'] = '%' . $filters['q'] . '%';
+    }
+
+    if ($filters['location'] !== '') {
+        $filterClauses[] = 'property_location = :location';
+        $queryParams[':location'] = $filters['location'];
+    }
+
+    if ($filters['property_type'] !== '') {
+        $filterClauses[] = 'property_type = :property_type';
+        $queryParams[':property_type'] = $filters['property_type'];
+    }
+
+    if ($filters['bedrooms'] !== '') {
+        $filterClauses[] = 'bedroom = :bedrooms';
+        $queryParams[':bedrooms'] = $filters['bedrooms'];
+    }
+
+    if ($filters['location_query'] !== '') {
+        $filterClauses[] = 'property_location LIKE :location_query';
+        $queryParams[':location_query'] = '%' . $filters['location_query'] . '%';
+    }
+
+    if ($filters['completion_year'] !== '') {
+        $filterClauses[] = 'completion_date IS NOT NULL AND completion_date <> "0000-00-00" AND YEAR(completion_date) = :completion_year';
+        $queryParams[':completion_year'] = (int)$filters['completion_year'];
+    }
+
+    $whereClause = $filterClauses ? ' WHERE ' . implode(' AND ', $filterClauses) : '';
+
+    $stmt = $pdo->prepare(
+        'SELECT id, hero_banner, gallery_images, project_status, property_type, project_name, property_title, property_location, starting_price, bedroom, bathroom, total_area, completion_date, created_at
+            FROM properties_list'
+        . $whereClause .
+        ' ORDER BY created_at DESC'
+    );
+
+    foreach ($queryParams as $param => $value) {
+        $stmt->bindValue($param, $value);
+    }
+
+    $stmt->execute();
+    $allProperties = $stmt->fetchAll();
+
+    $filteredProperties = [];
+    foreach ($allProperties as $property) {
+        $priceNumeric = $parsePriceToNumber($property['starting_price'] ?? null);
+
+        if ($effectiveMinPrice !== null && ($priceNumeric === null || $priceNumeric < $effectiveMinPrice)) {
+            continue;
+        }
+
+        if ($effectiveMaxPrice !== null && ($priceNumeric === null || $priceNumeric > $effectiveMaxPrice)) {
+            continue;
+        }
+
+        $filteredProperties[] = $property;
+    }
+
+    $filteredProperties = array_values($filteredProperties);
+    $propertyCount = count($filteredProperties);
+
+    if ($propertyCount === 0) {
+        $currentPage = 1;
+        $totalPages = 1;
+        $offset = 0;
+        $offplanProperties = [];
+    } else {
         $totalPages = (int)ceil($propertyCount / $itemsPerPage);
         if ($currentPage > $totalPages) {
             $currentPage = $totalPages;
         }
 
         $offset = ($currentPage - 1) * $itemsPerPage;
-
-        $stmt = $pdo->prepare(
-            'SELECT id, hero_banner, gallery_images, project_status, property_type, project_name, property_location, starting_price, bedroom, bathroom, total_area, created_at
-            FROM properties_list
-            ORDER BY created_at DESC
-            LIMIT :limit OFFSET :offset'
-        );
-        $stmt->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        $offplanProperties = $stmt->fetchAll();
-    } else {
-        $currentPage = 1;
-        $totalPages = 1;
+        $offplanProperties = array_slice($filteredProperties, $offset, $itemsPerPage);
     }
 } catch (Throwable $e) {
     $offplanProperties = [];
@@ -94,6 +265,41 @@ $normalizeImagePath = static function (?string $path) use ($uploadsBasePath, $le
 
 $title = 'Dubai Off-Plan Properties for Sale | High ROI Deals';
 
+$minPriceOptions = [
+    '' => 'Select Min',
+    '300000' => 'AED 300,000',
+    '500000' => 'AED 500,000',
+    '1000000' => 'AED 1,000,000',
+    '5000000' => 'AED 5,000,000',
+    '10000000' => 'AED 10,000,000',
+    '20000000' => 'AED 20,000,000',
+];
+
+$maxPriceOptions = [
+    '' => 'Select Max',
+    '1000000' => 'AED 1,000,000',
+    '5000000' => 'AED 5,000,000',
+    '10000000' => 'AED 10,000,000',
+    '20000000' => 'AED 20,000,000',
+    '30000000' => 'AED 30,000,000',
+    '50000000' => 'AED 50,000,000+',
+];
+
+$filterQueryParams = [];
+foreach (['q', 'location', 'property_type', 'bedrooms', 'location_query', 'completion_year', 'min_price', 'max_price'] as $key) {
+    $value = $filters[$key] ?? '';
+    if ($value !== '' && $value !== null) {
+        $filterQueryParams[$key] = (string)$value;
+    }
+}
+
+$buildPageUrl = static function (int $page) use ($filterQueryParams): string {
+    $params = $filterQueryParams;
+    $params['page'] = $page;
+
+    return '?' . http_build_query($params);
+};
+
 $meta_tags = '
     <!-- Basic Meta -->
     
@@ -137,7 +343,8 @@ include 'includes/navbar.php';
         <!-- Property Details Filter Sections -->
         <div class="row">
             <div class="col-12">
-                <form>
+                <form method="get" action="offplan-properties.php">
+                    <input type="hidden" name="page" value="1">
                     <div class="container">
                         <div class="row align-items-center mb-4">
                             <!-- Search input -->
@@ -155,7 +362,7 @@ include 'includes/navbar.php';
                                         </svg>
                                         Property Name
                                     </span>
-                                    <input type="search" placeholder="Enter Property Name">
+                                    <input type="search" name="q" placeholder="Enter Property Name" value="<?= htmlspecialchars($filters['q'], ENT_QUOTES, 'UTF-8') ?>">
                                 </label>
 
                             </div>
@@ -171,16 +378,11 @@ include 'includes/navbar.php';
                                         </svg>
                                         Location
                                     </span>
-                                    <select class="select-dropDownClass">
-                                        <option selected disabled>Select Location</option>
-                                        <option>Dubai Hills Estate</option>
-                                        <option>Emirates Living</option>
-                                        <option>Jumeirah Village Circle</option>
-                                        <option>Jumeirah Village Triangle</option>
-                                        <option>Downtown Dubai</option>
-                                        <option>Business Bay</option>
-                                        <option>Dubai Marina</option>
-                                        <option>Dubai Creek Harbour</option>
+                                    <select class="select-dropDownClass" name="location">
+                                        <option value="">Select Location</option>
+                                        <?php foreach ($filterOptions['locations'] as $locationOption): ?>
+                                            <option value="<?= htmlspecialchars($locationOption, ENT_QUOTES, 'UTF-8') ?>" <?= $filters['location'] === $locationOption ? 'selected' : '' ?>><?= htmlspecialchars($locationOption, ENT_QUOTES, 'UTF-8') ?></option>
+                                        <?php endforeach; ?>
                                     </select>
 
                                 </label>
@@ -197,14 +399,11 @@ include 'includes/navbar.php';
                                         </svg>
                                         Type
                                     </span>
-                                    <select id="property-type" class="select-dropDownClass">
-                                        <option selected disabled>Property Type</option>
-                                        <option>Apartment</option>
-                                        <option>Penthouse</option>
-                                        <option>Villa</option>
-                                        <option>Land</option>
-                                        <option>Townhouse</option>
-                                        <option>Duplex</option>
+                                    <select id="property-type" class="select-dropDownClass" name="property_type">
+                                        <option value="">Property Type</option>
+                                        <?php foreach ($filterOptions['property_types'] as $typeOption): ?>
+                                            <option value="<?= htmlspecialchars($typeOption, ENT_QUOTES, 'UTF-8') ?>" <?= $filters['property_type'] === $typeOption ? 'selected' : '' ?>><?= htmlspecialchars($typeOption, ENT_QUOTES, 'UTF-8') ?></option>
+                                        <?php endforeach; ?>
                                     </select>
 
                                 </label>
@@ -222,16 +421,11 @@ include 'includes/navbar.php';
                                         </svg>
                                         Bedrooms
                                     </span>
-                                    <select class="select-dropDownClass">
-                                        <option>All</option>
-                                        <option>Studio</option>
-                                        <option>1 Bed</option>
-                                        <option>2 Beds</option>
-                                        <option>3 Beds</option>
-                                        <option>4 Beds</option>
-                                        <option>5 Beds</option>
-                                        <option>6 Beds</option>
-                                        <option>7+ Beds</option>
+                                    <select class="select-dropDownClass" name="bedrooms">
+                                        <option value="">All Bedrooms</option>
+                                        <?php foreach ($filterOptions['bedrooms'] as $bedroomValue => $bedroomLabel): ?>
+                                            <option value="<?= htmlspecialchars((string)$bedroomValue, ENT_QUOTES, 'UTF-8') ?>" <?= (string)$filters['bedrooms'] === (string)$bedroomValue ? 'selected' : '' ?>><?= htmlspecialchars($bedroomLabel, ENT_QUOTES, 'UTF-8') ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </label>
                             </div>
@@ -250,7 +444,7 @@ include 'includes/navbar.php';
                                         </svg>
                                         Search Location
                                     </span>
-                                    <input type="search" placeholder="Enter Property Location..">
+                                    <input type="search" name="location_query" placeholder="Enter Property Location.." value="<?= htmlspecialchars($filters['location_query'], ENT_QUOTES, 'UTF-8') ?>">
                                 </label>
                             </div>
 
@@ -270,19 +464,11 @@ include 'includes/navbar.php';
                                         </svg>
                                         Completion Year
                                     </span>
-                                    <select class="select-dropDownClass">
-                                        <option selected disabled>Completion Year</option>
-                                        <option>2025</option>
-                                        <option>2026</option>
-                                        <option>2027</option>
-                                        <option>2028</option>
-                                        <option>2029</option>
-                                        <option>2030</option>
-                                        <option>2031</option>
-                                        <option>2032</option>
-                                        <option>2033</option>
-                                        <option>2034</option>
-                                        <option>2035</option>
+                                    <select class="select-dropDownClass" name="completion_year">
+                                        <option value="">Completion Year</option>
+                                        <?php foreach ($filterOptions['completion_years'] as $completionYear): ?>
+                                            <option value="<?= (int)$completionYear ?>" <?= (string)$filters['completion_year'] === (string)$completionYear ? 'selected' : '' ?>><?= (int)$completionYear ?></option>
+                                        <?php endforeach; ?>
                                     </select>
 
 
@@ -303,14 +489,11 @@ include 'includes/navbar.php';
                                         </svg>
                                         Min Price
                                     </span>
-                                    <select class="select-dropDownClass">
-                                        <option selected disabled>Select Min</option>
-                                        <option>AED 300,000</option>
-                                        <option>AED 500,000</option>
-                                        <option>AED 1,000,000</option>
-                                        <option>AED 5,000,000</option>
-                                        <option>AED 10,000,000</option>
-                                        <option>AED 20,000,000</option>
+                                    <select class="select-dropDownClass" name="min_price">
+                                        <?php foreach ($minPriceOptions as $value => $label): ?>
+                                            <?php $optionValue = (string)$value; ?>
+                                            <option value="<?= htmlspecialchars($optionValue, ENT_QUOTES, 'UTF-8') ?>" <?= (string)$filters['min_price'] === $optionValue ? 'selected' : '' ?>><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </label>
                             </div>
@@ -328,14 +511,11 @@ include 'includes/navbar.php';
                                         </svg>
                                         Max Price
                                     </span>
-                                    <select class="select-dropDownClass">
-                                        <option selected disabled>Select Max</option>
-                                        <option>AED 1,000,000</option>
-                                        <option>AED 5,000,000</option>
-                                        <option>AED 10,000,000</option>
-                                        <option>AED 20,000,000</option>
-                                        <option>AED 30,000,000</option>
-                                        <option>AED 50,000,000+</option>
+                                    <select class="select-dropDownClass" name="max_price">
+                                        <?php foreach ($maxPriceOptions as $value => $label): ?>
+                                            <?php $optionValue = (string)$value; ?>
+                                            <option value="<?= htmlspecialchars($optionValue, ENT_QUOTES, 'UTF-8') ?>" <?= (string)$filters['max_price'] === $optionValue ? 'selected' : '' ?>><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </label>
                             </div>
@@ -435,10 +615,21 @@ include 'includes/navbar.php';
 
                     $primaryImage = $heroBanner !== '' ? $heroBanner : ($galleryImages[0] ?? 'assets/images/offplan/breez-by-danube.webp');
                     $projectName = trim((string)($property['project_name'] ?? ''));
+                    if ($projectName === '') {
+                        $projectName = trim((string)($property['property_title'] ?? ''));
+                    }
 
                     $specs = [];
-                    if (!empty($property['bedroom'])) {
-                        $specs[] = ['icon' => 'assets/icons/bed.png', 'text' => trim((string)$property['bedroom']) . ' Beds'];
+                    $bedroomValue = isset($property['bedroom']) ? trim((string)$property['bedroom']) : '';
+                    if ($bedroomValue !== '') {
+                        if (is_numeric($bedroomValue)) {
+                            $bedroomLabel = (int)$bedroomValue === 1 ? '1 Bed' : $bedroomValue . ' Beds';
+                        } elseif (stripos($bedroomValue, 'bed') !== false || stripos($bedroomValue, 'studio') !== false) {
+                            $bedroomLabel = $bedroomValue;
+                        } else {
+                            $bedroomLabel = $bedroomValue . ' Beds';
+                        }
+                        $specs[] = ['icon' => 'assets/icons/bed.png', 'text' => $bedroomLabel];
                     }
                     if (!empty($property['bathroom'])) {
                         $specs[] = ['icon' => 'assets/icons/bathroom.png', 'text' => trim((string)$property['bathroom']) . ' Baths'];
@@ -517,7 +708,7 @@ include 'includes/navbar.php';
                 <ul>
                     <li class="prev<?= $currentPage <= 1 ? ' disabled' : '' ?>">
                         <?php if ($currentPage > 1): ?>
-                            <a href="?page=<?= (int)($currentPage - 1) ?>">Previous</a>
+                            <a href="<?= htmlspecialchars($buildPageUrl($currentPage - 1), ENT_QUOTES, 'UTF-8') ?>">Previous</a>
                         <?php else: ?>
                             <span>Previous</span>
                         <?php endif; ?>
@@ -528,14 +719,14 @@ include 'includes/navbar.php';
                             <?php if ($page === $currentPage): ?>
                                 <span><?= (int)$page ?></span>
                             <?php else: ?>
-                                <a href="?page=<?= (int)$page ?>"><?= (int)$page ?></a>
+                                <a href="<?= htmlspecialchars($buildPageUrl($page), ENT_QUOTES, 'UTF-8') ?>"><?= (int)$page ?></a>
                             <?php endif; ?>
                         </li>
                     <?php endfor; ?>
 
                     <li class="next<?= $currentPage >= $totalPages ? ' disabled' : '' ?>">
                         <?php if ($currentPage < $totalPages): ?>
-                            <a href="?page=<?= (int)($currentPage + 1) ?>">Next</a>
+                            <a href="<?= htmlspecialchars($buildPageUrl($currentPage + 1), ENT_QUOTES, 'UTF-8') ?>">Next</a>
                         <?php else: ?>
                             <span>Next</span>
                         <?php endif; ?>

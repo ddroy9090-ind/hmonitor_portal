@@ -558,7 +558,14 @@ include 'includes/navbar.php';
                             <!-- Reset Button -->
                             <div class="col-lg-1">
                                 <div class="mt-4">
-                                    <button class="btn btn-danger" type="submit" style="background-color: #d01f28; border: none;">Reset</button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-danger"
+                                        style="background-color: #d01f28; border: none;"
+                                        onclick="window.location.href='offplan-properties.php';"
+                                    >
+                                        Reset
+                                    </button>
                                 </div>
                             </div>
 

@@ -81,17 +81,42 @@ $locationAccessibilityFormData = [
 ];
 
 $amenitiesOptions = [
-  'infinity_pool'            => 'Infinity Pool',
-  'fully_equipped_gym'       => 'Fully Equipped Gym',
-  'landscaped_gardens'       => 'Landscaped Gardens',
-  'kids_play_area'           => "Kids' Play Area",
-  'bbq_area'                 => 'BBQ & Picnic Area',
-  'concierge_services'       => 'Concierge Services',
-  'twenty_four_security'     => '24/7 Security',
-  'retail_outlets'           => 'Retail & Dining Outlets',
-  'covered_parking'          => 'Covered Parking',
-  'smart_home_technology'    => 'Smart Home Technology',
+  'swimming_pool'         => 'Swimming Pool',
+  'infinity_pool'         => 'Infinity Pool',
+  'lap_pool_jacuzzi'      => 'Infinity Lap Pool & Jacuzzi',
+  'kids_play_area'        => "Kids' Play Area",
+  'splash_pad'            => 'Splash Pad',
+  'kids_pool'             => "Kids’ Pool",
+  'gymnasium'             => 'Gymnasium',
+  'fitness_studio'        => 'Natural Light Fitness Studio',
+  'jogging_track'         => 'Jogging Track',
+  'landscaped_gardens'    => 'Landscaped Gardens',
+  'garden_zones'          => 'Garden Zones',
+  'sports_courts'         => 'Sports Courts',
+  'basketball_court'      => 'Basketball Court',
+  'tennis_court'          => 'Tennis Court',
+  'sauna_room'            => 'Sauna Room',
+  'steam_room'            => 'Steam Room',
+  'yoga_meditation'       => 'Yoga & Meditation',
+  'yoga_deck'             => 'Yoga & Meditation Decks',
+  'zumba_room'            => 'Yoga/Zumba Room',
+  'bbq_area'              => 'BBQ Area',
+  'outdoor_bbq'           => 'Outdoor BBQ',
+  'picnic_area'           => 'Picnic Area',
+  'celebration_lawn'      => 'Celebration Lawn',
+  'pool_reading_nook'     => 'Pool-Facing Reading Nook',
+  'billiards_table'       => 'Billiards Table',
+  'indoor_games_room'     => 'Indoor Games Room',
+  'banquet_hall'          => 'Banquet Hall',
+  'twenty_four_security'  => '24/7 Security',
+  'smart_home_technology' => 'Smart Home Technology',
+  'retail_outlets'        => 'Retail Outlets',
+  'dining_outlets'        => 'Dining Outlets',
+  'concierge_services'    => 'Concierge Services',
+  'covered_parking'       => 'Covered Parking',
 ];
+
+
 
 $selectedAmenityKeys = [];
 $selectedAmenities     = [];

@@ -371,5 +371,49 @@ h4.section-title img{
 }
 
 
+/* Reset default browser checkbox */
+input[type="checkbox"] {
+  -webkit-appearance: none; /* Safari/Chrome */
+  -moz-appearance: none;    /* Firefox */
+  appearance: none;         /* Modern browsers */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #009688;   /* border color */
+  border-radius: 6px;          /* square with rounded edges */
+  background-color: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+input[type="checkbox"]:hover {
+  border-color: #00796b;
+}
+
+input[type="checkbox"]:focus{
+    box-shadow: none;
+}
+
+/* Checked state */
+input[type="checkbox"]:checked {
+  background-color: #009688;
+  border-color: #009688;
+}
+
+/* Tick mark */
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
 
 

@@ -6,6 +6,7 @@ body {
     font-size: 16px;
     color: inherit;
     font-family: "Hind Madurai", sans-serif !important;
+    
 
 }
 
@@ -58,19 +59,6 @@ p {
     line-height: 1.4 !important;
 }
 
-/* Animate on scroll helpers */
-.animate-on-scroll {
-    opacity: 0;
-    will-change: opacity, transform;
-}
-
-.animate-scroll-visible {
-    opacity: 1;
-}
-
-.animate-on-scroll.animate__animated {
-    --animate-duration: 0.9s;
-}
 
 /* Root section */
 .hh-hero-01 {

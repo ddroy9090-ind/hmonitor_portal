@@ -258,6 +258,51 @@ foreach ($amenitiesRaw as $amenity) {
     }
 }
 
+$resolveAmenityIcon = static function (string $label): string {
+    $normalized = trim($label);
+    if ($normalized === '') {
+        return 'fa-solid fa-circle-check';
+    }
+
+    $lower = function_exists('mb_strtolower') ? mb_strtolower($normalized) : strtolower($normalized);
+
+    $iconMap = [
+        ['keywords' => ['pool', 'swim'], 'icon' => 'fa-solid fa-person-swimming'],
+        ['keywords' => ['gym', 'fitness'], 'icon' => 'fa-solid fa-dumbbell'],
+        ['keywords' => ['parking'], 'icon' => 'fa-solid fa-square-parking'],
+        ['keywords' => ['security', 'guard'], 'icon' => 'fa-solid fa-shield-halved'],
+        ['keywords' => ['park', 'garden', 'green'], 'icon' => 'fa-solid fa-tree'],
+        ['keywords' => ['bbq', 'barbecue', 'grill'], 'icon' => 'fa-solid fa-fire'],
+        ['keywords' => ['play area', 'playground', 'kids', 'children'], 'icon' => 'fa-solid fa-children'],
+        ['keywords' => ['spa', 'wellness'], 'icon' => 'fa-solid fa-spa'],
+        ['keywords' => ['beach'], 'icon' => 'fa-solid fa-umbrella-beach'],
+        ['keywords' => ['shopping', 'mall', 'retail'], 'icon' => 'fa-solid fa-cart-shopping'],
+        ['keywords' => ['school', 'education'], 'icon' => 'fa-solid fa-school'],
+        ['keywords' => ['hospital', 'clinic', 'medical'], 'icon' => 'fa-solid fa-hospital'],
+        ['keywords' => ['wifi', 'internet'], 'icon' => 'fa-solid fa-wifi'],
+        ['keywords' => ['clubhouse', 'club house', 'community hall'], 'icon' => 'fa-solid fa-house'],
+        ['keywords' => ['lobby'], 'icon' => 'fa-solid fa-door-open'],
+        ['keywords' => ['air condition', 'ac'], 'icon' => 'fa-solid fa-snowflake'],
+        ['keywords' => ['sauna', 'steam'], 'icon' => 'fa-solid fa-temperature-three-quarters'],
+        ['keywords' => ['cinema', 'theatre', 'theater'], 'icon' => 'fa-solid fa-film'],
+        ['keywords' => ['tennis'], 'icon' => 'fa-solid fa-table-tennis-paddle-ball'],
+        ['keywords' => ['basketball'], 'icon' => 'fa-solid fa-basketball'],
+        ['keywords' => ['golf'], 'icon' => 'fa-solid fa-golf-ball-tee'],
+        ['keywords' => ['jogging', 'running', 'cycle'], 'icon' => 'fa-solid fa-person-running'],
+        ['keywords' => ['elevator', 'lift'], 'icon' => 'fa-solid fa-up-down'],
+    ];
+
+    foreach ($iconMap as $entry) {
+        foreach ($entry['keywords'] as $keyword) {
+            if ($keyword !== '' && str_contains($lower, $keyword)) {
+                return $entry['icon'];
+            }
+        }
+    }
+
+    return 'fa-solid fa-circle-check';
+};
+
 $aboutProjectParagraphs = $extractParagraphs($property['about_project'] ?? null);
 
 $aboutDeveloperParagraphs = $extractParagraphs($property['about_developer'] ?? null);
@@ -618,13 +663,21 @@ $developerStats = array_values(array_filter([
                                     <?php if ($amenitiesList): ?>
                                         <ul class="amenities-list">
                                             <?php foreach ($amenitiesList as $amenity): ?>
-                                                <li><img src="assets/icons/tick.png" alt="✓"> <?= htmlspecialchars($amenity, ENT_QUOTES, 'UTF-8') ?></li>
+                                                <?php $iconClass = $resolveAmenityIcon($amenity); ?>
+                                                <li>
+                                                    <i class="<?= htmlspecialchars($iconClass, ENT_QUOTES, 'UTF-8') ?>" aria-hidden="true"></i>
+                                                    <span><?= htmlspecialchars($amenity, ENT_QUOTES, 'UTF-8') ?></span>
+                                                </li>
                                             <?php endforeach; ?>
                                         </ul>
                                     <?php elseif ($featureItems): ?>
                                         <ul class="amenities-list">
                                             <?php foreach ($featureItems as $item): ?>
-                                                <li><img src="assets/icons/tick.png" alt="✓"> <?= htmlspecialchars($item, ENT_QUOTES, 'UTF-8') ?></li>
+                                                <?php $iconClass = $resolveAmenityIcon($item); ?>
+                                                <li>
+                                                    <i class="<?= htmlspecialchars($iconClass, ENT_QUOTES, 'UTF-8') ?>" aria-hidden="true"></i>
+                                                    <span><?= htmlspecialchars($item, ENT_QUOTES, 'UTF-8') ?></span>
+                                                </li>
                                             <?php endforeach; ?>
                                         </ul>
                                     <?php else: ?>

@@ -766,8 +766,15 @@ $developerStats = array_values(array_filter([
                                                         <div class="fp-pane<?= $index === 0 ? ' active' : '' ?>"
                                                             id="<?= htmlspecialchars($paneId, ENT_QUOTES, 'UTF-8') ?>">
                                                             <?php if (!empty($plan['file'])): ?>
-                                                                <img src="<?= htmlspecialchars($plan['file'], ENT_QUOTES, 'UTF-8') ?>"
-                                                                    alt="<?= htmlspecialchars(($plan['title'] ?: 'Floor Plan') . ' layout', ENT_QUOTES, 'UTF-8') ?>">
+                                                                <div class="fp-image">
+                                                                    <img src="<?= htmlspecialchars($plan['file'], ENT_QUOTES, 'UTF-8') ?>"
+                                                                        alt="<?= htmlspecialchars(($plan['title'] ?: 'Floor Plan') . ' layout', ENT_QUOTES, 'UTF-8') ?>"
+                                                                        data-fp-index="<?= $index ?>">
+                                                                    <button type="button" class="fp-view" aria-label="View image"
+                                                                        data-fp-index="<?= $index ?>">
+                                                                        <img src="assets/icons/plus.svg" alt="" aria-hidden="true">
+                                                                    </button>
+                                                                </div>
                                                             <?php else: ?>
                                                                 <div class="fp-placeholder">Floor plan preview not available.</div>
                                                             <?php endif; ?>
@@ -807,6 +814,12 @@ $developerStats = array_values(array_filter([
                                                     <?php endforeach; ?>
                                                 </aside>
                                             </div>
+                                        </div>
+                                        <div class="fp-lightbox" aria-hidden="true">
+                                            <button type="button" class="fp-lightbox-close" aria-label="Close">×</button>
+                                            <button type="button" class="fp-lightbox-nav prev" aria-label="Previous"></button>
+                                            <img alt="Floor plan preview">
+                                            <button type="button" class="fp-lightbox-nav next" aria-label="Next"></button>
                                         </div>
                                     <?php else: ?>
                                         <p class="mb-0">Floor plans will be shared soon.</p>
@@ -1796,7 +1809,7 @@ $developerStats = array_values(array_filter([
             const section = document.querySelector('.hh-floorplans-01');
             if (!section) return;
             const canvas = section.querySelector('.fp-canvas');
-            const buttons = section.querySelectorAll('.fp-aside [data-bs-toggle="tab"]');
+            const buttons = Array.from(section.querySelectorAll('.fp-aside [data-bs-toggle="tab"]'));
             if (!canvas || buttons.length === 0) {
                 return;
             }
@@ -1807,21 +1820,151 @@ $developerStats = array_values(array_filter([
                 if (pane) pane.classList.add('active');
             }
 
-            const defaultTarget = buttons[0].getAttribute('data-bs-target');
-            if (defaultTarget) {
-                showPane(defaultTarget);
+            function activateButton(index) {
+                buttons.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                const btn = buttons[index];
+                if (!btn) {
+                    return;
+                }
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                const targetSel = btn.getAttribute('data-bs-target');
+                if (targetSel) {
+                    showPane(targetSel);
+                }
             }
 
-            buttons.forEach(btn => {
+            activateButton(0);
+
+            buttons.forEach((btn, index) => {
                 btn.addEventListener('click', function() {
-                    section.querySelectorAll('.fp-box').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const targetSel = this.getAttribute('data-bs-target');
-                    if (targetSel) {
-                        showPane(targetSel);
+                    activateButton(index);
+                });
+            });
+
+            const lightbox = section.querySelector('.fp-lightbox');
+            const lbImg = lightbox ? lightbox.querySelector('img') : null;
+            const viewButtons = Array.from(section.querySelectorAll('.fp-view'));
+            const planImages = Array.from(section.querySelectorAll('.fp-pane img[data-fp-index]'))
+                .map(img => {
+                    const planIndex = Number(img.getAttribute('data-fp-index'));
+                    if (Number.isNaN(planIndex)) {
+                        return null;
+                    }
+                    return { index: planIndex, el: img };
+                })
+                .filter(Boolean)
+                .sort((a, b) => a.index - b.index);
+            let lbIndex = 0;
+
+            function syncActive(index) {
+                activateButton(index);
+            }
+
+            function setLightboxImage(position) {
+                const item = planImages[position];
+                if (!lbImg || !item) {
+                    return;
+                }
+                const img = item.el;
+                lbImg.src = img.src;
+                lbImg.alt = img.alt || 'Floor plan preview';
+                lbIndex = position;
+                syncActive(item.index);
+            }
+
+            function openLightbox(index) {
+                if (!lightbox || !lbImg) {
+                    return;
+                }
+                const position = planImages.findIndex(item => item.index === index);
+                if (position === -1) {
+                    return;
+                }
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                setLightboxImage(position);
+            }
+
+            function closeLightbox() {
+                if (!lightbox) {
+                    return;
+                }
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+            }
+
+            function prevLightbox() {
+                if (!planImages.length) return;
+                const position = (lbIndex - 1 + planImages.length) % planImages.length;
+                setLightboxImage(position);
+            }
+
+            function nextLightbox() {
+                if (!planImages.length) return;
+                const position = (lbIndex + 1) % planImages.length;
+                setLightboxImage(position);
+            }
+
+            if (lightbox && planImages.length <= 1) {
+                lightbox.classList.add('single');
+            }
+
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const index = Number(btn.getAttribute('data-fp-index'));
+                    if (!Number.isNaN(index)) {
+                        event.stopPropagation();
+                        openLightbox(index);
                     }
                 });
             });
+
+            planImages.forEach(item => {
+                const img = item.el;
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', () => {
+                    openLightbox(item.index);
+                });
+            });
+
+            if (lightbox) {
+                const closeBtn = lightbox.querySelector('.fp-lightbox-close');
+                const prevBtn = lightbox.querySelector('.fp-lightbox-nav.prev');
+                const nextBtn = lightbox.querySelector('.fp-lightbox-nav.next');
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closeLightbox);
+                }
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', prevLightbox);
+                }
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', nextLightbox);
+                }
+
+                lightbox.addEventListener('click', (event) => {
+                    if (event.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+
+                window.addEventListener('keydown', (event) => {
+                    if (!lightbox.classList.contains('open')) {
+                        return;
+                    }
+                    if (event.key === 'Escape') {
+                        closeLightbox();
+                    } else if (event.key === 'ArrowLeft') {
+                        prevLightbox();
+                    } else if (event.key === 'ArrowRight') {
+                        nextLightbox();
+                    }
+                });
+            }
         })();
     </script>
 

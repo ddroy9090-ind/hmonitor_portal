@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/includes/config.php';
 
-$propertyId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$propertyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($propertyId <= 0) {
     http_response_code(404);
@@ -152,9 +152,9 @@ foreach ($floorPlansRaw as $plan) {
 
     $floorPlans[] = [
         'title' => isset($plan['title']) && is_string($plan['title']) ? trim($plan['title']) : '',
-        'area'  => isset($plan['area']) && is_string($plan['area']) ? trim($plan['area']) : '',
+        'area' => isset($plan['area']) && is_string($plan['area']) ? trim($plan['area']) : '',
         'price' => isset($plan['price']) && is_string($plan['price']) ? trim($plan['price']) : '',
-        'file'  => isset($plan['file']) && is_string($plan['file'])
+        'file' => isset($plan['file']) && is_string($plan['file'])
             ? ($normalizeImagePath($plan['file']) ?? trim($plan['file']))
             : '',
     ];
@@ -183,9 +183,9 @@ foreach ($locationAccessRaw as $item) {
 }
 
 if (!$locationAccess) {
-    $landmark = trim((string)($property['landmark_name'] ?? ''));
-    $distance = trim((string)($property['distance_time'] ?? ''));
-    $category = trim((string)($property['category'] ?? ''));
+    $landmark = trim((string) ($property['landmark_name'] ?? ''));
+    $distance = trim((string) ($property['distance_time'] ?? ''));
+    $category = trim((string) ($property['category'] ?? ''));
 
     if ($landmark !== '' || $distance !== '' || $category !== '') {
         $locationAccess[] = [
@@ -199,13 +199,13 @@ if (!$locationAccess) {
 $completionDate = null;
 if (!empty($property['completion_date'])) {
     try {
-        $completionDate = (new DateTime((string)$property['completion_date']))->format('F Y');
+        $completionDate = (new DateTime((string) $property['completion_date']))->format('F Y');
     } catch (Throwable $e) {
-        $completionDate = trim((string)$property['completion_date']);
+        $completionDate = trim((string) $property['completion_date']);
     }
 }
 
-$startingPrice = trim((string)($property['starting_price'] ?? ''));
+$startingPrice = trim((string) ($property['starting_price'] ?? ''));
 $startingPriceDisplay = $startingPrice;
 if ($startingPriceDisplay !== '' && stripos($startingPriceDisplay, 'aed') === false) {
     $startingPriceDisplay = 'AED ' . $startingPriceDisplay;
@@ -229,9 +229,9 @@ $permitBarcode = is_string($property['permit_barcode'] ?? '') && $property['perm
     ? $normalizeImagePath($property['permit_barcode'])
     : null;
 
-$videoLink = trim((string)($property['video_link'] ?? ''));
-$locationMap = trim((string)($property['location_map'] ?? ''));
-$brochure = trim((string)($property['brochure'] ?? ''));
+$videoLink = trim((string) ($property['video_link'] ?? ''));
+$locationMap = trim((string) ($property['location_map'] ?? ''));
+$brochure = trim((string) ($property['brochure'] ?? ''));
 
 $featureItems = array_values(array_filter([
     $property['project_status'] ?? null,
@@ -244,7 +244,7 @@ $featureItems = array_values(array_filter([
 ]));
 
 if (!empty($property['project_name'])) {
-    array_unshift($featureItems, 'Project Name: ' . trim((string)$property['project_name']));
+    array_unshift($featureItems, 'Project Name: ' . trim((string) $property['project_name']));
 }
 
 $amenitiesList = [];
@@ -262,7 +262,7 @@ $resolveAmenityIcon = static function (string $label): string {
     $normalized = trim($label);
     if ($normalized === '') {
         return 'bi bi-check-circle';
-    } 
+    }
 
     $lower = function_exists('mb_strtolower') ? mb_strtolower($normalized) : strtolower($normalized);
 
@@ -309,16 +309,16 @@ $aboutDeveloperParagraphs = $extractParagraphs($property['about_developer'] ?? n
 
 $specItems = [];
 if (!empty($property['bedroom'])) {
-    $specItems[] = ['icon' => 'assets/icons/bed.png', 'label' => trim((string)$property['bedroom']), 'suffix' => ' Bedrooms'];
+    $specItems[] = ['icon' => 'assets/icons/bed.png', 'label' => trim((string) $property['bedroom']), 'suffix' => ' Bedrooms'];
 }
 if (!empty($property['bathroom'])) {
-    $specItems[] = ['icon' => 'assets/icons/bathroom.png', 'label' => trim((string)$property['bathroom']), 'suffix' => ' Bathrooms'];
+    $specItems[] = ['icon' => 'assets/icons/bathroom.png', 'label' => trim((string) $property['bathroom']), 'suffix' => ' Bathrooms'];
 }
 if (!empty($property['parking'])) {
-    $specItems[] = ['icon' => 'assets/icons/parking.png', 'label' => trim((string)$property['parking']), 'suffix' => ' Parking'];
+    $specItems[] = ['icon' => 'assets/icons/parking.png', 'label' => trim((string) $property['parking']), 'suffix' => ' Parking'];
 }
 if (!empty($property['total_area'])) {
-    $specItems[] = ['icon' => 'assets/icons/area.png', 'label' => trim((string)$property['total_area']), 'suffix' => ''];
+    $specItems[] = ['icon' => 'assets/icons/area.png', 'label' => trim((string) $property['total_area']), 'suffix' => ''];
 }
 if ($completionDate) {
     $specItems[] = ['icon' => 'assets/icons/calendar.png', 'label' => $completionDate, 'suffix' => ' Completion'];
@@ -329,29 +329,29 @@ $investmentHighlights = array_filter([
     ['label' => 'Capital Growth', 'value' => $property['capital_growth'] ?? null, 'note' => ''],
     ['label' => 'Occupancy Rate', 'value' => $property['occupancy_rate'] ?? null, 'note' => ''],
     ['label' => 'Resale Value', 'value' => $property['resale_value'] ?? null, 'note' => ''],
-], static fn($item) => isset($item['value']) && trim((string)$item['value']) !== '');
+], static fn($item) => isset($item['value']) && trim((string) $item['value']) !== '');
 
 $paymentSchedule = array_filter([
     ['title' => 'Booking Amount', 'percentage' => $property['booking_percentage'] ?? null, 'amount' => $property['booking_amount'] ?? null],
     ['title' => 'During Construction', 'percentage' => $property['during_construction_percentage'] ?? null, 'amount' => $property['during_construction_amount'] ?? null],
     ['title' => 'On Handover', 'percentage' => $property['handover_percentage'] ?? null, 'amount' => $property['handover_amount'] ?? null],
-], static fn($item) => (isset($item['percentage']) && trim((string)$item['percentage']) !== '') || (isset($item['amount']) && trim((string)$item['amount']) !== ''));
+], static fn($item) => (isset($item['percentage']) && trim((string) $item['percentage']) !== '') || (isset($item['amount']) && trim((string) $item['amount']) !== ''));
 
-$propertyTitle = trim((string)($property['property_title'] ?? ''));
+$propertyTitle = trim((string) ($property['property_title'] ?? ''));
 $titleText = $propertyTitle !== '' ? $propertyTitle : 'Property Details';
-$metaTitle = trim((string)($property['meta_title'] ?? ''));
+$metaTitle = trim((string) ($property['meta_title'] ?? ''));
 if ($metaTitle === '') {
     $metaTitle = $titleText;
 }
-$metaKeywords = trim((string)($property['meta_keywords'] ?? ''));
-$metaDescription = trim((string)($property['meta_description'] ?? ''));
+$metaKeywords = trim((string) ($property['meta_keywords'] ?? ''));
+$metaDescription = trim((string) ($property['meta_description'] ?? ''));
 
 $developerStats = array_values(array_filter([
     ['label' => 'Established', 'value' => $property['developer_established'] ?? null],
     ['label' => 'Completed Projects', 'value' => $property['completed_projects'] ?? null],
     ['label' => 'International Awards', 'value' => $property['international_awards'] ?? null],
     ['label' => 'On-Time Delivery', 'value' => $property['on_time_delivery'] ?? null],
-], static fn($stat) => isset($stat['value']) && trim((string)$stat['value']) !== ''));
+], static fn($stat) => isset($stat['value']) && trim((string) $stat['value']) !== ''));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -372,7 +372,7 @@ $developerStats = array_values(array_filter([
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/css/countrySelect.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="assets/css/properties.css">
@@ -382,40 +382,47 @@ $developerStats = array_values(array_filter([
 
 
     <!-- parent: .hh-property-hero -->
-    <div class="hh-property-hero " data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut" style="background-image: url('<?= htmlspecialchars($primaryImage, ENT_QUOTES, 'UTF-8') ?>');">
+    <div class="hh-property-hero " data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut"
+        style="background-image: url('<?= htmlspecialchars($primaryImage, ENT_QUOTES, 'UTF-8') ?>');">
         <!-- Top bar fixed at top of hero -->
         <div class="hh-property-hero-top">
             <a href="offplan-properties.php" class="hh-property-hero-back">← Back to Listings</a>
             <div class="hh-property-hero-top-actions">
-                <button type="button" class="hh-primarypill" onclick="openPopup()"><img width="14" src="assets/flaticons/phone.png" alt=""> Contact Agent</button>
+                <button type="button" class="hh-primarypill" onclick="openPopup()"><img width="14"
+                        src="assets/flaticons/phone.png" alt=""> Contact Agent</button>
             </div>
         </div>
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <!-- Info block -->
-                    <div class="hh-property-hero-info "  >
+                    <div class="hh-property-hero-info ">
                         <?php if (!empty($property['project_status']) || !empty($property['property_type'])): ?>
                             <div class="hh-property-hero-tags">
                                 <?php if (!empty($property['project_status'])): ?>
-                                    <span class="green"><?= htmlspecialchars($property['project_status'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span
+                                        class="green"><?= htmlspecialchars($property['project_status'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <?php endif; ?>
                                 <?php if (!empty($property['property_type'])): ?>
                                     <span><?= htmlspecialchars($property['property_type'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <?php endif; ?>
                             </div>
                         <?php endif; ?>
-                        <h1 ><?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?></h1>
+                        <h1><?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?></h1>
                         <?php if (!empty($property['project_name'])): ?>
-                            <p class="text-white fw-semibold mb-2 d-none">Project Name: <?= htmlspecialchars($property['project_name'], ENT_QUOTES, 'UTF-8') ?></p>
+                            <p class="text-white fw-semibold mb-2 d-none">Project Name:
+                                <?= htmlspecialchars($property['project_name'], ENT_QUOTES, 'UTF-8') ?></p>
                         <?php endif; ?>
                         <?php if (!empty($property['property_location'])): ?>
-                            <div class="hh-property-hero-loc"><img src="assets/icons/location.png" alt="" width="16"><?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?></div>
+                            <div class="hh-property-hero-loc"><img src="assets/icons/location.png" alt=""
+                                    width="16"><?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>
+                            </div>
                         <?php endif; ?>
                         <?php if ($startingPriceValue !== ''): ?>
                             <div class="hh-property-hero-price">
                                 <?php if ($startingPriceCurrency !== ''): ?>
-                                    <span class="AED"><?= htmlspecialchars($startingPriceCurrency, ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span
+                                        class="AED"><?= htmlspecialchars($startingPriceCurrency, ENT_QUOTES, 'UTF-8') ?></span>
                                     <?= htmlspecialchars($startingPriceValue, ENT_QUOTES, 'UTF-8') ?>
                                 <?php else: ?>
                                     <?= htmlspecialchars($startingPriceValue, ENT_QUOTES, 'UTF-8') ?>
@@ -427,7 +434,8 @@ $developerStats = array_values(array_filter([
                             <ul class="hh-property-hero-specs">
                                 <?php foreach ($specItems as $spec): ?>
                                     <li>
-                                        <img src="<?= htmlspecialchars($spec['icon'], ENT_QUOTES, 'UTF-8') ?>" alt="" width="16">
+                                        <img src="<?= htmlspecialchars($spec['icon'], ENT_QUOTES, 'UTF-8') ?>" alt=""
+                                            width="16">
                                         <?= htmlspecialchars(trim($spec['label'] . ' ' . $spec['suffix']), ENT_QUOTES, 'UTF-8') ?>
                                     </li>
                                 <?php endforeach; ?>
@@ -436,7 +444,8 @@ $developerStats = array_values(array_filter([
                     </div>
 
                     <!-- Bottom CTA buttons -->
-                    <div class="hh-property-hero-ctas " data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                    <div class="hh-property-hero-ctas " data-animation-in="animate__flipInX"
+                        data-animation-out="animate__flipOutX">
                         <button type="button" class="cta-solid" onclick="openPopup()">Enquire Now</button>
                         <button type="button" class="cta-outline" onclick="Brochurepopup()">Download Brochure</button>
                     </div>
@@ -447,13 +456,14 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-gallery-01 -->
-    <div class="hh-gallery-01 "  >
+    <div class="hh-gallery-01 ">
         <div class="container">
 
             <!-- Header -->
             <div class="row">
                 <div class="col-12">
-                    <div class="hh-gallery-01-head " data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp">
+                    <div class="hh-gallery-01-head " data-animation-in="animate__fadeInDown"
+                        data-animation-out="animate__fadeOutUp">
                         <h3>Property Gallery</h3>
                         <div class="hh-gallery-01-head-actions">
                             <button type="button" class="ghost" data-action="view-all">
@@ -463,7 +473,8 @@ $developerStats = array_values(array_filter([
                                 View All (<?= $galleryCount ?>)
                             </button>
                             <?php if ($videoLink !== ''): ?>
-                                <button type="button" class="solid" data-action="video" data-video="<?= htmlspecialchars($videoLink, ENT_QUOTES, 'UTF-8') ?>">
+                                <button type="button" class="solid" data-action="video"
+                                    data-video="<?= htmlspecialchars($videoLink, ENT_QUOTES, 'UTF-8') ?>">
                                     <svg width="18" height="18" viewBox="0 0 24 24">
                                         <path d="M4 5h11a2 2 0 0 1 2 2v1.5l3-2v11l-3-2V17a2 2 0 0 1-2 2H4z"
                                             fill="currentColor" />
@@ -480,7 +491,8 @@ $developerStats = array_values(array_filter([
             <div class="row">
                 <!-- Left: Gallery -->
                 <div class="col-12 col-lg-8">
-                    <div class="hh-gallery-01-wrap " data-animation-in="animate__fadeInLeft" data-animation-out="animate__fadeOutLeft">
+                    <div class="hh-gallery-01-wrap " data-animation-in="animate__fadeInLeft"
+                        data-animation-out="animate__fadeOutLeft">
 
                         <!-- Main swiper -->
                         <div class="swiper hh-gallery-01-main">
@@ -488,7 +500,8 @@ $developerStats = array_values(array_filter([
                                 <?php if ($galleryImages): ?>
                                     <?php foreach ($galleryImages as $image): ?>
                                         <div class="swiper-slide">
-                                            <img src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                                            <img src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8') ?>"
+                                                alt="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -508,8 +521,12 @@ $developerStats = array_values(array_filter([
                                         fill="currentColor" />
                                 </svg>
                             </button>
-                            <div class="fraction"><span><?= $galleryCount > 0 ? 1 : 0 ?></span> of <span><?= $galleryCount ?></span></div>
-                            <div class="progress"><i style="width: <?= $galleryCount > 0 ? 100 / max($galleryCount, 1) : 0 ?>%"></i></div>
+                            <div class="fraction"><span><?= $galleryCount > 0 ? 1 : 0 ?></span> of
+                                <span><?= $galleryCount ?></span>
+                            </div>
+                            <div class="progress"><i
+                                    style="width: <?= $galleryCount > 0 ? 100 / max($galleryCount, 1) : 0 ?>%"></i>
+                            </div>
                         </div>
 
                         <!-- Thumbs swiper -->
@@ -517,10 +534,12 @@ $developerStats = array_values(array_filter([
                             <div class="swiper-wrapper">
                                 <?php if ($galleryImages): ?>
                                     <?php foreach ($galleryImages as $image): ?>
-                                        <div class="swiper-slide"><img src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8') ?>" alt=""></div>
+                                        <div class="swiper-slide"><img
+                                                src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8') ?>" alt=""></div>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <div class="swiper-slide"><img src="assets/images/offplan/breez-by-danube.webp" alt=""></div>
+                                    <div class="swiper-slide"><img src="assets/images/offplan/breez-by-danube.webp" alt="">
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -529,7 +548,8 @@ $developerStats = array_values(array_filter([
 
                 <!-- Right: Agent panel -->
                 <div class="col-12 col-lg-4">
-                    <aside class="hh-gallery-01-agent " data-animation-in="animate__flipInY" data-animation-out="animate__flipOutY">
+                    <aside class="hh-gallery-01-agent " data-animation-in="animate__flipInY"
+                        data-animation-out="animate__flipOutY">
                         <div class="card-head">
                             <div class="avatar">
                                 <svg width="28" height="28" viewBox="0 0 24 24">
@@ -564,10 +584,10 @@ $developerStats = array_values(array_filter([
                         </button>
 
                         <div class="actions">
-                            <button type="button">
+                            <!-- <button type="button">
                                 <img src="assets/icons/video-call.png" alt="" width="20">
                                 3D Virtual Tour
-                            </button>
+                            </button> -->
                             <button type="button" onclick="Brochurepopup()">
                                 <img src="assets/icons/brochure-download.png" alt="" width="20">
                                 Download Brochure
@@ -592,12 +612,13 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-details-01 -->
-    <div class="hh-details-01 "  >
+    <div class="hh-details-01 ">
         <div class="container">
             <!-- Body -->
             <div class="row">
                 <div class="col-12 col-lg-8">
-                    <nav class="hh-tabs " data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp" role="tablist" aria-label="Property details tabs">
+                    <nav class="hh-tabs " data-animation-in="animate__fadeInDown"
+                        data-animation-out="animate__fadeOutUp" role="tablist" aria-label="Property details tabs">
                         <ul>
                             <li>
                                 <button id="hh-tab-overview-btn" type="button" class="active" role="tab"
@@ -638,11 +659,12 @@ $developerStats = array_values(array_filter([
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-12 p-0">
-                                        <div class="project-overview "  >
+                                        <div class="project-overview ">
                                             <div class="project-header">
                                                 <h3><?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?></h3>
                                                 <?php if (!empty($property['property_location'])): ?>
-                                                    <h6><?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?></h6>
+                                                    <h6><?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>
+                                                    </h6>
                                                 <?php endif; ?>
                                             </div>
                                             <?php foreach ($aboutProjectParagraphs as $paragraph): ?>
@@ -659,7 +681,7 @@ $developerStats = array_values(array_filter([
                         <div id="hh-tab-features" class="tab-pane fade" role="tabpanel"
                             aria-labelledby="hh-tab-features-btn">
                             <!-- parent: .hh-amenities-01 -->
-                            <div class="hh-amenities-01 "  >
+                            <div class="hh-amenities-01 ">
                                 <div class="container-fluid">
                                     <h3>Key Features & Amenities</h3>
                                     <?php if ($amenitiesList): ?>
@@ -667,7 +689,8 @@ $developerStats = array_values(array_filter([
                                             <?php foreach ($amenitiesList as $amenity): ?>
                                                 <?php $iconClass = $resolveAmenityIcon($amenity); ?>
                                                 <li>
-                                                    <i class="<?= htmlspecialchars($iconClass, ENT_QUOTES, 'UTF-8') ?>" aria-hidden="true"></i>
+                                                    <i class="<?= htmlspecialchars($iconClass, ENT_QUOTES, 'UTF-8') ?>"
+                                                        aria-hidden="true"></i>
                                                     <span><?= htmlspecialchars($amenity, ENT_QUOTES, 'UTF-8') ?></span>
                                                 </li>
                                             <?php endforeach; ?>
@@ -677,7 +700,8 @@ $developerStats = array_values(array_filter([
                                             <?php foreach ($featureItems as $item): ?>
                                                 <?php $iconClass = $resolveAmenityIcon($item); ?>
                                                 <li>
-                                                    <i class="<?= htmlspecialchars($iconClass, ENT_QUOTES, 'UTF-8') ?>" aria-hidden="true"></i>
+                                                    <i class="<?= htmlspecialchars($iconClass, ENT_QUOTES, 'UTF-8') ?>"
+                                                        aria-hidden="true"></i>
                                                     <span><?= htmlspecialchars($item, ENT_QUOTES, 'UTF-8') ?></span>
                                                 </li>
                                             <?php endforeach; ?>
@@ -691,7 +715,7 @@ $developerStats = array_values(array_filter([
 
                         <!-- Floor Plan -->
                         <div id="hh-tab-floor" class="tab-pane fade" role="tabpanel" aria-labelledby="hh-tab-floor-btn">
-                            <div class="hh-floorplans-01 "  >
+                            <div class="hh-floorplans-01 ">
                                 <div class="container-fluid">
                                     <?php if ($floorPlans): ?>
                                         <div class="row">
@@ -699,9 +723,11 @@ $developerStats = array_values(array_filter([
                                                 <div class="fp-canvas">
                                                     <?php foreach ($floorPlans as $index => $plan): ?>
                                                         <?php $paneId = 'fp-tab-' . $index; ?>
-                                                        <div class="fp-pane<?= $index === 0 ? ' active' : '' ?>" id="<?= htmlspecialchars($paneId, ENT_QUOTES, 'UTF-8') ?>">
+                                                        <div class="fp-pane<?= $index === 0 ? ' active' : '' ?>"
+                                                            id="<?= htmlspecialchars($paneId, ENT_QUOTES, 'UTF-8') ?>">
                                                             <?php if (!empty($plan['file'])): ?>
-                                                                <img src="<?= htmlspecialchars($plan['file'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars(($plan['title'] ?: 'Floor Plan') . ' layout', ENT_QUOTES, 'UTF-8') ?>">
+                                                                <img src="<?= htmlspecialchars($plan['file'], ENT_QUOTES, 'UTF-8') ?>"
+                                                                    alt="<?= htmlspecialchars(($plan['title'] ?: 'Floor Plan') . ' layout', ENT_QUOTES, 'UTF-8') ?>">
                                                             <?php else: ?>
                                                                 <div class="fp-placeholder">Floor plan preview not available.</div>
                                                             <?php endif; ?>
@@ -713,20 +739,28 @@ $developerStats = array_values(array_filter([
                                                 <aside class="fp-aside">
                                                     <?php foreach ($floorPlans as $index => $plan): ?>
                                                         <?php $targetId = '#fp-tab-' . $index; ?>
-                                                        <button type="button" class="fp-box<?= $index === 0 ? ' active' : '' ?>" data-bs-toggle="tab" data-bs-target="<?= htmlspecialchars($targetId, ENT_QUOTES, 'UTF-8') ?>">
+                                                        <button type="button" class="fp-box<?= $index === 0 ? ' active' : '' ?>"
+                                                            data-bs-toggle="tab"
+                                                            data-bs-target="<?= htmlspecialchars($targetId, ENT_QUOTES, 'UTF-8') ?>">
                                                             <div class="fp-box-head">
                                                                 <img src="assets/icons/floorplan.png" alt="">
-                                                                <div><strong><?= htmlspecialchars($plan['title'] ?: ('Floor Plan ' . ($index + 1)), ENT_QUOTES, 'UTF-8') ?></strong></div>
+                                                                <div>
+                                                                    <strong><?= htmlspecialchars($plan['title'] ?: ('Floor Plan ' . ($index + 1)), ENT_QUOTES, 'UTF-8') ?></strong>
+                                                                </div>
                                                             </div>
                                                             <ul class="fp-meta">
                                                                 <?php if (!empty($plan['area'])): ?>
-                                                                    <li><em>Total Area</em><b><?= htmlspecialchars($plan['area'], ENT_QUOTES, 'UTF-8') ?></b></li>
+                                                                    <li><em>Total
+                                                                            Area</em><b><?= htmlspecialchars($plan['area'], ENT_QUOTES, 'UTF-8') ?></b>
+                                                                    </li>
                                                                 <?php endif; ?>
                                                                 <?php if (!empty($property['bedroom'])): ?>
-                                                                    <li><em>Bedrooms</em><b><?= htmlspecialchars($property['bedroom'], ENT_QUOTES, 'UTF-8') ?></b></li>
+                                                                    <li><em>Bedrooms</em><b><?= htmlspecialchars($property['bedroom'], ENT_QUOTES, 'UTF-8') ?></b>
+                                                                    </li>
                                                                 <?php endif; ?>
                                                                 <?php if (!empty($plan['price'])): ?>
-                                                                    <li><em>Price</em><b><?= htmlspecialchars($plan['price'], ENT_QUOTES, 'UTF-8') ?></b></li>
+                                                                    <li><em>Price</em><b><?= htmlspecialchars($plan['price'], ENT_QUOTES, 'UTF-8') ?></b>
+                                                                    </li>
                                                                 <?php endif; ?>
                                                             </ul>
                                                         </button>
@@ -751,7 +785,8 @@ $developerStats = array_values(array_filter([
                                             <h4>About the Developer</h4>
                                         </div>
                                         <div class="col-12">
-                                            <section class="dev-card " data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                                            <section class="dev-card " data-animation-in="animate__flipInX"
+                                                data-animation-out="animate__flipOutX">
                                                 <div class="dev-head">
                                                     <div class="dev-ico">
                                                         <img src="assets/flaticons/residential.png" width="25" alt="">
@@ -766,11 +801,14 @@ $developerStats = array_values(array_filter([
                                                         <div class="col-lg-12">
                                                             <?php if ($developerLogo): ?>
                                                                 <div class="developer-profile-logo">
-                                                                    <img class="img-fluid" src="<?= htmlspecialchars($developerLogo, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($property['developer_name'] ?: 'Developer logo', ENT_QUOTES, 'UTF-8') ?>">
+                                                                    <img class="img-fluid"
+                                                                        src="<?= htmlspecialchars($developerLogo, ENT_QUOTES, 'UTF-8') ?>"
+                                                                        alt="<?= htmlspecialchars($property['developer_name'] ?: 'Developer logo', ENT_QUOTES, 'UTF-8') ?>">
                                                                 </div>
                                                             <?php endif; ?>
                                                             <?php foreach ($aboutDeveloperParagraphs as $paragraph): ?>
-                                                                <p><?= htmlspecialchars($paragraph, ENT_QUOTES, 'UTF-8') ?></p>
+                                                                <p><?= htmlspecialchars($paragraph, ENT_QUOTES, 'UTF-8') ?>
+                                                                </p>
                                                             <?php endforeach; ?>
                                                         </div>
                                                     </div>
@@ -803,7 +841,8 @@ $developerStats = array_values(array_filter([
                 <div class="col-12 col-lg-4">
                     <aside>
                         <!-- Contact Agent card -->
-                        <div class="agent-card " data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut">
+                        <div class="agent-card " data-animation-in="animate__fadeIn"
+                            data-animation-out="animate__fadeOut">
                             <div class="agent-title">Contact Agent</div>
 
                             <div class="agent-head">
@@ -817,8 +856,9 @@ $developerStats = array_values(array_filter([
                             </div>
 
                             <form>
-                                <input type="hidden" name="property_id" value="<?= (int)$propertyId ?>">
-                                <input type="hidden" name="property_title" value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                                <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
+                                <input type="hidden" name="property_title"
+                                    value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                                 <label>
                                     <span class="field-head">
                                         <img src="assets/icons/local-user.png" alt="" class="ico">
@@ -879,14 +919,14 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-invest-01 -->
-    <div class="hh-invest-01 "  >
+    <div class="hh-invest-01 ">
         <div class="container">
             <div class="row">
                 <!-- LEFT: Highlights + Payment Plan -->
                 <div class="col-12 col-lg-8">
 
                     <!-- Investment Highlights -->
-                    <section class="inv-high "  >
+                    <section class="inv-high ">
                         <header>
                             <span><img src="assets/icons/growth-chart.png" alt="" width="25"></span>
                             <h4>Investment Highlights</h4>
@@ -896,7 +936,7 @@ $developerStats = array_values(array_filter([
                             <div class="hi-grid">
                                 <?php foreach ($investmentHighlights as $highlight): ?>
                                     <div>
-                                        <strong><?= htmlspecialchars((string)$highlight['value'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                        <strong><?= htmlspecialchars((string) $highlight['value'], ENT_QUOTES, 'UTF-8') ?></strong>
                                         <span><?= htmlspecialchars($highlight['label'], ENT_QUOTES, 'UTF-8') ?></span>
                                         <?php if (!empty($highlight['note'])): ?>
                                             <em><?= htmlspecialchars($highlight['note'], ENT_QUOTES, 'UTF-8') ?></em>
@@ -910,7 +950,7 @@ $developerStats = array_values(array_filter([
                     </section>
 
                     <!-- Flexible Payment Plan -->
-                    <section class="pay-plan "  >
+                    <section class="pay-plan ">
                         <header>
                             <span><img src="assets/icons/wallet.png" alt="" width="25"></span>
                             <h4>Flexible Payment Plan</h4>
@@ -920,8 +960,8 @@ $developerStats = array_values(array_filter([
                             <div class="plan-list">
                                 <?php foreach ($paymentSchedule as $item): ?>
                                     <?php
-                                    $percentageText = trim((string)($item['percentage'] ?? ''));
-                                    $amountText = trim((string)($item['amount'] ?? ''));
+                                    $percentageText = trim((string) ($item['percentage'] ?? ''));
+                                    $amountText = trim((string) ($item['amount'] ?? ''));
                                     ?>
                                     <div class="plan-item">
                                         <?php if ($percentageText !== ''): ?>
@@ -949,8 +989,10 @@ $developerStats = array_values(array_filter([
                 </div>
 
                 <!-- RIGHT: Mortgage Calculator -->
-                <div class="col-12 col-lg-4 " data-animation-in="animate__fadeInRight" data-animation-out="animate__fadeOutRight">
-                    <aside class="mort-card " data-animation-in="animate__flipInY" data-animation-out="animate__flipOutY">
+                <div class="col-12 col-lg-4 " data-animation-in="animate__fadeInRight"
+                    data-animation-out="animate__fadeOutRight">
+                    <aside class="mort-card " data-animation-in="animate__flipInY"
+                        data-animation-out="animate__flipOutY">
                         <header>
                             <img src="assets/icons/mortgage.png" alt="" width="20">
                             <h5>Mortgage Calculator</h5>
@@ -1030,9 +1072,8 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-location-01 -->
-    <div class="hh-location-01 "  >
+    <div class="hh-location-01 ">
         <div class="container">
-
             <!-- Heading -->
             <div class="row">
                 <div class="col-12">
@@ -1042,7 +1083,8 @@ $developerStats = array_values(array_filter([
                             <h3>Prime Location &amp; Connectivity</h3>
                         </div>
                         <?php if (!empty($property['property_location'])): ?>
-                            <p class="locationP">Located at <?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>.</p>
+                            <p class="locationP">Located at
+                                <?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>.</p>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -1051,16 +1093,20 @@ $developerStats = array_values(array_filter([
             <!-- Main grid -->
             <div class="row">
                 <!-- LEFT: Map + Landmarks (col-lg-8) -->
-                <div class="col-12 col-lg-8 " data-animation-in="animate__fadeInLeft" data-animation-out="animate__fadeOutLeft">
+                <div class="col-12 col-lg-12 mb-5" data-animation-in="animate__fadeInLeft"
+                    data-animation-out="animate__fadeOutLeft">
                     <div class="row">
                         <!-- Map card -->
                         <div class="col-12 col-md-6">
-                            <div class="hh-location-01-map " data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut">
+                            <div class="hh-location-01-map " data-animation-in="animate__fadeIn"
+                                data-animation-out="animate__fadeOut">
                                 <?php if ($locationMap !== ''): ?>
                                     <?php if (stripos($locationMap, '<iframe') !== false): ?>
                                         <?= $locationMap ?>
                                     <?php else: ?>
-                                        <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%" height="290" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                        <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
+                                            height="290" style="border:0;" allowfullscreen loading="lazy"
+                                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <div class="map-placeholder">Location map coming soon.</div>
@@ -1070,7 +1116,7 @@ $developerStats = array_values(array_filter([
 
                         <!-- Landmarks list -->
                         <div class="col-12 col-md-6">
-                            <div class="hh-location-01-landmarks "  >
+                            <div class="hh-location-01-landmarks ">
 
                                 <?php if ($locationAccess): ?>
                                     <?php foreach ($locationAccess as $item): ?>
@@ -1100,61 +1146,80 @@ $developerStats = array_values(array_filter([
                 </div>
 
                 <!-- RIGHT: Permit + Quick Contact (col-lg-4) -->
-                <div class="col-12 col-lg-4 " data-animation-in="animate__fadeInRight" data-animation-out="animate__fadeOutRight">
-                    <div class="hh-location-01-side " data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                <div class="col-12 col-lg-12" data-animation-in="animate__fadeInRight"
+                    data-animation-out="animate__fadeOutRight">
+                    <div class="hh-location-01-side" data-animation-in="animate__flipInX"
+                        data-animation-out="animate__flipOutX">
 
-                    <!-- Permit card -->
-                    <div class="hh-location-01-permit " data-animation-in="animate__fadeIn" data-animation-out="animate__fadeOut">
-                        <div class="head">
-                            <strong>Property Permit</strong>
-                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Permit card -->
+                                <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
+                                    data-animation-out="animate__fadeOut">
+                                    <div class="head">
+                                        <strong>Property Permit</strong>
+                                    </div>
 
-                        <div class="qr-row">
-                            <?php if ($permitBarcode): ?>
-                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>" alt="Permit QR" />
-                            <?php endif; ?>
-                            <div class="permit-box">
-                                <span>Permit Number</span>
-                                <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                <?php if ($completionDate): ?>
-                                    <em>Completion: <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                <?php endif; ?>
+                                    <div class="qr-row">
+                                        <?php if ($permitBarcode): ?>
+                                            <img class="qr"
+                                                src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                                alt="Permit QR" />
+                                        <?php endif; ?>
+                                        <div class="permit-box">
+                                            <span>Permit Number</span>
+                                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                            <?php if ($completionDate): ?>
+                                                <em>Completion :
+                                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                            <?php endif; ?>
+                                            <p style="line-height: 1.6 !important; font-size: 14px;" class="mb-0">This property permit confirms official approval
+                                                and compliance with regulations. The project is authorized and scheduled
+                                                for completion in <?php if ($completionDate): ?>
+                                                    <em class="d-inline">
+                                                        <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                                    <?php endif; ?>, ensuring transparency and
+                                                    stakeholder confidence.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <!-- Quick contact -->
+                                <div class="hh-location-01-contact h-100">
+                                    <div class="head">
+                                        <strong>Quick Contact</strong>
+                                    </div>
+
+                                    <button type="button" class="call"
+                                        onclick="window.location.href='tel:+971 42554683'">
+                                        <img src="assets/flaticons/phone.png" alt="" />
+                                        <span>Call Now: +971 42554683</span>
+                                    </button>
+
+                                    <button type="button" class="email" onclick="openPopup()">
+                                        <img src="assets/flaticons/email.png" alt="" />
+                                        <span>Email Agent</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Quick contact -->
-                    <div class="hh-location-01-contact "  >
-                        <div class="head">
-                            <strong>Quick Contact</strong>
-                        </div>
-
-                        <button type="button" class="call" onclick="window.location.href='tel:+971 42554683'">
-                            <img src="assets/flaticons/phone.png" alt="" />
-                            <span>Call Now: +971 42554683</span>
-                        </button>
-
-                        <button type="button" class="email" onclick="openPopup()">
-                            <img src="assets/flaticons/email.png" alt="" />
-                            <span>Email Agent</span>
-                        </button>
-                    </div>
-
                 </div>
             </div>
-            </div>
-
         </div>
     </div>
 
 
     <!-- parent: .hh-cta-01 -->
-    <div class="hh-cta-01 "  >
+    <div class="hh-cta-01 ">
         <div class="container">
             <div class="row">
                 <div class="col-12">
 
-                    <div class="cta-banner " data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                    <div class="cta-banner " data-animation-in="animate__flipInX"
+                        data-animation-out="animate__flipOutX">
                         <h3>Ready to Invest in Your Future?</h3>
                         <p>Contact our property specialists today for exclusive pricing.</p>
 
@@ -1171,14 +1236,15 @@ $developerStats = array_values(array_filter([
     </div>
 
     <!-- parent: .hh-register-01 -->
-    <div class="hh-register-01 "  >
+    <div class="hh-register-01 ">
         <div class="container">
             <div class="row">
                 <div class="col-12">
 
-                    <form class="reg-card "   action="#" method="post" novalidate>
-                        <input type="hidden" name="property_id" value="<?= (int)$propertyId ?>">
-                        <input type="hidden" name="property_title" value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <form class="reg-card " action="#" method="post" novalidate>
+                        <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
+                        <input type="hidden" name="property_title"
+                            value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                         <div class="reg-head">
                             <h3>Register your interest</h3>
                             <p>Fill form below and our agent will contact you shortly.</p>
@@ -1373,8 +1439,9 @@ $developerStats = array_values(array_filter([
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
                 <form method="POST" class="appointment-form" action="danuber">
-                    <input type="hidden" name="property_id" value="<?= (int)$propertyId ?>">
-                    <input type="hidden" name="property_title" value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
+                    <input type="hidden" name="property_title"
+                        value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">
                         <label for="full_name">Enter Name</label>
                         <input type="text" name="name" id="full_name" class="form-control" required>
@@ -1421,9 +1488,11 @@ $developerStats = array_values(array_filter([
                     Get your brochure instantly. Enter your details below to access the download.
                 </p>
                 <form method="POST" class="appointment-form" action="download-brochure">
-                    <input type="hidden" name="property_id" value="<?= (int)$propertyId ?>">
-                    <input type="hidden" name="property_title" value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
-                    <input type="hidden" name="brochure_url" value="<?= htmlspecialchars($brochure, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
+                    <input type="hidden" name="property_title"
+                        value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="brochure_url"
+                        value="<?= htmlspecialchars($brochure, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">
                         <label for="brochure_name">Full Name</label>
                         <input type="text" name="brochure_name" id="brochure_name" class="form-control" required>

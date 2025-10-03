@@ -604,8 +604,10 @@ include 'includes/navbar.php';
                             <select>
                                 <option>Price: High to Low</option>
                                 <option>Price: Low to High</option>
-                                <option>Newest</option>
+                                <option>A to Z</option>
+                                <option>Newly</option>
                                 <option>Oldest</option>
+                                <option>Date</option>
                             </select>
                         </label>
                         <div class="hh-properties-01-toggle">

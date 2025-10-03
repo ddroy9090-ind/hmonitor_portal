@@ -463,9 +463,9 @@ $developerStats = array_values(array_filter([
                         <div class="info-card p-4 text-center h-100 text-white">
                             <img src="assets/icons/dollar.png" alt="Price" width="28" class="mb-2">
                             <div class="details">
-                                Starting From - 
+                                Starting From -
                                 <?= htmlspecialchars(trim($startingPriceCurrency . ' ' . $startingPriceValue), ENT_QUOTES, 'UTF-8') ?>
-                                 
+
                             </div>
                         </div>
                     </div>
@@ -479,7 +479,7 @@ $developerStats = array_values(array_filter([
                                     alt="icon" width="28" class="mb-2">
                                 <div class="details">
                                     <?= htmlspecialchars(trim($spec['label']), ENT_QUOTES, 'UTF-8') ?>
-                                    - 
+                                    -
                                     <?= htmlspecialchars(trim($spec['suffix']), ENT_QUOTES, 'UTF-8') ?>
                                 </div>
                                 <!-- <div class="small mt-1 details">
@@ -772,7 +772,10 @@ $developerStats = array_values(array_filter([
                                                                         data-fp-index="<?= $index ?>">
                                                                     <button type="button" class="fp-view" aria-label="View image"
                                                                         data-fp-index="<?= $index ?>">
-                                                                        <img src="assets/icons/plus.svg" alt="" aria-hidden="true">
+                                                                        <!-- <img src="assets/icons/plus.svg" alt="" aria-hidden="true"> -->
+                                                                        <svg width="18" height="18" viewBox="0 0 24 24">
+                                                                            <path d="M9 5H5v4H3V3h6v2zm6-2h6v6h-2V5h-4V3zM5 15H3v6h6v-2H5v-4zm16 0v6h-6v-2h4v-4h2z" fill="currentColor"></path>
+                                                                        </svg>
                                                                     </button>
                                                                 </div>
                                                             <?php else: ?>
@@ -1162,7 +1165,7 @@ $developerStats = array_values(array_filter([
                                         <?= $locationMap ?>
                                     <?php else: ?>
                                         <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
-                                            height="570px" style="border:0;" allowfullscreen loading="lazy"
+                                            height="500px" style="border:0;" allowfullscreen loading="lazy"
                                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                                     <?php endif; ?>
                                 <?php else: ?>
@@ -1854,7 +1857,10 @@ $developerStats = array_values(array_filter([
                     if (Number.isNaN(planIndex)) {
                         return null;
                     }
-                    return { index: planIndex, el: img };
+                    return {
+                        index: planIndex,
+                        el: img
+                    };
                 })
                 .filter(Boolean)
                 .sort((a, b) => a.index - b.index);

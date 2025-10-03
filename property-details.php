@@ -418,7 +418,7 @@ $developerStats = array_values(array_filter([
                                     width="16"><?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>
                             </div>
                         <?php endif; ?>
-                        <?php if ($startingPriceValue !== ''): ?>
+                        <!-- <?php if ($startingPriceValue !== ''): ?>
                             <div class="hh-property-hero-price">
                                 <?php if ($startingPriceCurrency !== ''): ?>
                                     <span
@@ -440,7 +440,7 @@ $developerStats = array_values(array_filter([
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
                     </div>
 
                     <!-- Bottom CTA buttons -->
@@ -454,6 +454,46 @@ $developerStats = array_values(array_filter([
             </div>
         </div>
     </div>
+
+    <section class="info-section">
+        <div class="container-fluid px-4">
+            <div class="row g-3">
+                <?php if ($startingPriceValue !== ''): ?>
+                    <div class="col-6 col-md-2">
+                        <div class="info-card p-4 text-center h-100 text-white">
+                            <img src="assets/icons/dollar.png" alt="Price" width="28" class="mb-2">
+                            <div class="details">
+                                Starting From - 
+                                <?= htmlspecialchars(trim($startingPriceCurrency . ' ' . $startingPriceValue), ENT_QUOTES, 'UTF-8') ?>
+                                 
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($specItems): ?>
+                    <?php foreach ($specItems as $spec): ?>
+                        <div class="col-6 col-md-2">
+                            <div class="info-card p-4 text-center h-100 text-white">
+                                <img src="<?= htmlspecialchars($spec['icon'], ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="icon" width="28" class="mb-2">
+                                <div class="details">
+                                    <?= htmlspecialchars(trim($spec['label']), ENT_QUOTES, 'UTF-8') ?>
+                                    - 
+                                    <?= htmlspecialchars(trim($spec['suffix']), ENT_QUOTES, 'UTF-8') ?>
+                                </div>
+                                <!-- <div class="small mt-1 details">
+                                    
+                                </div> -->
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </section>
+
+
 
     <!-- parent: .hh-gallery-01 -->
     <div class="hh-gallery-01 ">
@@ -631,7 +671,7 @@ $developerStats = array_values(array_filter([
                                 <button id="hh-tab-features-btn" type="button" role="tab" aria-selected="false"
                                     aria-controls="hh-tab-features" data-bs-toggle="tab"
                                     data-bs-target="#hh-tab-features">
-                                    Features
+                                    Key Features & Amenities
                                 </button>
                             </li>
                             <li>
@@ -787,14 +827,14 @@ $developerStats = array_values(array_filter([
                                         <div class="col-12">
                                             <section class="dev-card " data-animation-in="animate__flipInX"
                                                 data-animation-out="animate__flipOutX">
-                                                <div class="dev-head">
+                                                <!-- <div class="dev-head">
                                                     <div class="dev-ico">
                                                         <img src="assets/flaticons/residential.png" width="25" alt="">
                                                     </div>
                                                     <div class="dev-title">
                                                         <strong><?= htmlspecialchars($property['developer_name'] ?: 'Developer', ENT_QUOTES, 'UTF-8') ?></strong>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <div class="dev-body">
 
                                                     <div class="row justify-content-start align-items-center">
@@ -843,15 +883,14 @@ $developerStats = array_values(array_filter([
                         <!-- Contact Agent card -->
                         <div class="agent-card " data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
-                            <div class="agent-title">Contact Agent</div>
-
+                            <!-- <div class="agent-title">Contact Agent</div> -->
                             <div class="agent-head">
                                 <div class="avatar">
                                     <img src="assets/icons/chat.png" alt="">
                                 </div>
                                 <div class="agent-info">
-                                    <strong>Get in Touch</strong>
-                                    <span>Schedule your private viewing</span>
+                                    <strong>Contact Agent</strong>
+                                    <!-- <span>Schedule your private viewing</span> -->
                                 </div>
                             </div>
 
@@ -860,35 +899,35 @@ $developerStats = array_values(array_filter([
                                 <input type="hidden" name="property_title"
                                     value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                                 <label>
-                                    <span class="field-head">
+                                    <!-- <span class="field-head">
                                         <img src="assets/icons/local-user.png" alt="" class="ico">
                                         <span>Full Name *</span>
-                                    </span>
+                                    </span> -->
                                     <input type="text" placeholder="Enter your full name">
                                 </label>
 
                                 <label>
-                                    <span class="field-head">
+                                    <!-- <span class="field-head">
                                         <img src="assets/flaticons/email.png" alt="" class="ico">
                                         <span>Email Address *</span>
-                                    </span>
+                                    </span> -->
                                     <input type="email" placeholder="your.email@example.com">
                                 </label>
 
                                 <label>
-                                    <span class="field-head">
+                                    <!-- <span class="field-head">
                                         <img src="assets/flaticons/phone.png" alt="" class="ico">
                                         <span>Phone Number *</span>
-                                    </span>
+                                    </span> -->
                                     <input type="tel" name="phone" id="phone" placeholder="+971 50 123 4567">
                                 </label>
 
 
                                 <label>
-                                    <span class="field-head">
+                                    <!-- <span class="field-head">
                                         <img src="assets/icons/conversation.png" alt="" class="ico">
                                         <span>Inquiry Type</span>
-                                    </span>
+                                    </span> -->
                                     <div class="select-ico ">
                                         <select class="form-control select-dropDownClass">
                                             <option>Select inquiry type</option>
@@ -900,16 +939,21 @@ $developerStats = array_values(array_filter([
                                 </label>
 
                                 <label>
-                                    <span class="field-head">
+                                    <!-- <span class="field-head">
                                         <img src="assets/icons/message.png" alt="" class="ico">
                                         <span>Additional Message</span>
-                                    </span>
-                                    <textarea rows="4" placeholder="Any specific questions or requirements…"></textarea>
+                                    </span> -->
+                                    <textarea placeholder="Any specific questions or requirements…"></textarea>
                                 </label>
 
                                 <div class="g-recaptcha" data-sitekey="6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM"></div>
 
                                 <button type="button" class="send">Send Message</button>
+                                <p class="reg-note terms-and-privacy">
+                                    By clicking Submit, you agree to our
+                                    <a href="terms-and-conditions.php">Terms</a> &amp;
+                                    <a href="privacy-policy.php">Privacy Policy</a>.
+                                </p>
                             </form>
                         </div>
                     </aside>
@@ -994,7 +1038,7 @@ $developerStats = array_values(array_filter([
                     <aside class="mort-card " data-animation-in="animate__flipInY"
                         data-animation-out="animate__flipOutY">
                         <header>
-                            <img src="assets/icons/mortgage.png" alt="" width="20">
+                            <!-- <img src="assets/icons/mortgage.png" alt="" width="20"> -->
                             <h5>Mortgage Calculator</h5>
                         </header>
 
@@ -1018,7 +1062,7 @@ $developerStats = array_values(array_filter([
                         <!-- Down payment -->
                         <div class="range-row">
                             <div class="r-label">
-                                <span>Down Payment: <b id="mc-dp-lbl">25%</b> (<b id="mc-dp-amt">AED 625,000</b>)</span>
+                                <span>Down Payment : <b id="mc-dp-lbl">25%</b> (<b id="mc-dp-amt">AED 625,000</b>)</span>
                             </div>
                             <input id="mc-dp" type="range" min="10" max="50" step="1" value="25" />
                             <div class="r-scale">
@@ -1029,7 +1073,7 @@ $developerStats = array_values(array_filter([
                         <!-- Loan term -->
                         <div class="range-row">
                             <div class="r-label">
-                                <span>Loan Term: <b id="mc-term-lbl">25 years</b></span>
+                                <span>Loan Term : <b id="mc-term-lbl">25 years</b></span>
                             </div>
                             <input id="mc-term" type="range" min="10" max="35" step="1" value="25" />
                             <div class="r-scale">
@@ -1079,7 +1123,7 @@ $developerStats = array_values(array_filter([
                 <div class="col-12">
                     <div class="" data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp">
                         <div class="hh-location-01-head">
-                            <img src="assets/icons/location.png" alt="" />
+                            <!-- <img src="assets/icons/location.png" alt="" /> -->
                             <h3>Prime Location &amp; Connectivity</h3>
                         </div>
                         <?php if (!empty($property['property_location'])): ?>
@@ -1105,7 +1149,7 @@ $developerStats = array_values(array_filter([
                                         <?= $locationMap ?>
                                     <?php else: ?>
                                         <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
-                                            height="290" style="border:0;" allowfullscreen loading="lazy"
+                                            height="570px" style="border:0;" allowfullscreen loading="lazy"
                                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                                     <?php endif; ?>
                                 <?php else: ?>
@@ -1116,32 +1160,75 @@ $developerStats = array_values(array_filter([
 
                         <!-- Landmarks list -->
                         <div class="col-12 col-md-6">
-                            <div class="hh-location-01-landmarks ">
-
+                            <div class="hh-location-01-landmarks">
                                 <?php if ($locationAccess): ?>
-                                    <?php foreach ($locationAccess as $item): ?>
-                                        <button type="button">
-                                            <div class="left">
-                                                <img class="dot" src="assets/icons/dot-green.png" alt="" />
-                                                <div>
-                                                    <b><?= htmlspecialchars($item['landmark'], ENT_QUOTES, 'UTF-8') ?></b>
+                                    <ul class="list-unstyled landmarks-list">
+                                        <?php foreach ($locationAccess as $item): ?>
+                                            <li class="d-flex align-items-center mb-2">
+                                                <div class="d-flex align-items-center">
+                                                    <img class="dot me-2" src="assets/icons/dot-green.png" alt="">
+                                                    <span class="fw-semibold">
+                                                        <?= htmlspecialchars($item['landmark'], ENT_QUOTES, 'UTF-8') ?>
+                                                    </span>
                                                 </div>
-                                            </div>
-                                            <div class="right">
-                                                <?php if ($item['distance'] !== ''): ?>
-                                                    <span><?= htmlspecialchars($item['distance'], ENT_QUOTES, 'UTF-8') ?></span>
-                                                <?php endif; ?>
-                                                <?php if ($item['category'] !== ''): ?>
-                                                    <em><?= htmlspecialchars($item['category'], ENT_QUOTES, 'UTF-8') ?></em>
-                                                <?php endif; ?>
-                                            </div>
-                                        </button>
-                                    <?php endforeach; ?>
+                                                <div class="text-end">
+                                                    <?php if ($item['distance'] !== ''): ?>
+                                                        <span class="me-2"><?= htmlspecialchars($item['distance'], ENT_QUOTES, 'UTF-8') ?></span>
+                                                    <?php endif; ?>
+                                                    <?php if ($item['category'] !== ''): ?>
+                                                        <span class="text-white"><?= htmlspecialchars($item['category'], ENT_QUOTES, 'UTF-8') ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 <?php else: ?>
                                     <p class="mb-0">Connectivity details will be available soon.</p>
                                 <?php endif; ?>
                             </div>
+                            <!-- Permit card -->
+                            <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
+                                data-animation-out="animate__fadeOut">
+                                <div class="head">
+                                    <strong>Property Permit</strong>
+                                </div>
+
+                                <div class="qr-row">
+                                    <?php if ($permitBarcode): ?>
+                                        <img class="qr"
+                                            src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                            alt="Permit QR" />
+                                    <?php endif; ?>
+                                    <div class="permit-box h-100">
+                                        <span>Permit Number</span>
+                                        <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                        <?php if ($completionDate): ?>
+                                            <em>Completion :
+                                                <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Quick contact -->
+                            <div class="hh-location-01-contact">
+                                <div class="head">
+                                    <strong>Quick Contact</strong>
+                                </div>
+
+                                <button type="button" class="call"
+                                    onclick="window.location.href='tel:+971 42554683'">
+                                    <img src="assets/flaticons/phone.png" alt="" />
+                                    <span>Call Now: +971 42554683</span>
+                                </button>
+
+                                <button type="button" class="email" onclick="openPopup()">
+                                    <img src="assets/flaticons/email.png" alt="" />
+                                    <span>Email Agent</span>
+                                </button>
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
 
@@ -1153,56 +1240,10 @@ $developerStats = array_values(array_filter([
 
                         <div class="row">
                             <div class="col-lg-6">
-                                <!-- Permit card -->
-                                <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
-                                    data-animation-out="animate__fadeOut">
-                                    <div class="head">
-                                        <strong>Property Permit</strong>
-                                    </div>
 
-                                    <div class="qr-row">
-                                        <?php if ($permitBarcode): ?>
-                                            <img class="qr"
-                                                src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                                alt="Permit QR" />
-                                        <?php endif; ?>
-                                        <div class="permit-box">
-                                            <span>Permit Number</span>
-                                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                            <?php if ($completionDate): ?>
-                                                <em>Completion :
-                                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                            <?php endif; ?>
-                                            <p style="line-height: 1.6 !important; font-size: 14px;" class="mb-0">This property permit confirms official approval
-                                                and compliance with regulations. The project is authorized and scheduled
-                                                for completion in <?php if ($completionDate): ?>
-                                                    <em class="d-inline">
-                                                        <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                                    <?php endif; ?>, ensuring transparency and
-                                                    stakeholder confidence.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="col-lg-6">
-                                <!-- Quick contact -->
-                                <div class="hh-location-01-contact h-100">
-                                    <div class="head">
-                                        <strong>Quick Contact</strong>
-                                    </div>
 
-                                    <button type="button" class="call"
-                                        onclick="window.location.href='tel:+971 42554683'">
-                                        <img src="assets/flaticons/phone.png" alt="" />
-                                        <span>Call Now: +971 42554683</span>
-                                    </button>
-
-                                    <button type="button" class="email" onclick="openPopup()">
-                                        <img src="assets/flaticons/email.png" alt="" />
-                                        <span>Email Agent</span>
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1211,6 +1252,70 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
+    <!-- parent: .hh-register-01 -->
+    <div class="hh-register-01 ">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12">
+
+                    <form class="reg-card " action="#" method="post" novalidate>
+                        <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
+                        <input type="hidden" name="property_title"
+                            value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                        <div class="reg-head">
+                            <h3>Register your interest</h3>
+                            <p>Fill form below and our agent will contact you shortly.</p>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-12 col-lg-4">
+                                <!-- <label for="ri-name">Full Name*</label> -->
+                                <input id="ri-name" name="full_name" type="text" placeholder="Full Name*">
+                            </div>
+
+                            <div class="col-12 col-lg-4">
+                                <!-- <label for="ri-email">Email*</label> -->
+                                <input id="ri-email" name="email" type="email" placeholder="Email Address*">
+                            </div>
+
+                            <div class="col-12 col-lg-4">
+                                <!-- <label for="ri-mobile">Mobile*</label> -->
+                                <input id="ri-mobile" name="mobile" type="tel" placeholder="50 123 4567">
+                            </div>
+
+                            <div class="col-12 col-lg-4">
+                                <!-- <label for="ri-project">Interested In*</label> -->
+                                <select id="ri-project" name="project_name" class="select-dropDownClass">
+                                    <option value="">Interested In</option>
+                                    <option value="jumeirah-reside">Secondary</option>
+                                    <option value="downtown-dubai">Offplan</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-12 col-lg-4">
+                                <!-- <label for="ri-budget">Select Country*</label> -->
+                                <input id="ri-budget" name="budget_range" type="text" placeholder="Budget Range*">
+                            </div>
+
+                            <div class="col-12 col-lg-4">
+                                <!-- <label class="only-for-space">&nbsp;</label> -->
+                                <button type="submit" class="submit-btn">Submit Details</button>
+                            </div>
+                        </div>
+
+                        <p class="reg-note">
+                            By clicking Submit, you agree to our
+                            <a href="terms-and-conditions.php">Terms</a> &amp;
+                            <a href="privacy-policy.php">Privacy Policy</a>.
+                        </p>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- parent: .hh-cta-01 -->
     <div class="hh-cta-01 ">
@@ -1235,70 +1340,6 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-    <!-- parent: .hh-register-01 -->
-    <div class="hh-register-01 ">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-
-                    <form class="reg-card " action="#" method="post" novalidate>
-                        <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
-                        <input type="hidden" name="property_title"
-                            value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
-                        <div class="reg-head">
-                            <h3>Register your interest</h3>
-                            <p>Fill form below and our agent will contact you shortly.</p>
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-12 col-lg-4">
-                                <label for="ri-name">Full Name*</label>
-                                <input id="ri-name" name="full_name" type="text" placeholder="Full Name*">
-                            </div>
-
-                            <div class="col-12 col-lg-4">
-                                <label for="ri-email">Email*</label>
-                                <input id="ri-email" name="email" type="email" placeholder="Email Address*">
-                            </div>
-
-                            <div class="col-12 col-lg-4">
-                                <label for="ri-mobile">Mobile*</label>
-                                <input id="ri-mobile" name="mobile" type="tel" placeholder="50 123 4567">
-                            </div>
-
-                            <div class="col-12 col-lg-4">
-                                <label for="ri-project">Interested In*</label>
-                                <select id="ri-project" name="project_name" class="select-dropDownClass">
-                                    <option value="">Interested In</option>
-                                    <option value="jumeirah-reside">Secondary</option>
-                                    <option value="downtown-dubai">Offplan</option>
-                                </select>
-                            </div>
-
-
-                            <div class="col-12 col-lg-4">
-                                <label for="ri-budget">Select Country*</label>
-                                <input id="ri-budget" name="budget_range" type="text" placeholder="Budget Range*">
-                            </div>
-
-                            <div class="col-12 col-lg-4">
-                                <label class="only-for-space">&nbsp;</label>
-                                <button type="submit" class="submit-btn">Submit Details</button>
-                            </div>
-                        </div>
-
-                        <p class="reg-note">
-                            By clicking Submit, you agree to our
-                            <a href="terms-and-conditions.php">Terms</a> &amp;
-                            <a href="privacy-policy.php">Privacy Policy</a>.
-                        </p>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- footer five start -->
     <div class="footer-section-five">

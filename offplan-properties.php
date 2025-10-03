@@ -27,6 +27,15 @@ $sanitizeNumericString = static function ($value): string {
     return $value !== '' && ctype_digit($value) ? $value : '';
 };
 
+$allowedSortOptions = [
+    'price_desc',
+    'price_asc',
+    'name_asc',
+    'newest',
+    'oldest',
+    'completion_date',
+];
+
 $filters = [
     'q' => trim((string)(filter_input(INPUT_GET, 'q', FILTER_UNSAFE_RAW) ?? '')),
     'project_name' => trim((string)(filter_input(INPUT_GET, 'project_name', FILTER_UNSAFE_RAW) ?? '')),
@@ -37,7 +46,12 @@ $filters = [
     'completion_year' => filter_input(INPUT_GET, 'completion_year', FILTER_VALIDATE_INT) ?: '',
     'min_price' => $sanitizeNumericString(filter_input(INPUT_GET, 'min_price', FILTER_UNSAFE_RAW)),
     'max_price' => $sanitizeNumericString(filter_input(INPUT_GET, 'max_price', FILTER_UNSAFE_RAW)),
+    'sort' => trim((string)(filter_input(INPUT_GET, 'sort', FILTER_UNSAFE_RAW) ?? '')),
 ];
+
+if ($filters['sort'] !== '' && !in_array($filters['sort'], $allowedSortOptions, true)) {
+    $filters['sort'] = '';
+}
 
 $minPriceValue = $filters['min_price'] !== '' ? (float)$filters['min_price'] : null;
 $maxPriceValue = $filters['max_price'] !== '' ? (float)$filters['max_price'] : null;
@@ -211,6 +225,182 @@ try {
     }
 
     $filteredProperties = array_values($filteredProperties);
+
+    $sortOption = $filters['sort'] ?: 'newest';
+
+    $getComparableName = static function (array $property): string {
+        $name = '';
+        if (isset($property['project_name']) && is_string($property['project_name'])) {
+            $name = trim($property['project_name']);
+        }
+
+        if ($name === '' && isset($property['property_title']) && is_string($property['property_title'])) {
+            $name = trim($property['property_title']);
+        }
+
+        if ($name === '') {
+            return '';
+        }
+
+        if (function_exists('mb_strtolower')) {
+            return mb_strtolower($name, 'UTF-8');
+        }
+
+        return strtolower($name);
+    };
+
+    $getCompletionDateTimestamp = static function (array $property): ?int {
+        if (empty($property['completion_date']) || !is_string($property['completion_date'])) {
+            return null;
+        }
+
+        $timestamp = strtotime($property['completion_date']);
+
+        return $timestamp !== false ? $timestamp : null;
+    };
+
+    $getCreatedAtTimestamp = static function (array $property): ?int {
+        if (empty($property['created_at']) || !is_string($property['created_at'])) {
+            return null;
+        }
+
+        $timestamp = strtotime($property['created_at']);
+
+        return $timestamp !== false ? $timestamp : null;
+    };
+
+    $getPriceValue = static function (array $property) use ($parsePriceToNumber): ?float {
+        return $parsePriceToNumber($property['starting_price'] ?? null);
+    };
+
+    switch ($sortOption) {
+        case 'price_desc':
+            usort($filteredProperties, static function (array $a, array $b) use ($getPriceValue): int {
+                $priceA = $getPriceValue($a);
+                $priceB = $getPriceValue($b);
+
+                if ($priceA === $priceB) {
+                    return 0;
+                }
+
+                if ($priceA === null) {
+                    return 1;
+                }
+
+                if ($priceB === null) {
+                    return -1;
+                }
+
+                return $priceB <=> $priceA;
+            });
+            break;
+
+        case 'price_asc':
+            usort($filteredProperties, static function (array $a, array $b) use ($getPriceValue): int {
+                $priceA = $getPriceValue($a);
+                $priceB = $getPriceValue($b);
+
+                if ($priceA === $priceB) {
+                    return 0;
+                }
+
+                if ($priceA === null) {
+                    return 1;
+                }
+
+                if ($priceB === null) {
+                    return -1;
+                }
+
+                return $priceA <=> $priceB;
+            });
+            break;
+
+        case 'name_asc':
+            usort($filteredProperties, static function (array $a, array $b) use ($getComparableName): int {
+                $nameA = $getComparableName($a);
+                $nameB = $getComparableName($b);
+
+                if ($nameA === $nameB) {
+                    return 0;
+                }
+
+                if ($nameA === '') {
+                    return 1;
+                }
+
+                if ($nameB === '') {
+                    return -1;
+                }
+
+                return strcmp($nameA, $nameB);
+            });
+            break;
+
+        case 'oldest':
+            usort($filteredProperties, static function (array $a, array $b) use ($getCreatedAtTimestamp): int {
+                $createdA = $getCreatedAtTimestamp($a);
+                $createdB = $getCreatedAtTimestamp($b);
+
+                if ($createdA === $createdB) {
+                    return 0;
+                }
+
+                if ($createdA === null) {
+                    return 1;
+                }
+
+                if ($createdB === null) {
+                    return -1;
+                }
+
+                return $createdA <=> $createdB;
+            });
+            break;
+
+        case 'completion_date':
+            usort($filteredProperties, static function (array $a, array $b) use ($getCompletionDateTimestamp): int {
+                $completionA = $getCompletionDateTimestamp($a);
+                $completionB = $getCompletionDateTimestamp($b);
+
+                if ($completionA === $completionB) {
+                    return 0;
+                }
+
+                if ($completionA === null) {
+                    return 1;
+                }
+
+                if ($completionB === null) {
+                    return -1;
+                }
+
+                return $completionA <=> $completionB;
+            });
+            break;
+
+        case 'newest':
+        default:
+            usort($filteredProperties, static function (array $a, array $b) use ($getCreatedAtTimestamp): int {
+                $createdA = $getCreatedAtTimestamp($a);
+                $createdB = $getCreatedAtTimestamp($b);
+
+                if ($createdA === $createdB) {
+                    return 0;
+                }
+
+                if ($createdA === null) {
+                    return 1;
+                }
+
+                if ($createdB === null) {
+                    return -1;
+                }
+
+                return $createdB <=> $createdA;
+            });
+            break;
+    }
     $propertyCount = count($filteredProperties);
 
     if ($propertyCount === 0) {
@@ -292,7 +482,7 @@ $maxPriceOptions = [
 ];
 
 $filterQueryParams = [];
-foreach (['q', 'project_name', 'location', 'property_type', 'bedrooms', 'location_query', 'completion_year', 'min_price', 'max_price'] as $key) {
+foreach (['q', 'project_name', 'location', 'property_type', 'bedrooms', 'location_query', 'completion_year', 'min_price', 'max_price', 'sort'] as $key) {
     $value = $filters[$key] ?? '';
     if ($value !== '' && $value !== null) {
         $filterQueryParams[$key] = (string)$value;
@@ -349,7 +539,7 @@ include 'includes/navbar.php';
         <!-- Property Details Filter Sections -->
         <div class="row">
             <div class="col-12">
-                <form method="get" action="offplan-properties.php">
+                <form id="offplan-filter-form" method="get" action="offplan-properties.php">
                     <input type="hidden" name="page" value="1">
                     <div class="container">
                         <div class="row align-items-center mb-4">
@@ -601,13 +791,17 @@ include 'includes/navbar.php';
                     <div>
                         <label>
                             Sort by:
-                            <select>
-                                <option>Price: High to Low</option>
-                                <option>Price: Low to High</option>
-                                <option>A to Z</option>
-                                <option>Newly</option>
-                                <option>Oldest</option>
-                                <option>Date</option>
+                            <select
+                                name="sort"
+                                form="offplan-filter-form"
+                                onchange="document.getElementById('offplan-filter-form').submit();"
+                            >
+                                <option value="price_desc" <?= $filters['sort'] === 'price_desc' ? 'selected' : '' ?>>Price: High to Low</option>
+                                <option value="price_asc" <?= $filters['sort'] === 'price_asc' ? 'selected' : '' ?>>Price: Low to High</option>
+                                <option value="name_asc" <?= $filters['sort'] === 'name_asc' ? 'selected' : '' ?>>A to Z</option>
+                                <option value="newest" <?= $filters['sort'] === 'newest' || $filters['sort'] === '' ? 'selected' : '' ?>>Newly</option>
+                                <option value="oldest" <?= $filters['sort'] === 'oldest' ? 'selected' : '' ?>>Oldest</option>
+                                <option value="completion_date" <?= $filters['sort'] === 'completion_date' ? 'selected' : '' ?>>Date</option>
                             </select>
                         </label>
                         <div class="hh-properties-01-toggle">

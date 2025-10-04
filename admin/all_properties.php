@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 try {
   $listStmt = $pdo->query(
-    'SELECT id, property_title, property_location, property_type, project_status, starting_price, created_at
+    'SELECT id, project_name, property_location, property_type, created_at
        FROM properties_list
       ORDER BY created_at DESC, id DESC'
   );
@@ -180,44 +180,24 @@ render_head('All Properties', 'dashboard-body');
               <thead class="table-light">
                 <tr>
                   <th scope="col">ID</th>
-                  <th scope="col">Property Title</th>
+                  <th scope="col">Project Name</th>
                   <th scope="col">Location</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Starting Price</th>
-                  <th scope="col">Created At</th>
-                  <th scope="col" class="text-end">Actions</th>
+                  <th scope="col">Property Type</th>
+                  <th scope="col" class="text-end">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <?php if ($properties === []): ?>
                   <tr>
-                    <td colspan="8" class="text-center py-4">No properties found.</td>
+                    <td colspan="5" class="text-center py-4">No properties found.</td>
                   </tr>
                 <?php else: ?>
                   <?php foreach ($properties as $property): ?>
                     <tr>
                       <td><?= htmlspecialchars((string)$property['id'], ENT_QUOTES, 'UTF-8'); ?></td>
-                      <td><?= htmlspecialchars((string)($property['property_title'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
+                      <td><?= htmlspecialchars((string)($property['project_name'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
                       <td><?= htmlspecialchars((string)($property['property_location'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
                       <td><?= htmlspecialchars((string)($property['property_type'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
-                      <td><?= htmlspecialchars((string)($property['project_status'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
-                      <td><?= htmlspecialchars((string)($property['starting_price'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
-                      <td>
-                        <?php
-                        $createdAt = $property['created_at'] ?? null;
-                        if ($createdAt) {
-                          try {
-                            $dt = new DateTimeImmutable((string)$createdAt);
-                            echo htmlspecialchars($dt->format('M j, Y g:i A'), ENT_QUOTES, 'UTF-8');
-                          } catch (Throwable $e) {
-                            echo htmlspecialchars((string)$createdAt, ENT_QUOTES, 'UTF-8');
-                          }
-                        } else {
-                          echo '—';
-                        }
-                        ?>
-                      </td>
                       <td class="text-end">
                         <div class="btn-group" role="group" aria-label="Property Actions">
                           <a

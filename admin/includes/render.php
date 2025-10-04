@@ -62,6 +62,16 @@ function render_sidebar(string $active): void
     ],
     [
       'type'  => 'dropdown',
+      'key'   => 'buy-properties',
+      'icon'  => 'bi-cart-check',
+      'label' => 'Buy Properties',
+      'items' => [
+        'add-buy-property'   => ['href' => 'add_buy_property.php', 'label' => 'Add Buy Property'],
+        'buy-properties-list' => ['href' => 'buy_properties_list.php', 'label' => 'Buy Properties List'],
+      ],
+    ],
+    [
+      'type'  => 'dropdown',
       'key'   => 'all-leads',
       'icon'  => 'bi-person-lines-fill',
       'label' => 'All Type Leads',

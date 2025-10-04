@@ -81,9 +81,9 @@ $recaptchaSiteKey = hh_recaptcha_site_key();
 <body class="custom-cursor">
 
     <!-- Preloader Start -->
-    <!-- <div id="preloader">
+    <div id="preloader">
         <img src="assets/images/logo/preloader.gif" alt="houzzhunt loader">
-    </div>  -->
+    </div> 
     <!-- Preloader End -->
 
     <!-- <elevenlabs-convai agent-id="agent_3301k15cbk5jfxsr5dp18e65e5kd"></elevenlabs-convai>

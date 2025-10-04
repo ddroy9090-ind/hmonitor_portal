@@ -195,7 +195,7 @@
                                                 <li><a href="landlords-guide.php">Landlords Guide</a></li>
                                                 <li><a href="commercial-guide.php">Commercial Guide</a></li>
                                                 <li><a href="area-guides.php">Area Guide</a></li>
-                                                <li><a href="dubai-guide.php">Dubai Guide</a></li>
+                                                <!-- <li><a href="dubai-guide.php">Dubai Guide</a></li> -->
                                             </ul>
                                         </div>
                                     </div>

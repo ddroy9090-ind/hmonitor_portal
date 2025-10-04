@@ -59,32 +59,60 @@ include 'includes/navbar.php';
 </div>
 <!-- page header start -->
 
-<!-- <section class="area-wrapper">
+
+
+<section class="area-wrapper">
   <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="text-center mb-4">
+          <h2 class="heading-title mb-0"><span>UAE Area Investor Guides 2025</span></h2>
+          <p class="text-muted w-50 m-auto" >
+            Explore detailed investor guides for Dubai, Abu Dhabi, and Ras Al Khaimah.
+            Get insights on opportunities, trends, and strategies for the UAE property market.
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="row g-4">
       <div class="col-12 col-sm-6 col-md-4">
-        <a href="area-details/al-barari.php">
+        <a href="dubai-guide.php">
           <div class="area-card">
-            <img src="https://ggfx-handh3.s3.eu-west-2.amazonaws.com/x/340x200/al_barari_tile_new_e2abfdea5f.webp" alt="Al Barari" />
+            <img src="assets/images/banner/dubai-guide-banner.webp" alt="Al Barari" />
             <div class="overlay-icon">
               <img src="assets/flaticons/right-up.png" alt="Arrow Icon" />
             </div>
           </div>
-          <div class="area-name">Al Barari</div>
+          <div class="area-name">Dubai Investor Guide 2025</div>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="abudhabi-guide.php">
+          <div class="area-card">
+            <img src="assets/images/banner/abudhabi-guide-banner.webp" alt="Al Barari" />
+            <div class="overlay-icon">
+              <img src="assets/flaticons/right-up.png" alt="Arrow Icon" />
+            </div>
+          </div>
+          <div class="area-name">Abu Dhabi Investor Guide 2025</div>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="ras-al-khaimah-guide.php">
+          <div class="area-card">
+            <img src="assets/images/banner/ras-alkhamiah-guide-banner.webp" alt="Al Barari" />
+            <div class="overlay-icon">
+              <img src="assets/flaticons/right-up.png" alt="Arrow Icon" />
+            </div>
+          </div>
+          <div class="area-name">Ras Al Khaimah Investor Guide 2025</div>
         </a>
       </div>
     </div>
   </div>
-</section> -->
-
-<section style="padding: 100px 0px; text-align: center;">
-    <div class="container">
-        <h2 style="font-size:60px; font-weight:500px;" class="heading-title"><span>Coming Soon</span></h2>
-        <p style="font-size: 16px; max-width: 600px; margin: 0 auto;">
-            We’re working on something amazing! <br> Stay tuned for updates and announcements from houzzhunt.
-        </p>
-    </div>
 </section>
+
+
 
 <!-- Frequently Asked Questions Section -->
 <?php include 'includes/faq.php'; ?>

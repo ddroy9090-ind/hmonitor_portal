@@ -451,9 +451,9 @@ p {
 
 .hh-properties-01-body h3 {
     margin-bottom: 15px !important;
-    font-size: 18px;
-    font-weight: 500;
-    color: #222;
+    font-size: 20px;
+    font-weight: 600;
+    color: #004a44;
     transition: color .25s ease-in-out;
 }
 
@@ -500,7 +500,7 @@ p {
 
 .hh-properties-01-foot strong {
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     color: #004a44;
 }
 
@@ -570,7 +570,6 @@ p {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.3);
-    /* Adjust 0.5 for lighter/darker overlay */
     z-index: 0;
 }
 
@@ -658,7 +657,7 @@ p {
     padding: 6px 20px;
     border-radius: 999px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
 
     /* Glass effect */
     backdrop-filter: blur(8px);
@@ -672,8 +671,8 @@ p {
 
 
 .hh-property-hero-tags .green {
-    background: #004a44;
-    color: #fff;
+    background: #26ecb0;
+    color: #111;
 }
 
 .hh-property-hero h1 {
@@ -1060,7 +1059,7 @@ p {
 .hh-gallery-01-agent .cta-row .call {
     background: #fff;
     color: #004a44;
-    border: 2px solid #004a44;
+    border: 1px solid #004a44;
 }
 
 /* .hh-gallery-01-agent .cta-row .call img {
@@ -1070,7 +1069,7 @@ p {
 .hh-gallery-01-agent .cta-row .wa {
     background: #fff;
     color: #004a44;
-    border: 2px solid #004a44;
+    border: 1px solid #004a44;
 }
 
 .hh-gallery-01-agent .cta-row .call:hover {
@@ -2553,7 +2552,7 @@ p {
     border-radius: 14px;
     overflow: hidden;
     background: linear-gradient(135deg, #f2fbfa, #eef7f6);
-    min-height: 100%;
+    /* min-height: 100%; */
 }
 
 .hh-location-01 .hh-location-01-map>img {
@@ -2692,6 +2691,7 @@ p {
     border-top-right-radius: 5px; */
     border-radius: 14px;
     margin-bottom: 10px;
+    /* width: 60%; */
 }
 
 .hh-location-01 .hh-location-01-permit .head {
@@ -2760,16 +2760,38 @@ p {
     font-weight: 500;
 }
 
+
+.d-flex.align-items-stretch {
+    display: flex;
+    gap: 20px;
+}
+
+.hh-location-01-permit,
+.hh-location-01-contact {
+    flex: 1;                   /* equal width */
+    display: flex;
+    flex-direction: column;    /* stack content vertically */
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #ddd;
+}
+
+/* NEW: force equal height */
+.d-flex.align-items-stretch > div {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
 /* Quick contact */
 .hh-location-01 .hh-location-01-contact {
     background: #fff;
-    /* border: 1px solid #e6eceb;
-    border-radius: 14px; */
     padding: 12px;
-    /* box-shadow: 0 8px 22px rgba(0, 0, 0, .06); */
-    /* border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px; */
-     border-radius: 14px;
+    border-radius: 14px;
+    height: 190px;
     
 }
 
@@ -2778,7 +2800,6 @@ p {
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-    height: 44px;
 }
 
 .hh-location-01 .hh-location-01-contact .head img {
@@ -2793,44 +2814,36 @@ p {
     color: #004a44;
 }
 
+.hh-location-01-contact button{
+    width: 100%;
+    margin: 10px 0;
+}
+
 .hh-location-01 .hh-location-01-contact .call {
-    /* width: 100%; */
-    /* height: 44px; */
     border-radius: 5px;
     border: 0;
     background: #004a44;
     color: #fff;
     font-weight: 500;
-    /* display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; */
     cursor: pointer;
     margin-bottom: 10px;
     transition: filter .2s ease-in-out;
     padding: 10px 20px;
     font-size: 14px;
-    width: 250px;
-    margin: 0 10px;
+    
+    
 }
 
 
 .hh-location-01 .hh-location-01-contact .email {
-    /* width: 100%;
-    height: 44px; */
     border-radius: 5px;
     background: #fff;
     color: #004a44;
     border: 1px solid #e6eceb;
-    /* display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; */
     cursor: pointer;
     padding: 10px 20px;
     font-size: 14px;
-    width: 250px;
-    margin: 0 10px;
+    
 }
 
 .hh-location-01 .hh-location-01-contact .call:hover {
@@ -3310,8 +3323,8 @@ body.no-scroll {
     top: 10px;
     right: 15px;
     font-size: 18px;
-    background: #004a44;
-    color: #fff;
+    background: transparent;
+    color: #666;
     width: 32px;
     height: 33px;
     line-height: 30px;

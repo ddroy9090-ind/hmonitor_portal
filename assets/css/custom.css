@@ -1302,8 +1302,8 @@ body.no-scroll {
     top: 10px;
     right: 15px;
     font-size: 18px;
-    background: #004a44;
-    color: #fff;
+    background: transparent;
+    color: #666;
     width: 32px;
     height: 33px;
     line-height: 30px;

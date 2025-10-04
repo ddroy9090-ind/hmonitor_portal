@@ -1165,7 +1165,7 @@ $developerStats = array_values(array_filter([
                                         <?= $locationMap ?>
                                     <?php else: ?>
                                         <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
-                                            height="500px" style="border:0;" allowfullscreen loading="lazy"
+                                            height="375px" style="border:0;" allowfullscreen loading="lazy"
                                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                                     <?php endif; ?>
                                 <?php else: ?>
@@ -1202,65 +1202,50 @@ $developerStats = array_values(array_filter([
                                     <p class="mb-0">Connectivity details will be available soon.</p>
                                 <?php endif; ?>
                             </div>
-                            <!-- Permit card -->
-                            <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
-                                data-animation-out="animate__fadeOut">
-                                <div class="head">
-                                    <strong>Property Permit</strong>
-                                </div>
 
-                                <div class="qr-row">
-                                    <?php if ($permitBarcode): ?>
-                                        <img class="qr"
-                                            src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                            alt="Permit QR" />
-                                    <?php endif; ?>
-                                    <div class="permit-box h-100">
-                                        <span>Permit Number</span>
-                                        <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                        <?php if ($completionDate): ?>
-                                            <em>Completion :
-                                                <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                            <div class="d-flex align-items-stretch">
+                                <!-- Permit card -->
+                                <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
+                                    data-animation-out="animate__fadeOut">
+                                    <div class="head">
+                                        <strong>Property Permit</strong>
+                                    </div>
+
+                                    <div class="qr-row">
+                                        <?php if ($permitBarcode): ?>
+                                            <img class="qr"
+                                                src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                                alt="Permit QR" />
                                         <?php endif; ?>
+                                        <div class="permit-box h-100">
+                                            <span>Permit Number</span>
+                                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                            <?php if ($completionDate): ?>
+                                                <em>Completion :
+                                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- Quick contact -->
-                            <div class="hh-location-01-contact">
-                                <div class="head">
-                                    <strong>Quick Contact</strong>
+                                <!-- Quick contact -->
+                                <div class="hh-location-01-contact">
+                                    <div class="head">
+                                        <strong>Quick Contact</strong>
+                                    </div>
+
+                                    <button type="button" class="call"
+                                        onclick="window.location.href='tel:+971 42554683'">
+                                        <img src="assets/flaticons/phone.png" alt="" />
+                                        <span>Call Now: +971 42554683</span>
+                                    </button>
+
+                                    <button type="button" class="email" onclick="openPopup()">
+                                        <img src="assets/flaticons/email.png" alt="" />
+                                        <span>Email Agent</span>
+                                    </button>
                                 </div>
-
-                                <button type="button" class="call"
-                                    onclick="window.location.href='tel:+971 42554683'">
-                                    <img src="assets/flaticons/phone.png" alt="" />
-                                    <span>Call Now: +971 42554683</span>
-                                </button>
-
-                                <button type="button" class="email" onclick="openPopup()">
-                                    <img src="assets/flaticons/email.png" alt="" />
-                                    <span>Email Agent</span>
-                                </button>
                             </div>
-                        </div>
 
-
-                    </div>
-                </div>
-
-                <!-- RIGHT: Permit + Quick Contact (col-lg-4) -->
-                <div class="col-12 col-lg-12" data-animation-in="animate__fadeInRight"
-                    data-animation-out="animate__fadeOutRight">
-                    <div class="hh-location-01-side" data-animation-in="animate__flipInX"
-                        data-animation-out="animate__flipOutX">
-
-                        <div class="row">
-                            <div class="col-lg-6">
-
-                            </div>
-                            <div class="col-lg-6">
-
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -4651,7 +4651,7 @@ nav.navbar-custom {
 button#callBtn {
     position: fixed;
     bottom: 20px;
-    /* left: 20px; */
+    right: 20px;
     width: 50px !important;
     height: 50px;
     z-index: 1;
@@ -4876,8 +4876,8 @@ button#callBtn {
 
     button#callBtn {
         top: 14px;
-        right: 48px !important;
-        width: 25px !important;
+        right: 48px;
+        width: 25px;
         height: 25px;
         z-index: 99998;
         font-size: 16px;

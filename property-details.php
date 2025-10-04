@@ -493,8 +493,6 @@ $developerStats = array_values(array_filter([
         </div>
     </section>
 
-
-
     <!-- parent: .hh-gallery-01 -->
     <div class="hh-gallery-01 ">
         <div class="container">
@@ -1203,7 +1201,7 @@ $developerStats = array_values(array_filter([
                                 <?php endif; ?>
                             </div>
 
-                            <div class="d-flex align-items-stretch">
+                            <div>
                                 <!-- Permit card -->
                                 <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
                                     data-animation-out="animate__fadeOut">
@@ -1211,24 +1209,45 @@ $developerStats = array_values(array_filter([
                                         <strong>Property Permit</strong>
                                     </div>
 
-                                    <div class="qr-row">
-                                        <?php if ($permitBarcode): ?>
-                                            <img class="qr"
-                                                src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                                alt="Permit QR" />
-                                        <?php endif; ?>
-                                        <div class="permit-box h-100">
-                                            <span>Permit Number</span>
-                                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                            <?php if ($completionDate): ?>
-                                                <em>Completion :
-                                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                    <div class="qr-row d-flex justify-content-between align-items-center">
+                                        <!-- Left Side (QR + Permit Details) -->
+                                        <div class="d-flex align-items-center gap-3">
+                                            <?php if ($permitBarcode): ?>
+                                                <img class="qr"
+                                                    src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                                    alt="Permit QR" width="80" />
                                             <?php endif; ?>
+
+                                            <div class="permit-box">
+                                                <span>Permit Number</span>
+                                                <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                                <?php if ($completionDate): ?>
+                                                    <em>Completion :
+                                                        <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+
+                                        <!-- Right Side (Actions) -->
+                                        <div class="map-action d-flex gap-2">
+                                            <button type="button" class="call"
+                                                onclick="window.location.href='tel:+97142554683'">
+                                                <img src="assets/flaticons/phone.png" alt="" width="16" />
+                                                <span>+971 42554683</span>
+                                            </button>
+
+                                            <button type="button" class="email" onclick="openPopup()">
+                                                <img src="assets/flaticons/email.png" alt="" width="16" />
+                                                <span>Email Agent</span>
+                                            </button>
                                         </div>
                                     </div>
+
                                 </div>
+
+
                                 <!-- Quick contact -->
-                                <div class="hh-location-01-contact">
+                                <!-- <div class="hh-location-01-contact">
                                     <div class="head">
                                         <strong>Quick Contact</strong>
                                     </div>
@@ -1243,10 +1262,11 @@ $developerStats = array_values(array_filter([
                                         <img src="assets/flaticons/email.png" alt="" />
                                         <span>Email Agent</span>
                                     </button>
-                                </div>
+                                </div> -->
                             </div>
 
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -1518,7 +1538,6 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-
     <!-- Download Brochure -->
     <div class="popup-overlay" id="downloadBrochure">
         <div class="popup-content">
@@ -1568,7 +1587,6 @@ $developerStats = array_values(array_filter([
             </div>
         </div>
     </div>
-
 
     <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendors/jquery/jquery-3.7.1.min.js"></script>

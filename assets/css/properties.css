@@ -2680,19 +2680,6 @@ p {
     gap: 33px;
 }
 
-/* Permit card */
-.hh-location-01 .hh-location-01-permit {
-    background: #fff;
-    /* border: 1px solid #e6eceb;
-    border-radius: 14px; */
-    padding: 12px;
-    /* box-shadow: 0 8px 22px rgba(0, 0, 0, .06); */
-    /* border-top-left-radius: 5px;
-    border-top-right-radius: 5px; */
-    border-radius: 14px;
-    margin-bottom: 10px;
-    /* width: 60%; */
-}
 
 .hh-location-01 .hh-location-01-permit .head {
     display: flex;
@@ -2709,36 +2696,30 @@ p {
 
 .hh-location-01 .hh-location-01-permit .head strong {
     font-size: 16px;
-    color: #004a44;
+    color: #fff;
     font-weight: 500;
 }
 
 .hh-location-01 .hh-location-01-permit .qr-row {
     display: flex;
     align-items: start;
-    gap: 10px;
+    gap: 15px;
 }
 
 .hh-location-01 .hh-location-01-permit .qr {
-    /* width: 200px; */
-    height: 130px;
-    border-radius: 2px;
-    object-fit: cover;
+    /* height: 130px; */
     border: 1px solid #e6eceb;
+    width: 38%;
 }
 
-.hh-location-01 .hh-location-01-permit .permit-box {
-    flex: 1;
-    background: #fff;
-    border: 1px solid #e6eceb;
-    border-radius: 10px;
-    padding: 15px 10px;
-    /* width: 100%; */
-}
+/* .hh-location-01 .hh-location-01-permit .permit-box {
+    width: 50%;
+
+} */
 
 .hh-location-01 .hh-location-01-permit .permit-box span {
     display: block;
-    color: #687674;
+    color: #fff;
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 2px;
@@ -2746,7 +2727,7 @@ p {
 
 .hh-location-01 .hh-location-01-permit .permit-box b {
     display: block;
-    color: #004a44;
+    color: #fff;
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 0px;
@@ -2755,39 +2736,19 @@ p {
 .hh-location-01 .hh-location-01-permit .permit-box em {
     display: block;
     font-style: normal;
-    color: #666;
+    color: #fff;
     font-size: 14px;
     font-weight: 500;
 }
 
 
-.d-flex.align-items-stretch {
-    display: flex;
-    gap: 20px;
-}
 
-.hh-location-01-permit,
-.hh-location-01-contact {
-    flex: 1;                   /* equal width */
-    display: flex;
-    flex-direction: column;    /* stack content vertically */
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    border: 1px solid #ddd;
-}
-
-/* NEW: force equal height */
-.d-flex.align-items-stretch > div {
-    display: flex;
-    flex-direction: column;
-}
 
 
 
 
 /* Quick contact */
-.hh-location-01 .hh-location-01-contact {
+/* .hh-location-01 .hh-location-01-contact {
     background: #fff;
     padding: 12px;
     border-radius: 14px;
@@ -2866,7 +2827,7 @@ p {
     width: 18px;
     height: 18px;
     object-fit: contain;
-}
+} */
 
 
 /* ===== CTA Banner ===== */
@@ -3634,7 +3595,7 @@ body.no-scroll {
     /* filter: brightness(0) invert(1); */
 }
 
-.info-card .details{
+.info-card .details {
     color: #004a44;
     font-size: 14px;
     /* font-weight: 600; */
@@ -3642,7 +3603,7 @@ body.no-scroll {
 
 .info-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 
@@ -3659,10 +3620,38 @@ body.no-scroll {
 }
 
 .landmarks-list .dot {
-    width:20px;
+    width: 20px;
     filter: brightness(0) invert(1);
 }
 
+.map-action {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.map-action button {
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+}
+
+.map-action button img {
+    width: 30px;
+    height: 30px;
+    background: #e4f9f6;
+    display: inline-block;
+    border-radius: 6px;
+    position: relative;
+    padding: 9px;
+}
+
+.map-action button span {
+    color: #fff;
+}
 
 
 

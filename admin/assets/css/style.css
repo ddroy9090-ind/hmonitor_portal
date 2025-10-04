@@ -64,10 +64,15 @@ body {
 }
 
 .sidebar .nav-submenu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   padding: 4px 0 8px;
+}
+
+.sidebar .nav-submenu.collapse {
+  transition: height 0.25s ease;
+}
+
+.sidebar .nav-submenu.collapse:not(.show) {
+  display: none;
 }
 
 .sidebar .nav-sublink {
@@ -79,6 +84,10 @@ body {
   padding: 0.4rem 0.75rem 0.4rem 2.25rem;
   font-size: 0.95rem;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar .nav-sublink + .nav-sublink {
+  margin-top: 4px;
 }
 
 .sidebar .nav-sublink .submenu-indicator {

@@ -98,7 +98,8 @@ function render_sidebar(string $active): void
   echo '</form>';
   echo '</div>';
 
-  echo '<nav class="nav flex-column gap-1">';
+  $navId = 'sidebar-nav';
+  echo '<nav id="' . $navId . '" class="nav flex-column gap-1">';
   $index = 0;
   foreach ($menu as $item) {
     $index++;
@@ -136,7 +137,7 @@ function render_sidebar(string $active): void
       $collapseClass .= ' show';
     }
 
-    echo '<div id="' . htmlspecialchars($collapseId, ENT_QUOTES, 'UTF-8') . '" class="' . $collapseClass . '">';
+    echo '<div id="' . htmlspecialchars($collapseId, ENT_QUOTES, 'UTF-8') . '" class="' . $collapseClass . '" data-bs-parent="#' . $navId . '">';
     foreach ($item['items'] as $childKey => $child) {
       $childActive = $childKey === $active ? ' active' : '';
       $href = htmlspecialchars($child['href'], ENT_QUOTES, 'UTF-8');
@@ -172,6 +173,7 @@ function render_footer(bool $includeECharts = false, bool $includeChartJs = fals
 
 
   echo "\n<script src=\"assets/js/table-tooltips.js\"></script>";
+  echo "\n<script src=\"assets/js/sidebar.js\"></script>";
   echo '</body></html>';
 }
 

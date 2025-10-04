@@ -41,6 +41,20 @@ function render_sidebar(string $active): void
       'label' => 'Dashboard',
     ],
     [
+      'type'  => 'link',
+      'key'   => 'logs',
+      'href'  => 'page_access_logs.php',
+      'icon'  => 'bi-universal-access-circle',
+      'label' => 'Page Access Logs',
+    ],
+    [
+      'type'  => 'link',
+      'key'   => 'analytics',
+      'href'  => 'analytics_dashboard.php',
+      'icon'  => 'bi-graph-up-arrow',
+      'label' => 'Analytics Dashboard',
+    ],
+    [
       'type'  => 'dropdown',
       'key'   => 'blogs',
       'icon'  => 'bi-journal-text',
@@ -91,20 +105,7 @@ function render_sidebar(string $active): void
         'mortgage-leads'  => ['href' => 'mortgage_leads.php', 'label' => 'Mortgage Leads'],
       ],
     ],
-    [
-      'type'  => 'link',
-      'key'   => 'analytics',
-      'href'  => 'analytics_dashboard.php',
-      'icon'  => 'bi-graph-up-arrow',
-      'label' => 'Analytics Dashboard',
-    ],
-    [
-      'type'  => 'link',
-      'key'   => 'logs',
-      'href'  => 'page_access_logs.php',
-      'icon'  => 'bi-universal-access-circle',
-      'label' => 'Page Access Logs',
-    ],
+    
   ];
 
   echo '<aside class="col-12 col-md-3 col-lg-2 sidebar p-3">';
@@ -119,7 +120,7 @@ function render_sidebar(string $active): void
   echo '</div>';
 
   $navId = 'sidebar-nav';
-  echo '<nav id="' . $navId . '" class="nav flex-column gap-1">';
+  echo '<nav id="' . $navId . '" class="nav flex-column gap-2">';
   $index = 0;
   foreach ($menu as $item) {
     $index++;

@@ -36,7 +36,7 @@ body {
   border: none;
   padding: 0.5rem 0.75rem;
   width: 100%;
-  color: inherit;
+  color: #fff;
   text-align: left;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -84,6 +84,7 @@ body {
   padding: 0.4rem 0.75rem 0.4rem 2.25rem;
   font-size: 0.95rem;
   transition: background-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
 }
 
 .sidebar .nav-sublink + .nav-sublink {

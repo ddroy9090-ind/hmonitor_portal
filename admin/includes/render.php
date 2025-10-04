@@ -72,6 +72,16 @@ function render_sidebar(string $active): void
     ],
     [
       'type'  => 'dropdown',
+      'key'   => 'rent-properties',
+      'icon'  => 'bi-key',
+      'label' => 'Rent Properties',
+      'items' => [
+        'add-rent-property'     => ['href' => 'add_rent_property.php', 'label' => 'Add Rent Property'],
+        'rent-properties-list'  => ['href' => 'rent_properties_list.php', 'label' => 'All Rent Properties'],
+      ],
+    ],
+    [
+      'type'  => 'dropdown',
       'key'   => 'all-leads',
       'icon'  => 'bi-person-lines-fill',
       'label' => 'All Type Leads',

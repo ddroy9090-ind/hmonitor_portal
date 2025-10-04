@@ -130,12 +130,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit;
 }
 
+// Pagination setup
+$perPage = 10;
+$page = max(1, (int)($_GET['page'] ?? 1));
+$totalProperties = 0;
+$totalPages = 1;
+
 try {
-  $listStmt = $pdo->query(
+  $countStmt = $pdo->query('SELECT COUNT(*) FROM buy_properties_list');
+  $totalProperties = (int)$countStmt->fetchColumn();
+} catch (Throwable $e) {
+  error_log('Failed to count buy properties list: ' . $e->getMessage());
+}
+
+if ($totalProperties > 0) {
+  $totalPages = (int)ceil($totalProperties / $perPage);
+  if ($page > $totalPages) {
+    $page = $totalPages;
+  }
+} else {
+  $page = 1;
+}
+
+$offset = ($page - 1) * $perPage;
+
+try {
+  $listStmt = $pdo->prepare(
     'SELECT id, project_name, property_location, property_type, created_at
        FROM buy_properties_list
-      ORDER BY created_at DESC, id DESC'
+      ORDER BY created_at DESC, id DESC
+      LIMIT :limit OFFSET :offset'
   );
+  $listStmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+  $listStmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+  $listStmt->execute();
   $properties = $listStmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Throwable $e) {
   error_log('Failed to fetch properties list: ' . $e->getMessage());
@@ -223,6 +251,45 @@ render_head('Buy Properties List', 'dashboard-body');
             </table>
           </div>
         </div>
+        <?php if ($totalPages > 1): ?>
+          <?php
+          $queryParams = $_GET;
+          $buildPageUrl = static function (int $targetPage) use ($queryParams): string {
+            $queryParams['page'] = $targetPage;
+            return '?' . http_build_query($queryParams);
+          };
+          ?>
+          <div class="card-footer bg-white">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center gap-2">
+              <small class="text-muted">
+                Showing
+                <?= htmlspecialchars((string)min($totalProperties, $offset + 1), ENT_QUOTES, 'UTF-8'); ?>
+                –
+                <?= htmlspecialchars((string)min($totalProperties, $offset + count($properties)), ENT_QUOTES, 'UTF-8'); ?>
+                of
+                <?= htmlspecialchars((string)$totalProperties, ENT_QUOTES, 'UTF-8'); ?>
+                properties
+              </small>
+              <nav aria-label="Buy properties pagination">
+                <ul class="pagination mb-0">
+                  <?php $prevDisabled = $page <= 1; ?>
+                  <li class="page-item<?= $prevDisabled ? ' disabled' : ''; ?>">
+                    <a class="page-link" href="<?= $prevDisabled ? '#' : htmlspecialchars($buildPageUrl($page - 1), ENT_QUOTES, 'UTF-8'); ?>" tabindex="<?= $prevDisabled ? '-1' : '0'; ?>">Previous</a>
+                  </li>
+                  <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item<?= $i === $page ? ' active' : ''; ?>">
+                      <a class="page-link" href="<?= htmlspecialchars($buildPageUrl($i), ENT_QUOTES, 'UTF-8'); ?>"><?= htmlspecialchars((string)$i, ENT_QUOTES, 'UTF-8'); ?></a>
+                    </li>
+                  <?php endfor; ?>
+                  <?php $nextDisabled = $page >= $totalPages; ?>
+                  <li class="page-item<?= $nextDisabled ? ' disabled' : ''; ?>">
+                    <a class="page-link" href="<?= $nextDisabled ? '#' : htmlspecialchars($buildPageUrl($page + 1), ENT_QUOTES, 'UTF-8'); ?>" tabindex="<?= $nextDisabled ? '-1' : '0'; ?>">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        <?php endif; ?>
       </div>
 
     </main>

@@ -32,21 +32,59 @@ HTML;
 function render_sidebar(string $active): void
 {
   $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
-  $items = [
-    'home'      => ['href' => 'index.php', 'icon' => 'bi-house',     'label' => 'Dashboard'],
-    'logs'      => ['href' => 'page_access_logs.php', 'icon' => 'bi-universal-access-circle',       'label' => 'Page Access Logs'],
-    'analytics' => ['href' => 'analytics_dashboard.php', 'icon' => 'bi-graph-up-arrow', 'label' => 'Analytics Dashboard'],
-    'contact-form' => ['href' => 'contact_form_submissions.php', 'icon' => 'bi-person-rolodex', 'label' => 'Contact Submissions'],
-    'mortgage-leads' => ['href' => 'mortgage_leads.php', 'icon' => 'bi-cash-coin', 'label' => 'Mortgage Leads'],
-    'popup-form' => ['href' => 'popup_form_submissions.php', 'icon' => 'bi-database', 'label' => 'Popup Submissions'],
-    'add-property' => ['href' => 'add_property.php', 'icon' => 'bi-buildings', 'label' => 'Add Property'],
-    'all-properties' => ['href' => 'all_properties.php', 'icon' => 'bi-list-ul', 'label' => 'All Properties'],
-    'add-blogs' => ['href' => 'add_blogs.php', 'icon' => 'bi-journal-plus', 'label' => 'Add Blogs'],
-    // 'add-job-vacancy' => ['href' => 'add_job_vacancy.php', 'icon' => 'bi-briefcase', 'label' => 'Add Job Vacancy'],
-    'all-blogs' => ['href' => 'all_blogs.php', 'icon' => 'bi-journal-text', 'label' => 'All Blogs'],
-    // 'market-reports' => ['href' => 'market_reports.php', 'icon' => 'bi-bar-chart', 'label' => 'Market Reports'],
-    // 'market-report-leads' => ['href' => 'market_reports_leads.php', 'icon' => 'bi-people', 'label' => 'Market Reports Leads'],
-    // 'job-leads' => ['href' => 'job_leads.php', 'icon' => 'bi-person-badge', 'label' => 'Job Leads'],
+  $menu = [
+    [
+      'type'  => 'link',
+      'key'   => 'home',
+      'href'  => 'index.php',
+      'icon'  => 'bi-house',
+      'label' => 'Dashboard',
+    ],
+    [
+      'type'  => 'dropdown',
+      'key'   => 'blogs',
+      'icon'  => 'bi-journal-text',
+      'label' => 'Blogs',
+      'items' => [
+        'add-blogs' => ['href' => 'add_blogs.php', 'label' => 'Add Blogs'],
+        'all-blogs' => ['href' => 'all_blogs.php', 'label' => 'All Blogs'],
+      ],
+    ],
+    [
+      'type'  => 'dropdown',
+      'key'   => 'offplan-properties',
+      'icon'  => 'bi-buildings',
+      'label' => 'Offplan Properties',
+      'items' => [
+        'add-property'       => ['href' => 'add_property.php', 'label' => 'Add Property'],
+        'all-properties'     => ['href' => 'all_properties.php', 'label' => 'All Properties'],
+      ],
+    ],
+    [
+      'type'  => 'dropdown',
+      'key'   => 'all-leads',
+      'icon'  => 'bi-person-lines-fill',
+      'label' => 'All Type Leads',
+      'items' => [
+        'contact-form'    => ['href' => 'contact_form_submissions.php', 'label' => 'Contact Submissions'],
+        'popup-form'      => ['href' => 'popup_form_submissions.php', 'label' => 'Popup Submissions'],
+        'mortgage-leads'  => ['href' => 'mortgage_leads.php', 'label' => 'Mortgage Leads'],
+      ],
+    ],
+    [
+      'type'  => 'link',
+      'key'   => 'analytics',
+      'href'  => 'analytics_dashboard.php',
+      'icon'  => 'bi-graph-up-arrow',
+      'label' => 'Analytics Dashboard',
+    ],
+    [
+      'type'  => 'link',
+      'key'   => 'logs',
+      'href'  => 'page_access_logs.php',
+      'icon'  => 'bi-universal-access-circle',
+      'label' => 'Page Access Logs',
+    ],
   ];
 
   echo '<aside class="col-12 col-md-3 col-lg-2 sidebar p-3">';
@@ -61,16 +99,55 @@ function render_sidebar(string $active): void
   echo '</div>';
 
   echo '<nav class="nav flex-column gap-1">';
-  foreach ($items as $key => $item) {
-    $isActive = $key === $active ? ' active' : '';
+  $index = 0;
+  foreach ($menu as $item) {
+    $index++;
+    if ($item['type'] === 'link') {
+      $isActive = $item['key'] === $active ? ' active' : '';
+      $icon = htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8');
+      $href = htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8');
+      $label = htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8');
+      printf('<a href="%s" class="nav-link%s"><i class="bi %s me-2"></i>%s</a>', $href, $isActive, $icon, $label);
+      continue;
+    }
+
+    $collapseId = 'menu-' . $index;
     $icon = htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8');
-    $href = htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8');
     $label = htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8');
-    printf('<a href="%s" class="nav-link%s"><i class="bi %s me-2"></i>%s</a>', $href, $isActive, $icon, $label);
+    $isGroupActive = array_key_exists($active, $item['items']);
+    $toggleClasses = 'nav-link menu-toggle d-flex align-items-center justify-content-between';
+    if ($isGroupActive) {
+      $toggleClasses .= ' active';
+    }
+
+    printf(
+      '<button class="%s" type="button" data-bs-toggle="collapse" data-bs-target="#%s" aria-expanded="%s" aria-controls="%s">' .
+      '<span><i class="bi %s me-2"></i>%s</span><i class="bi bi-chevron-down chevron"></i></button>',
+      $toggleClasses,
+      htmlspecialchars($collapseId, ENT_QUOTES, 'UTF-8'),
+      $isGroupActive ? 'true' : 'false',
+      htmlspecialchars($collapseId, ENT_QUOTES, 'UTF-8'),
+      $icon,
+      $label
+    );
+
+    $collapseClass = 'collapse nav-submenu';
+    if ($isGroupActive) {
+      $collapseClass .= ' show';
+    }
+
+    echo '<div id="' . htmlspecialchars($collapseId, ENT_QUOTES, 'UTF-8') . '" class="' . $collapseClass . '">';
+    foreach ($item['items'] as $childKey => $child) {
+      $childActive = $childKey === $active ? ' active' : '';
+      $href = htmlspecialchars($child['href'], ENT_QUOTES, 'UTF-8');
+      $label = htmlspecialchars($child['label'], ENT_QUOTES, 'UTF-8');
+      echo '<a href="' . $href . '" class="nav-sublink' . $childActive . '">';
+      echo '<span class="submenu-indicator"></span>' . $label;
+      echo '</a>';
+    }
+    echo '</div>';
   }
   echo '</nav>';
-  echo '';
-  echo '';
   echo '</aside>';
 }
 

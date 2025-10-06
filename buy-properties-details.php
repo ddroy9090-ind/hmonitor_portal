@@ -880,7 +880,7 @@ $developerStats = array_values(array_filter([
                 <div class="col-12 col-lg-4">
                     <aside>
                         <!-- Contact Agent card -->
-                        <div class="agent-card " data-animation-in="animate__fadeIn"
+                        <div class="agent-card " id="contactAgent" data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
                             <!-- <div class="agent-title">Contact Agent</div> -->
                             <div class="agent-head">
@@ -893,61 +893,32 @@ $developerStats = array_values(array_filter([
                                 </div>
                             </div>
 
-                            <form>
+                            <form method="POST" action="process_offplan_lead">
+                                <input type="hidden" name="redirect"
+                                    value="buy-properties-details.php?id=<?= (int) $propertyId ?>#contactAgent">
                                 <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                                 <input type="hidden" name="property_title"
                                     value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                                <input type="hidden" name="form_type" value="popup">
                                 <label>
-                                    <!-- <span class="field-head">
-                                        <img src="assets/icons/local-user.png" alt="" class="ico">
-                                        <span>Full Name *</span>
-                                    </span> -->
-                                    <input type="text" placeholder="Enter your full name">
+                                    <input type="text" name="name" placeholder="Enter your full name" required>
                                 </label>
 
                                 <label>
-                                    <!-- <span class="field-head">
-                                        <img src="assets/flaticons/email.png" alt="" class="ico">
-                                        <span>Email Address *</span>
-                                    </span> -->
-                                    <input type="email" placeholder="your.email@example.com">
+                                    <input type="email" name="email" placeholder="your.email@example.com" required>
                                 </label>
 
                                 <label>
-                                    <!-- <span class="field-head">
-                                        <img src="assets/flaticons/phone.png" alt="" class="ico">
-                                        <span>Phone Number *</span>
-                                    </span> -->
-                                    <input type="tel" name="phone" id="phone" placeholder="+971 50 123 4567">
-                                </label>
-
-
-                                <label>
-                                    <!-- <span class="field-head">
-                                        <img src="assets/icons/conversation.png" alt="" class="ico">
-                                        <span>Inquiry Type</span>
-                                    </span> -->
-                                    <div class="select-ico ">
-                                        <select class="form-control select-dropDownClass">
-                                            <option>Select inquiry type</option>
-                                            <option>Schedule Viewing</option>
-                                            <option>Request Callback</option>
-                                            <option>Download Brochure</option>
-                                        </select>
-                                    </div>
+                                    <input type="text" name="country" placeholder="Enter your country" required>
                                 </label>
 
                                 <label>
-                                    <!-- <span class="field-head">
-                                        <img src="assets/icons/message.png" alt="" class="ico">
-                                        <span>Additional Message</span>
-                                    </span> -->
-                                    <textarea placeholder="Any specific questions or requirements…"></textarea>
+                                    <input type="tel" name="phone" id="phone" placeholder="+971 50 123 4567" required>
                                 </label>
 
                                 <div class="g-recaptcha" data-sitekey="6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM"></div>
 
-                                <button type="button" class="send">Send Message</button>
+                                <button type="submit" class="send">Send Message</button>
                                 <p class="reg-note terms-and-privacy">
                                     By clicking Submit, you agree to our
                                     <a href="terms-and-conditions.php">Terms</a> &amp;

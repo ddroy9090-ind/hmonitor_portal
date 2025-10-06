@@ -1514,7 +1514,7 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
-                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
+                <form method="POST" class="appointment-form" action="process_offplan_lead">
                     <input type="hidden" name="redirect"
                         value="property-details.php?id=<?= (int) $propertyId ?>#propertyEnquirey">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
@@ -1565,7 +1565,7 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Get your brochure instantly. Enter your details below to access the download.
                 </p>
-                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
+                <form method="POST" class="appointment-form" action="process_offplan_lead">
                     <input type="hidden" name="redirect"
                         value="property-details.php?id=<?= (int) $propertyId ?>#downloadBrochure">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">

@@ -438,7 +438,7 @@ $developerStats = array_values(array_filter([
                                     width="16"><?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>
                             </div>
                         <?php endif; ?>
-                        <!-- <?php if ($startingPriceValue !== ''): ?>
+                        <?php if ($startingPriceValue !== ''): ?>
                             <div class="hh-property-hero-price">
                                 <?php if ($startingPriceCurrency !== ''): ?>
                                     <span
@@ -460,7 +460,7 @@ $developerStats = array_values(array_filter([
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                        <?php endif; ?> -->
+                        <?php endif; ?>
                     </div>
 
                     <!-- Bottom CTA buttons -->
@@ -475,44 +475,7 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-    <section class="info-section">
-        <div class="container-fluid px-4">
-            <div class="row g-3">
-                <?php if ($startingPriceValue !== ''): ?>
-                    <div class="col-6 col-md-2">
-                        <div class="info-card p-4 text-center h-100 text-white">
-                            <img src="assets/icons/dollar.png" alt="Price" width="28" class="mb-2">
-                            <div class="details">
-                                Starting From -
-                                <?= htmlspecialchars(trim($startingPriceCurrency . ' ' . $startingPriceValue), ENT_QUOTES, 'UTF-8') ?>
-
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($specItems): ?>
-                    <?php foreach ($specItems as $spec): ?>
-                        <div class="col-6 col-md-2">
-                            <div class="info-card p-4 text-center h-100 text-white">
-                                <img src="<?= htmlspecialchars($spec['icon'], ENT_QUOTES, 'UTF-8') ?>"
-                                    alt="icon" width="28" class="mb-2">
-                                <div class="details">
-                                    <?= htmlspecialchars(trim($spec['label']), ENT_QUOTES, 'UTF-8') ?>
-                                    -
-                                    <?= htmlspecialchars(trim($spec['suffix']), ENT_QUOTES, 'UTF-8') ?>
-                                </div>
-                                <!-- <div class="small mt-1 details">
-                                    
-                                </div> -->
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-
+    
 
 
     <!-- parent: .hh-gallery-01 -->

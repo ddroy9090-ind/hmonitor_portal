@@ -189,7 +189,7 @@ p {
 
 .hh-hero-01 select:focus,
 .hh-hero-01 input[type="search"]:focus {
-    border-color: #0e6e64;
+    border-color: #004a44;
     box-shadow: 0 0 0 4px rgba(0, 118, 106, 0.12);
 }
 
@@ -207,7 +207,7 @@ p {
     padding: 0 24px;
     border-radius: 10px;
     border: 0;
-    background: #0e6e64;
+    background: #004a44;
     color: #ffffff;
     font-weight: 500;
     cursor: pointer;
@@ -228,7 +228,7 @@ p {
     width: 48px;
     border-radius: 12px;
     background: #ffffff;
-    border: 2px solid #0e6e64;
+    border: 2px solid #004a44;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -737,7 +737,7 @@ p {
 /* CTA bottom center */
 .hh-property-hero-ctas {
     position: absolute;
-    /* bottom: -100px; */
+    bottom: -100px;
     left: 15%;
     transform: translateX(-50%);
     display: flex;
@@ -761,14 +761,14 @@ p {
 }
 
 .hh-property-hero-ctas .cta-solid {
-    background: #004a44;
-    color: #fff;
+    background: #26ecb0;
+    color: #111;
     border: none;
 }
 
 .hh-property-hero-ctas .cta-solid:hover {
-    background: #004a44;
-    color: #fff;
+    background: #26ecb0;
+    color: #111;
 }
 
 .hh-property-hero-ctas .cta-outline {
@@ -822,9 +822,9 @@ p {
 }
 
 .hh-gallery-01-head-actions .solid {
-    background: #0e6e64;
+    background: #004a44;
     color: #fff;
-    border-color: #0e6e64;
+    border-color: #004a44;
 }
 
 .hh-gallery-01-head-actions .ghost:hover {

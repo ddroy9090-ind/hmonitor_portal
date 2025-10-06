@@ -1612,7 +1612,7 @@ $developerStats = array_values(array_filter([
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
                 <form method="POST" class="appointment-form"
-                    action="property-details.php?id=<?= (int) $propertyId ?>">
+                    action="process_offplan_lead.php">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_title"
                         value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">

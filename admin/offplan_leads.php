@@ -39,7 +39,7 @@ try {
     }
 
     $stmt = $pdo->prepare(
-      'SELECT id, lead_type, property_id, property_title, name, email, phone, country, brochure_url, ip_address, user_agent, created_at '
+      'SELECT lead_type, property_id, property_title, name, email, phone, country, brochure_url '
       . 'FROM offplan_leads '
       . 'ORDER BY created_at DESC, id DESC '
       . 'LIMIT :limit OFFSET :offset'
@@ -98,7 +98,6 @@ render_sidebar('offplan-leads');
         <table class="table table-striped table-hover align-middle mb-0">
           <thead class="table-secondary">
             <tr>
-              <th scope="col">#</th>
               <th scope="col">Lead Type</th>
               <th scope="col">Property</th>
               <th scope="col">Name</th>
@@ -106,23 +105,11 @@ render_sidebar('offplan-leads');
               <th scope="col">Phone</th>
               <th scope="col">Country</th>
               <th scope="col">Brochure</th>
-              <th scope="col">IP Address</th>
-              <th scope="col">User Agent</th>
-              <th scope="col">Submitted</th>
             </tr>
           </thead>
           <tbody>
             <?php foreach ($leads as $lead): ?>
               <?php
-                $createdAt = (string) ($lead['created_at'] ?? '');
-                $createdAtFormatted = '—';
-                if ($createdAt !== '') {
-                  try {
-                    $createdAtFormatted = (new DateTimeImmutable($createdAt))->format('d M Y H:i');
-                  } catch (Throwable $e) {
-                    $createdAtFormatted = $createdAt;
-                  }
-                }
                 $leadType = (string) ($lead['lead_type'] ?? '');
                 $leadTypeLabel = match ($leadType) {
                   'brochure' => 'Brochure Download',
@@ -135,7 +122,6 @@ render_sidebar('offplan-leads');
                 }
               ?>
               <tr>
-                <td><?= (int) $lead['id'] ?></td>
                 <td><?= htmlspecialchars($leadTypeLabel, ENT_QUOTES, 'UTF-8') ?></td>
                 <td><?= htmlspecialchars($propertyTitle !== '' ? $propertyTitle : '—', ENT_QUOTES, 'UTF-8') ?></td>
                 <td><?= htmlspecialchars((string) ($lead['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
@@ -159,15 +145,6 @@ render_sidebar('offplan-leads');
                     <span class="text-muted">—</span>
                   <?php endif; ?>
                 </td>
-                <td><?= htmlspecialchars((string) ($lead['ip_address'] ?? '—'), ENT_QUOTES, 'UTF-8') ?></td>
-                <td class="text-break">
-                  <?php if (!empty($lead['user_agent'])): ?>
-                    <small><?= htmlspecialchars($lead['user_agent'], ENT_QUOTES, 'UTF-8') ?></small>
-                  <?php else: ?>
-                    <span class="text-muted">—</span>
-                  <?php endif; ?>
-                </td>
-                <td><?= htmlspecialchars($createdAtFormatted, ENT_QUOTES, 'UTF-8') ?></td>
               </tr>
             <?php endforeach; ?>
           </tbody>

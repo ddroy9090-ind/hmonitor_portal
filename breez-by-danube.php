@@ -1,3 +1,16 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/includes/config.php';
+
+hh_session_start();
+
+$leadFormError = $_SESSION['offplan_lead_error'] ?? null;
+unset($_SESSION['offplan_lead_error']);
+
+$recaptchaSiteKey = hh_recaptcha_site_key();
+$propertyTitle = 'Breez by Danube';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +28,15 @@
 </head>
 
 <body>
+
+    <?php if ($leadFormError): ?>
+        <div class="container position-relative" style="z-index: 1050;">
+            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($leadFormError, ENT_QUOTES, 'UTF-8') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php endif; ?>
 
 
     <!-- parent: .hh-property-hero -->
@@ -1149,7 +1171,12 @@
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
-                <form method="POST" class="appointment-form" action="danuber">
+                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
+                    <input type="hidden" name="redirect" value="breez-by-danube.php#propertyEnquirey">
+                    <input type="hidden" name="property_id" value="0">
+                    <input type="hidden" name="property_title"
+                        value="<?= htmlspecialchars($propertyTitle, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="form_type" value="popup">
                     <div class="form-group">
                         <label for="full_name">Enter Name</label>
                         <input type="text" name="name" id="full_name" class="form-control" required>
@@ -1171,7 +1198,8 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+                        <div class="g-recaptcha"
+                            data-sitekey="<?= htmlspecialchars($recaptchaSiteKey, ENT_QUOTES, 'UTF-8') ?>"></div>
                     </div>
 
                     <div class="form-group">
@@ -1195,7 +1223,13 @@
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Get your brochure instantly. Enter your details below to access the download.
                 </p>
-                <form method="POST" class="appointment-form" action="download-brochure">
+                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
+                    <input type="hidden" name="redirect" value="breez-by-danube.php#downloadBrochure">
+                    <input type="hidden" name="property_id" value="0">
+                    <input type="hidden" name="property_title"
+                        value="<?= htmlspecialchars($propertyTitle, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="form_type" value="brochure">
+                    <input type="hidden" name="brochure_url" value="">
                     <div class="form-group">
                         <label for="brochure_name">Full Name</label>
                         <input type="text" name="brochure_name" id="brochure_name" class="form-control" required>
@@ -1217,7 +1251,8 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+                        <div class="g-recaptcha"
+                            data-sitekey="<?= htmlspecialchars($recaptchaSiteKey, ENT_QUOTES, 'UTF-8') ?>"></div>
                     </div>
 
                     <div class="form-group">
@@ -1237,6 +1272,10 @@
     <script src="https://cdn.jsdelivr.net/npm/country-select-js@2.0.1/build/js/countrySelect.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <?php if (!defined('HH_RECAPTCHA_SCRIPT_LOADED')): ?>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <?php define('HH_RECAPTCHA_SCRIPT_LOADED', true); ?>
+    <?php endif; ?>
 
 
     <script>

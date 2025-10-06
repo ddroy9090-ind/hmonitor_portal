@@ -409,7 +409,7 @@ $developerStats = array_values(array_filter([
             <a href="buy-properties.php" class="hh-property-hero-back">← Back to Buy Listings</a>
             <div class="hh-property-hero-top-actions">
                 <button type="button" class="hh-primarypill" onclick="openPopup()"><img width="14"
-                        src="assets/flaticons/phone.png" alt=""> Contact Agent</button>
+                        src="assets/flaticons/phone.png" alt=""> Contact Us</button>
             </div>
         </div>
         <div class="container">
@@ -879,52 +879,53 @@ $developerStats = array_values(array_filter([
                 <!-- Right: sidebar -->
                 <div class="col-12 col-lg-4">
                     <aside>
-                        <!-- Contact Agent card -->
+                        
                         <div class="agent-card " id="contactAgent" data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
-                            <!-- <div class="agent-title">Contact Agent</div> -->
+                            
                             <div class="agent-head">
                                 <div class="avatar">
                                     <img src="assets/icons/chat.png" alt="">
                                 </div>
                                 <div class="agent-info">
                                     <strong>Contact Agent</strong>
-                                    <!-- <span>Schedule your private viewing</span> -->
+                                  
                                 </div>
                             </div>
 
                             <form method="POST" action="process_offplan_lead">
                                 <input type="hidden" name="redirect"
-                                    value="buy-properties-details.php?id=<?= (int) $propertyId ?>#contactAgent">
+                                    value="property-details.php?id=<?= (int) $propertyId ?>#contactAgent">
                                 <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                                 <input type="hidden" name="property_title"
                                     value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
                                 <input type="hidden" name="form_type" value="popup">
                                 <label>
-                                    <input type="text" name="name" placeholder="Enter your full name" required>
+                                    <input type="text" name="name" id="full_name" placeholder="Enter your full name" required>
                                 </label>
 
                                 <label>
-                                    <input type="email" name="email" placeholder="your.email@example.com" required>
+                                    <input type="email" name="email" id="email_address" placeholder="your.email@example.com" required>
                                 </label>
 
                                 <label>
-                                    <input type="text" name="country" placeholder="Enter your country" required>
+                                    <input type="text" name="country" id="country" placeholder="Enter your country" required>
                                 </label>
 
                                 <label>
-                                    <input type="tel" name="phone" id="phone" placeholder="+971 50 123 4567" required>
+                                    <input type="tel" name="phone" id="mobile_number" placeholder="+971 50 123 4567" class="mt-3" required>
                                 </label>
 
                                 <div class="g-recaptcha" data-sitekey="6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM"></div>
 
-                                <button type="submit" class="send">Send Message</button>
+                                <button type="submit" class="send mt-3">Submit</button>
                                 <p class="reg-note terms-and-privacy">
                                     By clicking Submit, you agree to our
                                     <a href="terms-and-conditions.php">Terms</a> &amp;
                                     <a href="privacy-policy.php">Privacy Policy</a>.
                                 </p>
                             </form>
+
                         </div>
                     </aside>
                 </div>

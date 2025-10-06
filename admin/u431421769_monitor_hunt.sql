@@ -155,6 +155,29 @@ INSERT INTO `popup_form` (`id`, `name`, `email`, `phone`, `country`, `ip_address
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `offplan_leads`
+--
+
+CREATE TABLE `offplan_leads` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `lead_type` varchar(50) DEFAULT NULL,
+  `property_id` int(11) DEFAULT NULL,
+  `property_title` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(64) DEFAULT NULL,
+  `country` varchar(150) DEFAULT NULL,
+  `brochure_url` varchar(500) DEFAULT NULL,
+  `ip_address` varchar(100) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `lead_type` (`lead_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `properties_list`
 --
 
@@ -272,6 +295,12 @@ ALTER TABLE `contact_form`
 --
 ALTER TABLE `mortgage_leads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `offplan_leads`
+--
+ALTER TABLE `offplan_leads`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `page_access_logs`

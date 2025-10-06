@@ -100,6 +100,7 @@ function render_sidebar(string $active): void
       'icon'  => 'bi-person-lines-fill',
       'label' => 'All Type Leads',
       'items' => [
+        'offplan-leads'  => ['href' => 'offplan_leads.php', 'label' => 'Off-Plan Leads'],
         'contact-form'    => ['href' => 'contact_form_submissions.php', 'label' => 'Contact Submissions'],
         'popup-form'      => ['href' => 'popup_form_submissions.php', 'label' => 'Popup Submissions'],
         'mortgage-leads'  => ['href' => 'mortgage_leads.php', 'label' => 'Mortgage Leads'],

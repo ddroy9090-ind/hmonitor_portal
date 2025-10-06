@@ -4,7 +4,19 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/includes/config.php';
 
-$propertyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+hh_session_start();
+
+$propertyId = 0;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $propertyId = isset($_POST['property_id']) ? (int) $_POST['property_id'] : 0;
+}
+
+if ($propertyId <= 0) {
+    $propertyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+}
+
+$leadFormError = $_SESSION['offplan_lead_error'] ?? null;
+unset($_SESSION['offplan_lead_error']);
 
 if ($propertyId <= 0) {
     http_response_code(404);
@@ -25,6 +37,96 @@ if (!$property) {
     http_response_code(404);
     echo 'Property not found.';
     exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $formType = (string) ($_POST['form_type'] ?? '');
+    if ($formType === 'popup' || $formType === 'brochure') {
+        $redirectUrl = 'property-details.php?id=' . $propertyId
+            . ($formType === 'brochure' ? '#downloadBrochure' : '#propertyEnquirey');
+
+        $nameKey = $formType === 'popup' ? 'name' : 'brochure_name';
+        $emailKey = $formType === 'popup' ? 'email' : 'brochure_email';
+        $countryKey = $formType === 'popup' ? 'country' : 'brochure_country';
+        $phoneKey = $formType === 'popup' ? 'phone' : 'brochure_phone';
+
+        $name = trim((string) ($_POST[$nameKey] ?? ''));
+        $emailInput = trim((string) ($_POST[$emailKey] ?? ''));
+        $emailValidated = filter_var($emailInput, FILTER_VALIDATE_EMAIL);
+        $email = $emailValidated !== false ? $emailValidated : '';
+        $country = trim((string) ($_POST[$countryKey] ?? ''));
+        $phone = trim((string) ($_POST[$phoneKey] ?? ''));
+
+        if ($name === '' || $email === '' || $country === '' || $phone === '') {
+            $_SESSION['offplan_lead_error'] = 'Please fill in all required fields with valid details.';
+            header('Location: ' . $redirectUrl);
+            exit;
+        }
+
+        $name = mb_substr($name, 0, 150);
+        $email = mb_substr(strtolower($email), 0, 190);
+        $country = mb_substr($country, 0, 150);
+        $phone = mb_substr(preg_replace('/[^0-9+()\-\s]/', '', $phone), 0, 64);
+
+        $propertyTitleForLead = trim((string) ($property['property_title'] ?? ''));
+        if ($propertyTitleForLead === '') {
+            $propertyTitleForLead = trim((string) ($property['project_name'] ?? ''));
+        }
+
+        $normalizeBrochureUrl = static function (string $value): string {
+            $value = trim(str_replace('\\', '/', $value));
+            if ($value === '') {
+                return '';
+            }
+
+            if (preg_match('#^(https?:)?//#i', $value)) {
+                return $value;
+            }
+
+            return '/' . ltrim($value, '/');
+        };
+
+        $brochureUrl = '';
+        if ($formType === 'brochure') {
+            $brochureUrl = $normalizeBrochureUrl((string) ($_POST['brochure_url'] ?? ''));
+        }
+
+        $ipAddress = mb_substr((string) ($_SERVER['REMOTE_ADDR'] ?? ''), 0, 100);
+        $userAgent = mb_substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500);
+
+        try {
+            $insert = $pdo->prepare(
+                'INSERT INTO offplan_leads '
+                . '(lead_type, property_id, property_title, name, email, phone, country, brochure_url, ip_address, user_agent, created_at) '
+                . 'VALUES (:lead_type, :property_id, :property_title, :name, :email, :phone, :country, :brochure_url, :ip_address, :user_agent, NOW())'
+            );
+
+            $insert->execute([
+                ':lead_type' => $formType,
+                ':property_id' => $propertyId,
+                ':property_title' => $propertyTitleForLead,
+                ':name' => $name,
+                ':email' => $email,
+                ':phone' => $phone,
+                ':country' => $country,
+                ':brochure_url' => $brochureUrl !== '' ? $brochureUrl : null,
+                ':ip_address' => $ipAddress !== '' ? $ipAddress : null,
+                ':user_agent' => $userAgent !== '' ? $userAgent : null,
+            ]);
+
+            if ($formType === 'brochure' && $brochureUrl !== '') {
+                $_SESSION['download_brochure_url'] = $brochureUrl;
+            }
+
+            header('Location: thankyou.php');
+            exit;
+        } catch (Throwable $e) {
+            error_log('Failed to save off-plan lead: ' . $e->getMessage());
+            $_SESSION['offplan_lead_error'] = 'We could not process your request at this time. Please try again later.';
+            header('Location: ' . $redirectUrl);
+            exit;
+        }
+    }
 }
 
 $decodeList = static function (?string $json): array {
@@ -379,6 +481,15 @@ $developerStats = array_values(array_filter([
 </head>
 
 <body>
+
+    <?php if ($leadFormError): ?>
+        <div class="container position-relative" style="z-index: 1050;">
+            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($leadFormError, ENT_QUOTES, 'UTF-8') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php endif; ?>
 
 
     <!-- parent: .hh-property-hero -->
@@ -1500,10 +1611,12 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
-                <form method="POST" class="appointment-form" action="danuber">
+                <form method="POST" class="appointment-form"
+                    action="property-details.php?id=<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_title"
                         value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="form_type" value="popup">
                     <div class="form-group">
                         <label for="full_name">Enter Name</label>
                         <input type="text" name="name" id="full_name" class="form-control" required>
@@ -1548,10 +1661,12 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Get your brochure instantly. Enter your details below to access the download.
                 </p>
-                <form method="POST" class="appointment-form" action="download-brochure">
+                <form method="POST" class="appointment-form"
+                    action="property-details.php?id=<?= (int) $propertyId ?>#downloadBrochure">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_title"
                         value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="form_type" value="brochure">
                     <input type="hidden" name="brochure_url"
                         value="<?= htmlspecialchars($brochure, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">

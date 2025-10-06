@@ -56,11 +56,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $emailValidated !== false ? $emailValidated : '';
         $country = trim((string) ($_POST[$countryKey] ?? ''));
         $phone = trim((string) ($_POST[$phoneKey] ?? ''));
+        $recaptchaResponse = trim((string) ($_POST['g-recaptcha-response'] ?? ''));
 
         if ($name === '' || $email === '' || $country === '' || $phone === '') {
             $_SESSION['offplan_lead_error'] = 'Please fill in all required fields with valid details.';
             header('Location: ' . $redirectUrl);
             exit;
+        }
+
+        if ($recaptchaResponse === '') {
+            $_SESSION['offplan_lead_error'] = 'Please verify the reCAPTCHA.';
+            header('Location: ' . $redirectUrl);
+            exit;
+        }
+
+        $recaptchaSecret = hh_recaptcha_secret_key();
+        if ($recaptchaSecret !== '') {
+            $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify?'
+                . http_build_query([
+                    'secret' => $recaptchaSecret,
+                    'response' => $recaptchaResponse,
+                    'remoteip' => $_SERVER['REMOTE_ADDR'] ?? null,
+                ]);
+
+            $verifyResponse = @file_get_contents($verifyUrl);
+            $verifyData = is_string($verifyResponse) ? json_decode($verifyResponse, true) : null;
+
+            if (!is_array($verifyData) || empty($verifyData['success'])) {
+                $_SESSION['offplan_lead_error'] = 'reCAPTCHA verification failed. Please try again.';
+                header('Location: ' . $redirectUrl);
+                exit;
+            }
         }
 
         $name = mb_substr($name, 0, 150);
@@ -1612,7 +1638,7 @@ $developerStats = array_values(array_filter([
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
                 <form method="POST" class="appointment-form"
-                    action="process_offplan_lead.php">
+                    action="property-details.php?id=<?= (int) $propertyId ?>#propertyEnquirey">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_title"
                         value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">

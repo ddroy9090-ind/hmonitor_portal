@@ -1,3 +1,16 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/includes/config.php';
+
+hh_session_start();
+
+$downloadBrochureUrl = '';
+if (!empty($_SESSION['download_brochure_url'])) {
+    $downloadBrochureUrl = (string) $_SESSION['download_brochure_url'];
+    unset($_SESSION['download_brochure_url']);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,6 +77,24 @@
         </div>
     </div>
 
+    <?php if ($downloadBrochureUrl !== ''): ?>
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                var link = document.createElement('a');
+                link.href = <?= json_encode($downloadBrochureUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                link.download = '';
+                link.rel = 'noopener';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                window.setTimeout(function () {
+                    if (link.parentNode) {
+                        link.parentNode.removeChild(link);
+                    }
+                }, 500);
+            });
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>

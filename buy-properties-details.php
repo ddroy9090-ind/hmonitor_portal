@@ -237,6 +237,12 @@ $permitBarcode = is_string($property['permit_barcode'] ?? '') && $property['perm
 $videoLink = trim((string) ($property['video_link'] ?? ''));
 $locationMap = trim((string) ($property['location_map'] ?? ''));
 $brochure = trim((string) ($property['brochure'] ?? ''));
+if ($brochure !== '') {
+    $normalizedBrochure = $normalizeImagePath($brochure);
+    if ($normalizedBrochure !== null) {
+        $brochure = $normalizedBrochure;
+    }
+}
 
 $featureItems = array_values(array_filter([
     $property['project_status'] ?? null,
@@ -1515,7 +1521,7 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
-                <form method="POST" class="appointment-form" action="process_offplan_lead">
+                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
                     <input type="hidden" name="redirect"
                         value="buy-properties-details.php?id=<?= (int) $propertyId ?>#propertyEnquirey">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">

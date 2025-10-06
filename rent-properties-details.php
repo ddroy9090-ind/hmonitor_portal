@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/includes/config.php';
 
+hh_session_start();
+
+$leadFormError = $_SESSION['offplan_lead_error'] ?? null;
+unset($_SESSION['offplan_lead_error']);
+
 $propertyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($propertyId <= 0) {
@@ -379,6 +384,15 @@ $developerStats = array_values(array_filter([
 </head>
 
 <body>
+
+    <?php if ($leadFormError): ?>
+        <div class="container position-relative" style="z-index: 1050;">
+            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($leadFormError, ENT_QUOTES, 'UTF-8') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php endif; ?>
 
 
     <!-- parent: .hh-property-hero -->
@@ -1501,10 +1515,13 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Unlock expert advice, exclusive listings & investment insights.
                 </p>
-                <form method="POST" class="appointment-form" action="danuber">
+                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
+                    <input type="hidden" name="redirect"
+                        value="rent-properties-details.php?id=<?= (int) $propertyId ?>#propertyEnquirey">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_title"
                         value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="form_type" value="popup">
                     <div class="form-group">
                         <label for="full_name">Enter Name</label>
                         <input type="text" name="name" id="full_name" class="form-control" required>
@@ -1550,10 +1567,13 @@ $developerStats = array_values(array_filter([
                 <p style="font-size: 14px !important; margin-bottom: 10px;">
                     Get your brochure instantly. Enter your details below to access the download.
                 </p>
-                <form method="POST" class="appointment-form" action="download-brochure">
+                <form method="POST" class="appointment-form" action="process_offplan_lead.php">
+                    <input type="hidden" name="redirect"
+                        value="rent-properties-details.php?id=<?= (int) $propertyId ?>#downloadBrochure">
                     <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                     <input type="hidden" name="property_title"
                         value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="form_type" value="brochure">
                     <input type="hidden" name="brochure_url"
                         value="<?= htmlspecialchars($brochure, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">

@@ -983,7 +983,7 @@ p {
 }
 
 .hh-gallery-01-thumbs .swiper-slide-thumb-active {
-    border-color: #18a394;
+    border-color: #26ecb0;
     transform: translateY(-1px);
 }
 
@@ -1749,7 +1749,7 @@ p {
 }
 
 .hh-developer-01 .stat {
-    background: #f1fbfa;
+    /* background: #f1fbfa; */
     border: 1px solid #d9eeeb;
     border-radius: 12px;
     padding: 14px;
@@ -1775,7 +1775,7 @@ p {
 .hh-floorplans-01 {
     font-family: "Hind Madurai", sans-serif !important;
     color: #1b2b2a;
-    padding:0;
+    padding: 0;
 }
 
 .hh-floorplans-01 h3 {
@@ -1842,7 +1842,7 @@ p {
 
 .hh-floorplans-01 .fp-view:hover,
 .hh-floorplans-01 .fp-view:focus-visible {
-    background: #18a394;
+    background: #26ecb0;
     box-shadow: 0 16px 32px rgba(24, 163, 148, 0.25);
     transform: translateY(-2px);
     color: #fff;
@@ -1922,10 +1922,10 @@ p {
 }
 
 .hh-floorplans-01 .fp-box[aria-selected="true"] {
-    border-color: #18a394;
+    border-color: #26ecb0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
     outline: 0;
-    background: #f2fbfa;
+    background: #fff;
 }
 
 /* box head */
@@ -1941,7 +1941,7 @@ p {
     height: 30px;
     object-fit: contain;
     border-radius: 8px;
-    background: #e9f6f4;
+    /* background: #e9f6f4; */
     padding: 8px;
 }
 
@@ -1973,7 +1973,7 @@ p {
     align-items: baseline;
     justify-content: space-between;
     border: 1px solid #edf3f2;
-    background: #f8fbfb;
+    /* background: #f8fbfb; */
     border-radius: 10px;
     padding: 8px 10px;
 }
@@ -2046,7 +2046,7 @@ p {
 
 .hh-floorplans-01 .fp-lightbox-close:hover,
 .hh-floorplans-01 .fp-lightbox-close:focus-visible {
-    background: #18a394;
+    background: #26ecb0;
     color: #fff;
     box-shadow: 0 18px 36px rgba(24, 163, 148, 0.35);
     transform: translateY(-2px);
@@ -2092,7 +2092,7 @@ p {
 
 .hh-floorplans-01 .fp-lightbox-nav:hover,
 .hh-floorplans-01 .fp-lightbox-nav:focus-visible {
-    background: #18a394;
+    background: #26ecb0;
     box-shadow: 0 18px 40px rgba(24, 163, 148, 0.35);
     transform: translateY(-2px);
 }
@@ -2165,7 +2165,7 @@ p {
 .hh-invest-01 section>header span {
     width: 40px;
     height: 40px;
-    background: #e4f9f6;
+    /* background: #e4f9f6; */
     display: inline-block;
     border-radius: 50%;
     position: relative;
@@ -3529,10 +3529,11 @@ body.no-scroll {
 .amenities-list {
     list-style: none;
     padding: 0;
-    margin: 24px 0 0;
+    margin: 0px 0 0;
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 18px;
+    padding-bottom: 40px;
 }
 
 @media (min-width: 576px) {
@@ -3559,13 +3560,13 @@ body.no-scroll {
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     color: #144c43;
     font-weight: 500;
     gap: 16px;
-    padding: 28px 16px;
+    padding: 10px 16px;
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 5px;
     box-shadow: 0 10px 30px rgba(16, 82, 70, 0.08);
     border: 1px solid rgba(16, 82, 70, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -3577,15 +3578,17 @@ body.no-scroll {
 }
 
 .amenities-list li i {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #e9f6f4;
+    /* background: #e9f6f4; */
+    background-color: #004a44;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
-    color: #0c9f84;
+    font-size: 18px;
+    /* color: #0c9f84; */
+    color: #26ecb0;
 }
 
 .amenities-list li span {
@@ -3873,10 +3876,11 @@ body.no-scroll {
         font-size: 12px;
     }
 }
+
 .hh-amenities-01 {
     background: #f1faf7;
-    padding: 48px 40px;
-    border-radius: 24px;
+    padding: 0;
+    border-radius: 12px;
 }
 
 .hh-amenities-01 h3 {

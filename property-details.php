@@ -1137,29 +1137,75 @@ $developerStats = array_values(array_filter([
 
                         <!-- Landmarks list -->
                         <div class="col-12 col-md-6" id="LandMarkList">
-                            
+
                             <div class="hh-location-01-landmarks">
                                 <?php if ($locationAccess): ?>
-                                    <ul class="list-unstyled landmarks-list">
+                                    <?php
+                                    $landmarkIconKeywords = [
+                                        'mall' => 'assets/icons/community.svg',
+                                        'marina' => 'assets/icons/community.svg',
+                                        'airport' => 'assets/icons/globe.png',
+                                        'metro' => 'assets/icons/location.png',
+                                        'station' => 'assets/icons/location.png',
+                                        'school' => 'assets/icons/community.svg',
+                                        'hospital' => 'assets/icons/eye.svg',
+                                        'beach' => 'assets/icons/community.svg',
+                                        'park' => 'assets/icons/community.svg',
+                                        'tower' => 'assets/icons/home.svg',
+                                    ];
+                                    $defaultLandmarkIcon = 'assets/icons/location.png';
+                                    ?>
+                                    <div class="hh-landmarks-grid">
                                         <?php foreach ($locationAccess as $item): ?>
-                                            <li class="d-flex align-items-center mb-2">
-                                                <div class="d-flex align-items-center">
-                                                    <img class="dot me-2" src="assets/icons/dot-green.png" alt="">
-                                                    <span class="fw-semibold">
-                                                        <?= htmlspecialchars($item['landmark'], ENT_QUOTES, 'UTF-8') ?>
-                                                    </span>
+                                            <?php
+                                            $landmarkRaw = is_string($item['landmark']) ? $item['landmark'] : '';
+                                            $categoryRaw = is_string($item['category']) ? $item['category'] : '';
+                                            $distanceRaw = is_string($item['distance']) ? $item['distance'] : '';
+
+                                            $categoryValue = trim($categoryRaw);
+                                            $distanceValue = trim($distanceRaw);
+                                            $landmarkKey = strtolower($landmarkRaw);
+                                            $categoryKey = strtolower($categoryValue);
+
+                                            $iconPath = $defaultLandmarkIcon;
+                                            foreach ($landmarkIconKeywords as $keyword => $path) {
+                                                if (($categoryKey !== '' && str_contains($categoryKey, $keyword)) ||
+                                                    ($landmarkKey !== '' && str_contains($landmarkKey, $keyword))) {
+                                                    $iconPath = $path;
+                                                    break;
+                                                }
+                                            }
+
+                                            $metaParts = array_values(array_filter([
+                                                $distanceValue,
+                                                $categoryValue,
+                                            ], static fn($value): bool => $value !== ''));
+
+                                            $iconAlt = $categoryValue !== '' ? $categoryValue . ' icon' : 'Landmark icon';
+                                            ?>
+                                            <div class="hh-landmark-card">
+                                                <div class="hh-landmark-icon">
+                                                    <img src="<?= htmlspecialchars($iconPath, ENT_QUOTES, 'UTF-8') ?>"
+                                                        alt="<?= htmlspecialchars($iconAlt, ENT_QUOTES, 'UTF-8') ?>">
                                                 </div>
-                                                <div class="text-end">
-                                                    <?php if ($item['distance'] !== ''): ?>
-                                                        <span class="me-2"><?= htmlspecialchars($item['distance'], ENT_QUOTES, 'UTF-8') ?></span>
-                                                    <?php endif; ?>
-                                                    <?php if ($item['category'] !== ''): ?>
-                                                        <span class="text-white"><?= htmlspecialchars($item['category'], ENT_QUOTES, 'UTF-8') ?></span>
+                                                <div class="hh-landmark-details">
+                                                    <div class="hh-landmark-name">
+                                                        <?= htmlspecialchars($landmarkRaw, ENT_QUOTES, 'UTF-8') ?>
+                                                    </div>
+                                                    <?php if ($metaParts): ?>
+                                                        <div class="hh-landmark-meta">
+                                                            <?php foreach ($metaParts as $index => $metaPart): ?>
+                                                                <?php if ($index > 0): ?>
+                                                                    <span class="hh-landmark-meta-separator">|</span>
+                                                                <?php endif; ?>
+                                                                <span><?= htmlspecialchars($metaPart, ENT_QUOTES, 'UTF-8') ?></span>
+                                                            <?php endforeach; ?>
+                                                        </div>
                                                     <?php endif; ?>
                                                 </div>
-                                            </li>
+                                            </div>
                                         <?php endforeach; ?>
-                                    </ul>
+                                    </div>
                                 <?php else: ?>
                                     <p class="mb-0">Connectivity details will be available soon.</p>
                                 <?php endif; ?>

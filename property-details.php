@@ -923,7 +923,7 @@ $developerStats = array_values(array_filter([
                                     <a href="privacy-policy.php">Privacy Policy</a>.
                                 </p>
                             </form>
-                            
+
                         </div>
                     </aside>
                 </div>
@@ -1128,7 +1128,7 @@ $developerStats = array_values(array_filter([
                         </div>
 
                         <!-- Landmarks list -->
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-6" id="LandMarkList">
                             <div class="hh-location-01-landmarks">
                                 <?php if ($locationAccess): ?>
                                     <ul class="list-unstyled landmarks-list">

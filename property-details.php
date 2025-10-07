@@ -1253,15 +1253,7 @@ $developerStats = array_values(array_filter([
                         <div class="hh-property-videos__card">
                             <div class="hh-property-videos__header">
                                 <span class="hh-property-videos__icon" aria-hidden="true">
-                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.12"
-                                            d="M4 9.55556C4 6.48109 4 4.94385 4.75736 3.90693C5.13137 3.39379 5.62257 2.96577 6.1967 2.65246C7.31241 2 8.87592 2 12.0029 2H15.9971C19.1241 2 20.6876 2 21.8033 2.65246C22.3774 2.96577 22.8686 3.39379 23.2426 3.90693C24 4.94385 24 6.48109 24 9.55556V18.4444C24 21.5189 24 23.0561 23.2426 24.0931C22.8686 24.6062 22.3774 25.0342 21.8033 25.3475C20.6876 26 19.1241 26 15.9971 26H12.0029C8.87592 26 7.31241 26 6.1967 25.3475C5.62257 25.0342 5.13137 24.6062 4.75736 24.0931C4 23.0561 4 21.5189 4 18.4444V9.55556Z"
-                                            fill="#37A7A5" />
-                                        <path
-                                            d="M11.5 10.2908C11.5 9.2528 11.5 8.73383 11.7883 8.50402C12.0766 8.27422 12.5408 8.47778 13.4692 8.88491L18.6002 11.1312C19.6137 11.5795 20.1205 11.8036 20.1205 12.2454C20.1205 12.6872 19.6137 12.9113 18.6002 13.3596L13.4692 15.6059C12.5408 16.013 12.0766 16.2166 11.7883 15.9868C11.5 15.757 11.5 15.238 11.5 14.2V10.2908Z"
-                                            fill="#0F172A" />
-                                    </svg>
+                                    <img src="assets/icons/property-video.svg" alt="" width="28" height="28">
                                 </span>
                                 <div class="hh-property-videos__header-text">
                                     <h3>Property Videos</h3>
@@ -1286,11 +1278,7 @@ $developerStats = array_values(array_filter([
                                     style="background-image: url('<?= htmlspecialchars($videoPreviewImage, ENT_QUOTES, 'UTF-8') ?>');"
                                     aria-label="Play property video">
                                     <span class="hh-property-videos__play" aria-hidden="true">
-                                        <svg width="50" height="50" viewBox="0 0 60 60" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="30" cy="30" r="30" fill="white" fill-opacity="0.82" />
-                                            <path d="M26 22L39 30L26 38V22Z" fill="#0F172A" />
-                                        </svg>
+                                        <img src="assets/icons/play-circle.svg" alt="" width="60" height="60">
                                     </span>
                                     <?php if ($videoDuration !== ''): ?>
                                         <span class="hh-property-videos__duration">
@@ -1303,15 +1291,7 @@ $developerStats = array_values(array_filter([
                                     <h4><?= htmlspecialchars($displayVideoTitle, ENT_QUOTES, 'UTF-8') ?></h4>
                                     <?php if ($videoViews !== ''): ?>
                                         <div class="hh-property-videos__views">
-                                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path d="M1.5 10C1.5 10 4.5 4.5 10 4.5C15.5 4.5 18.5 10 18.5 10C18.5 10 15.5 15.5 10 15.5C4.5 15.5 1.5 10 1.5 10Z"
-                                                    stroke="#64748B" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M10 12.25C11.2426 12.25 12.25 11.2426 12.25 10C12.25 8.75736 11.2426 7.75 10 7.75C8.75736 7.75 7.75 8.75736 7.75 10C7.75 11.2426 8.75736 12.25 10 12.25Z"
-                                                    stroke="#64748B" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
+                                            <img src="assets/icons/eye.svg" alt="" width="22" height="16">
                                             <span><?= htmlspecialchars($videoViews, ENT_QUOTES, 'UTF-8') ?></span>
                                         </div>
                                     <?php endif; ?>

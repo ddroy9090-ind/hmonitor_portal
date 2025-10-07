@@ -475,8 +475,6 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-    
-
     <!-- parent: .hh-gallery-01 -->
     <div class="hh-gallery-01 ">
         <div class="container">
@@ -738,6 +736,7 @@ $developerStats = array_values(array_filter([
                         <!-- Floor Plan -->
                         <div id="hh-tab-floor" class="tab-pane fade" role="tabpanel" aria-labelledby="hh-tab-floor-btn">
                             <div class="hh-floorplans-01 ">
+                                <h3>Floor Plans</h3>
                                 <div class="container-fluid">
                                     <?php if ($floorPlans): ?>
                                         <div class="row">
@@ -820,7 +819,7 @@ $developerStats = array_values(array_filter([
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <h4>About the Developer</h4>
+                                            <h3>About the Developer</h3>
                                         </div>
                                         <div class="col-12">
                                             <section class="dev-card " data-animation-in="animate__flipInX"

@@ -884,9 +884,8 @@ p {
 .hh-gallery-01-main .nav::after {
     content: "";
     display: block;
-    width: 20px;
-    /* size of your icon */
-    height: 20px;
+    width: 15px;
+    height: 15px;
     background-size: contain;
     background-repeat: no-repeat;
     margin: auto;
@@ -895,6 +894,8 @@ p {
 /* Next button */
 .hh-gallery-01-main .nav.next::after {
     background-image: url("../icons/next-arrow.png");
+    left: 4px;
+    position: relative;
 }
 
 /* Prev button */
@@ -905,7 +906,7 @@ p {
 
 .hh-gallery-01-main .nav:hover {
     background: rgba(0, 0, 0, .35);
-    transform: translateY(-50%) scale(1.02);
+    /* transform: translateY(-50%) scale(1.02); */
 }
 
 /* Fullscreen */
@@ -1158,7 +1159,7 @@ p {
     right: 22px;
     width: 42px;
     height: 42px;
-    border-radius: 10px;
+    border-radius: 50%;
     border: 0;
     background: #fff;
     color: #111;
@@ -1172,9 +1173,9 @@ p {
     top: 50%;
     transform: translateY(-50%);
     width: 44px;
-    height: 88px;
+    height: 44px;
     border: 0;
-    border-radius: 10px;
+    border-radius: 50%;
     background: rgba(255, 255, 255, .15);
     cursor: pointer;
 }
@@ -1191,26 +1192,33 @@ p {
 .hh-gallery-01-lightbox .lb-next::after {
     content: "";
     display: block;
-    width: 10px;
-    height: 10px;
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
+    width: 15px;
+    height: 15px;
+    background-size: contain;
+    background-repeat: no-repeat;
     margin: auto;
 }
 
 .hh-gallery-01-lightbox .lb-prev::after {
-    transform: rotate(225deg);
+    background-image: url("../icons/pre-arrow.png");
 }
 
 .hh-gallery-01-lightbox .lb-next::after {
-    transform: rotate(45deg);
+    background-image: url("../icons/next-arrow.png");
 }
 
 .hh-details-01 {
     font-family: "Hind Madurai", sans-serif !important;
     color: #1b2b2a;
     padding-bottom: 50px;
+}
+
+.hh-details-01 .tab-content .tab-pane h3 {
+    color: #004a44;
+    padding: 15px 0;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
 }
 
 /* --- Tabs UI (custom, Bootstrap JS handles toggle) --- */
@@ -1335,28 +1343,6 @@ p {
 }
 
 
-
-/* Content styles */
-.hh-details-01 h3 {
-    margin: 8px 0 10px;
-    font-size: 24px;
-}
-
-
-.hh-amenities-01 h3 {
-    margin: 8px 0 10px;
-    font-size: 24px;
-}
-
-.hh-developer-01 h4 {
-    margin: 8px 0 10px;
-    font-size: 24px;
-}
-
-/* .hh-details-01 h4 {
-    margin: 8px 0 10px;
-    font-size: 18px;
-} */
 
 .hh-details-01 p {
     margin: 0 0 14px;
@@ -1690,7 +1676,7 @@ p {
 
 .hh-developer-01 {
     font-family: "Hind Madurai", sans-serif !important;
-    padding: 16px 0;
+    padding: 0;
 }
 
 /* card */
@@ -1789,7 +1775,7 @@ p {
 .hh-floorplans-01 {
     font-family: "Hind Madurai", sans-serif !important;
     color: #1b2b2a;
-    padding: 18px 0;
+    padding:0;
 }
 
 .hh-floorplans-01 h3 {

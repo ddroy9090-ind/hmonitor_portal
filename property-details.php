@@ -1086,29 +1086,12 @@ $developerStats = array_values(array_filter([
             <!-- Heading -->
             <div class="row">
                 <div class="col-12">
-                    <div>
-                        <div class="hh-location-01-head">
-                            <h3>Prime Location &amp; Connectivity</h3>
-                        </div>
-                        <?php if (!empty($property['property_location'])): ?>
-                            <p class="locationP">Located at
-                                <?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>.</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Main grid -->
-            <div class="row g-4">
-                <div class="col-12 col-lg-8" data-animation-in="animate__fadeInLeft"
-                    data-animation-out="animate__fadeOutLeft">
-                    <div class="hh-location-01-map-card">
-                        <div class="hh-location-card-head">
+                    <div class="hh-location-card-head">
                             <div class="hh-location-card-icon">
                                 <img src="assets/icons/location.png" alt="Interactive map icon">
                             </div>
                             <div class="hh-location-card-text">
-                                <strong>Interactive Location Map</strong>
+                                <strong>Prime Location & Connectivity</strong>
                                 <?php if ($locationHighlight !== ''): ?>
                                     <span><?= htmlspecialchars($locationHighlight, ENT_QUOTES, 'UTF-8') ?></span>
                                 <?php else: ?>
@@ -1116,6 +1099,15 @@ $developerStats = array_values(array_filter([
                                 <?php endif; ?>
                             </div>
                         </div>
+                </div>
+            </div>
+
+            <!-- Main grid -->
+            <div class="row g-4">
+                <div class="col-lg-8 col-lg-8" data-animation-in="animate__fadeInLeft"
+                    data-animation-out="animate__fadeOutLeft">
+                    <div class="hh-location-01-map-card">
+                        
                         <div class="hh-location-01-map" data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
                             <?php if ($locationMap !== ''): ?>
@@ -1138,7 +1130,7 @@ $developerStats = array_values(array_filter([
 
                     <div class="hh-location-01-landmarks" id="LandMarkList">
                         <div class="hh-landmarks-head">
-                            <strong>Nearby Landmarks &amp; Amenities</strong>
+                            <strong>Nearby Landmarks</strong>
                             <span>Stay connected to the best spots around the community.</span>
                         </div>
                         <?php if ($locationAccess): ?>

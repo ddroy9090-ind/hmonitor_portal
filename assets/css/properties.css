@@ -2603,18 +2603,19 @@ p {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: 0 28px 46px -42px rgba(15, 160, 144, 0.68);
+    /* box-shadow: 0 28px 46px -42px rgba(15, 160, 144, 0.68); */
 }
 
 .hh-location-01 .hh-location-card-head {
     display: flex;
     align-items: center;
     gap: 16px;
+    margin-bottom: 15px;
 }
 
 .hh-location-01 .hh-location-card-icon {
-    width: 54px;
-    height: 54px;
+    width: 40px;
+    height: 40px;
     border-radius: 16px;
     background: rgba(22, 187, 170, 0.12);
     display: flex;
@@ -2623,8 +2624,8 @@ p {
 }
 
 .hh-location-01 .hh-location-card-icon img {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
 }
 
@@ -2842,10 +2843,11 @@ p {
 }
 
 .hh-location-01 .hh-location-01-permit {
-    background: linear-gradient(135deg, #0f8a7a 0%, #16bbaa 100%);
-    border-radius: 20px;
+    /* background: linear-gradient(135deg, #0f8a7a 0%, #16bbaa 100%); */
+    border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 26px 48px -34px rgba(11, 111, 102, 0.6);
+    /* box-shadow: 0 26px 48px -34px rgba(11, 111, 102, 0.6); */
+    border: 1px #ededed solid;
 }
 
 .hh-location-01 .hh-location-01-permit .head {
@@ -2859,11 +2861,12 @@ p {
     width: 18px;
     height: 18px;
     object-fit: contain;
+    filter: brightness(0);
 }
 
 .hh-location-01 .hh-location-01-permit .head strong {
     font-size: 16px;
-    color: #fff;
+    /* color: #fff; */
     font-weight: 600;
 }
 
@@ -2875,7 +2878,7 @@ p {
 }
 
 .hh-location-01 .hh-location-01-permit .qr {
-    border: 4px solid rgba(255, 255, 255, 0.35);
+    /* border: 4px solid rgba(255, 255, 255, 0.35); */
     border-radius: 12px;
     width: 120px;
     max-width: 45%;
@@ -2889,14 +2892,14 @@ p {
 
 .hh-location-01 .hh-location-01-permit .permit-box span {
     display: block;
-    color: #fff;
+    /* color: #fff; */
     font-size: 16px;
     font-weight: 500;
 }
 
 .hh-location-01 .hh-location-01-permit .permit-box b {
     display: block;
-    color: #fff;
+    /* color: #fff; */
     font-size: 18px;
     font-weight: 600;
 }
@@ -2904,7 +2907,7 @@ p {
 .hh-location-01 .hh-location-01-permit .permit-box em {
     display: block;
     font-style: normal;
-    color: rgba(255, 255, 255, 0.9);
+    /* color: rgba(255, 255, 255, 0.9); */
     font-size: 14px;
     font-weight: 500;
 }

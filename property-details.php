@@ -456,7 +456,7 @@ $developerStats = array_values(array_filter([
                                 <?php else: ?>
                                     <?= htmlspecialchars($startingPriceValue, ENT_QUOTES, 'UTF-8') ?>
                                 <?php endif; ?>
-                                <span>Starting from</span>
+                                <span style="display: block;">Starting from</span>
                             </div>
                         <?php endif; ?>
                         <?php if ($specItems): ?>
@@ -487,10 +487,10 @@ $developerStats = array_values(array_filter([
     <!-- parent: .hh-gallery-01 -->
     <div class="hh-gallery-01 ">
         <div class="container">
-
-            <!-- Header -->
+            <!-- Gallery + Agent -->
             <div class="row">
-                <div class="col-12">
+                <!-- Left: Gallery -->
+                <div class="col-12 col-lg-8">
                     <div class="hh-gallery-01-head " data-animation-in="animate__fadeInDown"
                         data-animation-out="animate__fadeOutUp">
                         <h3>Property Gallery</h3>
@@ -513,13 +513,6 @@ $developerStats = array_values(array_filter([
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Gallery + Agent -->
-            <div class="row">
-                <!-- Left: Gallery -->
-                <div class="col-12 col-lg-8">
                     <div class="hh-gallery-01-wrap " data-animation-in="animate__fadeInLeft"
                         data-animation-out="animate__fadeOutLeft">
 
@@ -586,7 +579,7 @@ $developerStats = array_values(array_filter([
                             <div class="info">
                                 <strong>Sarah Al-Mansouri</strong>
                                 <span>Senior Property Consultant</span>
-                                <em><b style="color: #edb608; font-size: 18px;">★★★★★</b> · 5.0 Rating</em>
+                                <em><b style="color: #fff; font-size: 18px;">★★★★★</b> · 5.0 Rating</em>
                             </div>
                         </div>
 
@@ -824,14 +817,14 @@ $developerStats = array_values(array_filter([
                                         <div class="col-12">
                                             <section class="dev-card " data-animation-in="animate__flipInX"
                                                 data-animation-out="animate__flipOutX">
-                                                <!-- <div class="dev-head">
+                                                <div class="dev-head">
                                                     <div class="dev-ico">
                                                         <img src="assets/flaticons/residential.png" width="25" alt="">
                                                     </div>
                                                     <div class="dev-title">
                                                         <strong><?= htmlspecialchars($property['developer_name'] ?: 'Developer', ENT_QUOTES, 'UTF-8') ?></strong>
                                                     </div>
-                                                </div> -->
+                                                </div>
                                                 <div class="dev-body">
 
                                                     <div class="row justify-content-start align-items-center">
@@ -925,50 +918,6 @@ $developerStats = array_values(array_filter([
 
                         </div>
                     </aside>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- parent: .hh-cta-01 -->
-    <div class="hh-cta-01">
-        <div class="container">
-            <div class="row align-items-center gy-4">
-                <!-- Left: Property Permit -->
-                <div class="col-lg-6">
-                    <div class="permit-section">
-                        <div class="permit-heading">
-                            <h6>Property Permit</h6>
-                            <?php if ($permitBarcode): ?>
-                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                    alt="Permit QR" width="120" />
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="permit-box">
-                            <span>Permit Number</span>
-                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                            <?php if ($completionDate): ?>
-                                <em>Completion:
-                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right: CTA Banner -->
-                <div class="col-lg-6">
-                    <div class="cta-banner" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
-                        <h3>Ready to Invest in Your Future?</h3>
-                        <p>Contact our property specialists today for exclusive pricing and expert advice.</p>
-
-                        <div class="cta-actions">
-                            <button onclick="window.location.href='tel:+97142554683'" type="button"
-                                class="cta-btn primary">Call Now</button>
-                            <button type="button" class="cta-btn secondary" onclick="openPopup()">Enquire Now</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1133,9 +1082,8 @@ $developerStats = array_values(array_filter([
             <!-- Heading -->
             <div class="row">
                 <div class="col-12">
-                    <div class="" data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp">
+                    <div>
                         <div class="hh-location-01-head">
-                            <!-- <img src="assets/icons/location.png" alt="" /> -->
                             <h3>Prime Location &amp; Connectivity</h3>
                         </div>
                         <?php if (!empty($property['property_location'])): ?>
@@ -1153,98 +1101,100 @@ $developerStats = array_values(array_filter([
                     data-animation-out="animate__fadeOutLeft">
                     <div class="row">
                         <!-- Map card -->
-                        <div class="col-12 col-md-6">
-                            <div class="hh-location-01-map " data-animation-in="animate__fadeIn"
-                                data-animation-out="animate__fadeOut">
-                                <?php if ($locationMap !== ''): ?>
-                                    <?php if (stripos($locationMap, '<iframe') !== false): ?>
-                                        <?= $locationMap ?>
-                                    <?php else: ?>
-                                        <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
-                                            height="375px" style="border:0;" allowfullscreen loading="lazy"
-                                            referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                    <div class="map-placeholder">Location map coming soon.</div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-
-                        <!-- Landmarks list -->
-                        <div class="col-12 col-md-6" id="LandMarkList">
-
-                            <div class="hh-location-01-landmarks">
-                                <?php if ($locationAccess): ?>
-                                    <?php
-                                    $landmarkIconKeywords = [
-                                        'mall' => 'assets/icons/community.svg',
-                                        'marina' => 'assets/icons/community.svg',
-                                        'airport' => 'assets/icons/globe.png',
-                                        'metro' => 'assets/icons/location.png',
-                                        'station' => 'assets/icons/location.png',
-                                        'school' => 'assets/icons/community.svg',
-                                        'hospital' => 'assets/icons/eye.svg',
-                                        'beach' => 'assets/icons/community.svg',
-                                        'park' => 'assets/icons/community.svg',
-                                        'tower' => 'assets/icons/home.svg',
-                                    ];
-                                    $defaultLandmarkIcon = 'assets/icons/location.png';
-                                    ?>
-                                    <div class="hh-landmarks-grid">
-                                        <?php foreach ($locationAccess as $item): ?>
-                                            <?php
-                                            $landmarkRaw = is_string($item['landmark']) ? $item['landmark'] : '';
-                                            $categoryRaw = is_string($item['category']) ? $item['category'] : '';
-                                            $distanceRaw = is_string($item['distance']) ? $item['distance'] : '';
-
-                                            $categoryValue = trim($categoryRaw);
-                                            $distanceValue = trim($distanceRaw);
-                                            $landmarkKey = strtolower($landmarkRaw);
-                                            $categoryKey = strtolower($categoryValue);
-
-                                            $iconPath = $defaultLandmarkIcon;
-                                            foreach ($landmarkIconKeywords as $keyword => $path) {
-                                                if (($categoryKey !== '' && str_contains($categoryKey, $keyword)) ||
-                                                    ($landmarkKey !== '' && str_contains($landmarkKey, $keyword))
-                                                ) {
-                                                    $iconPath = $path;
-                                                    break;
-                                                }
-                                            }
-
-                                            $metaParts = array_values(array_filter([
-                                                $distanceValue,
-                                                $categoryValue,
-                                            ], static fn($value): bool => $value !== ''));
-
-                                            $iconAlt = $categoryValue !== '' ? $categoryValue . ' icon' : 'Landmark icon';
-                                            ?>
-                                            <div class="hh-landmark-card">
-                                                <div class="hh-landmark-icon">
-                                                    <img src="<?= htmlspecialchars($iconPath, ENT_QUOTES, 'UTF-8') ?>"
-                                                        alt="<?= htmlspecialchars($iconAlt, ENT_QUOTES, 'UTF-8') ?>">
-                                                </div>
-                                                <div class="hh-landmark-details">
-                                                    <div class="hh-landmark-name">
-                                                        <?= htmlspecialchars($landmarkRaw, ENT_QUOTES, 'UTF-8') ?>
-                                                    </div>
-                                                    <?php if ($metaParts): ?>
-                                                        <div class="hh-landmark-meta">
-                                                            <?php foreach ($metaParts as $index => $metaPart): ?>
-                                                                <?php if ($index > 0): ?>
-                                                                    <span class="hh-landmark-meta-separator">|</span>
-                                                                <?php endif; ?>
-                                                                <span><?= htmlspecialchars($metaPart, ENT_QUOTES, 'UTF-8') ?></span>
-                                                            <?php endforeach; ?>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="hh-location-01-map " data-animation-in="animate__fadeIn"
+                                        data-animation-out="animate__fadeOut">
+                                        <?php if ($locationMap !== ''): ?>
+                                            <?php if (stripos($locationMap, '<iframe') !== false): ?>
+                                                <?= $locationMap ?>
+                                            <?php else: ?>
+                                                <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
+                                                    height="375px" style="border:0;" allowfullscreen loading="lazy"
+                                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <div class="map-placeholder">Location map coming soon.</div>
+                                        <?php endif; ?>
                                     </div>
-                                <?php else: ?>
-                                    <p class="mb-0">Connectivity details will be available soon.</p>
-                                <?php endif; ?>
+                                </div>
+                                <!-- Landmarks list -->
+                                <div class="col-lg-4" id="LandMarkList">
+                                    <div class="hh-location-01-landmarks">
+                                        <?php if ($locationAccess): ?>
+                                            <?php
+                                            $landmarkIconKeywords = [
+                                                'mall' => 'assets/icons/community.svg',
+                                                'marina' => 'assets/icons/community.svg',
+                                                'airport' => 'assets/icons/globe.png',
+                                                'metro' => 'assets/icons/location.png',
+                                                'station' => 'assets/icons/location.png',
+                                                'school' => 'assets/icons/community.svg',
+                                                'hospital' => 'assets/icons/eye.svg',
+                                                'beach' => 'assets/icons/community.svg',
+                                                'park' => 'assets/icons/community.svg',
+                                                'tower' => 'assets/icons/home.svg',
+                                            ];
+                                            $defaultLandmarkIcon = 'assets/icons/location.png';
+                                            ?>
+                                            <div class="hh-landmarks-grid">
+                                                <?php foreach ($locationAccess as $item): ?>
+                                                    <?php
+                                                    $landmarkRaw = is_string($item['landmark']) ? $item['landmark'] : '';
+                                                    $categoryRaw = is_string($item['category']) ? $item['category'] : '';
+                                                    $distanceRaw = is_string($item['distance']) ? $item['distance'] : '';
+
+                                                    $categoryValue = trim($categoryRaw);
+                                                    $distanceValue = trim($distanceRaw);
+                                                    $landmarkKey = strtolower($landmarkRaw);
+                                                    $categoryKey = strtolower($categoryValue);
+
+                                                    $iconPath = $defaultLandmarkIcon;
+                                                    foreach ($landmarkIconKeywords as $keyword => $path) {
+                                                        if (($categoryKey !== '' && str_contains($categoryKey, $keyword)) ||
+                                                            ($landmarkKey !== '' && str_contains($landmarkKey, $keyword))
+                                                        ) {
+                                                            $iconPath = $path;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    $metaParts = array_values(array_filter([
+                                                        $distanceValue,
+                                                        $categoryValue,
+                                                    ], static fn($value): bool => $value !== ''));
+
+                                                    $iconAlt = $categoryValue !== '' ? $categoryValue . ' icon' : 'Landmark icon';
+                                                    ?>
+                                                    <div class="hh-landmark-card">
+                                                        <div class="hh-landmark-icon">
+                                                            <img src="<?= htmlspecialchars($iconPath, ENT_QUOTES, 'UTF-8') ?>"
+                                                                alt="<?= htmlspecialchars($iconAlt, ENT_QUOTES, 'UTF-8') ?>">
+                                                        </div>
+                                                        <div class="hh-landmark-details">
+                                                            <div class="hh-landmark-name">
+                                                                <?= htmlspecialchars($landmarkRaw, ENT_QUOTES, 'UTF-8') ?>
+                                                            </div>
+                                                            <?php if ($metaParts): ?>
+                                                                <div class="hh-landmark-meta">
+                                                                    <?php foreach ($metaParts as $index => $metaPart): ?>
+                                                                        <?php if ($index > 0): ?>
+                                                                            <span class="hh-landmark-meta-separator">|</span>
+                                                                        <?php endif; ?>
+                                                                        <span><?= htmlspecialchars($metaPart, ENT_QUOTES, 'UTF-8') ?></span>
+                                                                    <?php endforeach; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <p class="mb-0">Connectivity details will be available soon.</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1253,13 +1203,54 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
+    <!-- parent: .hh-cta-01 -->
+    <div class="hh-cta-01">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <!-- Left: Property Permit -->
+                <!-- <div class="col-lg-6">
+                    <div class="permit-section">
+                        <div class="permit-heading">
+                            <h6>Property Permit</h6>
+                            <?php if ($permitBarcode): ?>
+                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="Permit QR" width="120" />
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="permit-box">
+                            <span>Permit Number</span>
+                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                            <?php if ($completionDate): ?>
+                                <em>Completion:
+                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Right: CTA Banner -->
+                <div class="col-lg-12">
+                    <div class="cta-banner" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                        <h3>Ready to Invest in Your Future?</h3>
+                        <p>Contact our property specialists today for exclusive pricing and expert advice.</p>
+
+                        <div class="cta-actions">
+                            <button onclick="window.location.href='tel:+97142554683'" type="button"
+                                class="cta-btn primary">Call Now</button>
+                            <button type="button" class="cta-btn primary" onclick="openPopup()">Enquire Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- parent: .hh-register-01 -->
     <div class="hh-register-01 ">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12">
-
                     <form class="reg-card " action="#" method="post" novalidate>
                         <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                         <input type="hidden" name="property_title"
@@ -1650,7 +1641,6 @@ $developerStats = array_values(array_filter([
             animatedElements.forEach((el) => observer.observe(el));
         });
     </script>
-
 
     <script>
         /* ---- Swiper thumbs + main ---- */
@@ -2060,7 +2050,6 @@ $developerStats = array_values(array_filter([
         });
     </script>
 
-
     <script>
         // Initialize multiple inputs with intlTelInput
         function initIntlTelInput(id) {
@@ -2085,7 +2074,6 @@ $developerStats = array_values(array_filter([
         const itiPhone = initIntlTelInput("#phone");
         const itiRiMobile = initIntlTelInput("#ri-mobile");
     </script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

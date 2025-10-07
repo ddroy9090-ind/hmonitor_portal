@@ -62,7 +62,7 @@ p {
 
 /* Root section */
 .hh-hero-01 {
-    background: #004a44;
+    background: #16bbaa;
     z-index: 9;
     color: #ffffff;
     position: relative;
@@ -106,7 +106,7 @@ p {
 
 .terms-and-privacy a {
     text-decoration: underline;
-    color: #004a44;
+    color: #16bbaa;
 }
 
 /* .hh-hero-01 header em {
@@ -189,7 +189,7 @@ p {
 
 .hh-hero-01 select:focus,
 .hh-hero-01 input[type="search"]:focus {
-    border-color: #004a44;
+    border-color: #16bbaa;
     box-shadow: 0 0 0 4px rgba(0, 118, 106, 0.12);
 }
 
@@ -207,7 +207,7 @@ p {
     padding: 0 24px;
     border-radius: 10px;
     border: 0;
-    background: #004a44;
+    background: #16bbaa;
     color: #ffffff;
     font-weight: 500;
     cursor: pointer;
@@ -228,7 +228,7 @@ p {
     width: 48px;
     border-radius: 12px;
     background: #ffffff;
-    border: 2px solid #004a44;
+    border: 2px solid #16bbaa;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -340,9 +340,9 @@ p {
 }
 
 .hh-properties-01-toggle button {
-    border: 1px solid #004a44;
+    border: 1px solid #16bbaa;
     background: #fff;
-    color: #004a44;
+    color: #16bbaa;
     border-radius: 8px;
     cursor: pointer;
     transition: background .2s ease-in-out;
@@ -351,7 +351,7 @@ p {
 
 .hh-properties-01-toggle button.active,
 .hh-properties-01-toggle button:hover {
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
     position: relative;
     bottom: 2px;
@@ -426,7 +426,7 @@ p {
 }
 
 .hh-properties-01-tags .green {
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
 }
 
@@ -453,12 +453,12 @@ p {
     margin-bottom: 15px !important;
     font-size: 20px;
     font-weight: 600;
-    color: #004a44;
+    color: #16bbaa;
     transition: color .25s ease-in-out;
 }
 
 .hh-properties-01 article:hover .hh-properties-01-body h3 {
-    color: #004a44;
+    color: #16bbaa;
     transition: transform .25s ease-in-out;
 }
 
@@ -501,13 +501,13 @@ p {
 .hh-properties-01-foot strong {
     font-size: 20px;
     font-weight: 600;
-    color: #004a44;
+    color: #16bbaa;
 }
 
 .hh-properties-01-foot .details-link {
-    border: 1px solid #004a44;
+    border: 1px solid #16bbaa;
     background: transparent;
-    color: #004a44;
+    color: #16bbaa;
     padding: 6px 16px;
     border-radius: 8px;
     font-weight: 600;
@@ -518,7 +518,7 @@ p {
 }
 
 .hh-properties-01-foot .details-link:hover {
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
 }
 
@@ -527,10 +527,10 @@ p {
     padding: 12px 32px;
     font-size: 16px;
     font-weight: 600;
-    color: #004a44;
+    color: #16bbaa;
     /* text color */
     background: transparent;
-    border: 2px solid #004a44;
+    border: 2px solid #16bbaa;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -540,7 +540,7 @@ p {
 
 /* Hover effect */
 .hh-btn-load:hover {
-    background: #004a44;
+    background: #16bbaa;
     /* fill green */
     color: #fff;
     /* invert text */
@@ -569,7 +569,7 @@ p {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 0;
 }
 
@@ -577,7 +577,7 @@ p {
 .hh-property-hero>.container {
     position: relative;
     z-index: 1;
-    bottom: 140px;
+    /* bottom: 140px; */
 }
 
 /* TOP BAR fixed on top of hero */
@@ -609,7 +609,7 @@ p {
     height: 40px;
     border-radius: 10px;
     background: #fff;
-    color: #004a44;
+    color: #16bbaa;
     border: none;
     cursor: pointer;
     display: flex;
@@ -618,13 +618,13 @@ p {
 }
 
 .hh-iconbtn:hover {
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
 }
 
 .hh-primarypill {
-    background: #26ecb0;
-    color: #111;
+    background: #16bbaa;
+    color: #fff;
     border: none;
     padding: 8px 18px;
     border-radius: 10px;
@@ -636,12 +636,14 @@ p {
 }
 
 .hh-primarypill img {
-    filter: brightness(0);
+    filter: brightness(0) invert(1);
 }
 
 /* INFO block bottom-left */
 .hh-property-hero-info {
     max-width: 800px;
+    position: relative;
+    top: 113px;
 }
 
 .hh-property-hero-tags {
@@ -671,7 +673,7 @@ p {
 
 
 .hh-property-hero-tags .green {
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
 }
 
@@ -695,7 +697,7 @@ p {
 }
 
 .hh-property-hero-price {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 500;
     margin: 0 0 20px;
 }
@@ -708,7 +710,7 @@ p {
 }
 
 .hh-property-hero-price span.AED {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 400;
     margin-left: 8px;
     opacity: 1;
@@ -737,15 +739,15 @@ p {
 /* CTA bottom center */
 .hh-property-hero-ctas {
     position: absolute;
-    bottom: -100px;
-    left: 15%;
+    bottom: -110px;
+    right: 0;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;
     width: 100%;
-    max-width: 400px;
+    max-width: 325px;
     padding: 8px 20px;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 
@@ -761,24 +763,24 @@ p {
 }
 
 .hh-property-hero-ctas .cta-solid {
-    background: #26ecb0;
-    color: #111;
+    background: #16bbaa;
+    color: #fff;
     border: none;
 }
 
 .hh-property-hero-ctas .cta-solid:hover {
-    background: #26ecb0;
-    color: #111;
+    background: #16bbaa;
+    color: #fff;
 }
 
 .hh-property-hero-ctas .cta-outline {
     background: #fff;
-    color: #004a44;
+    color: #16bbaa;
     border: none;
 }
 
 .hh-property-hero-ctas .cta-outline:hover {
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
 }
 
@@ -821,11 +823,10 @@ p {
     transition: all .2s ease-in-out;
 }
 
-/* .hh-gallery-01-head-actions .solid {
-    background: #;
+.hh-gallery-01-head-actions .solid {
+    background: linear-gradient(90deg, #00B4A2 0%, #00D5C3 100%);
     color: #fff;
-    border-color: #;
-} */
+}
 
 .hh-gallery-01-head-actions .ghost:hover {
     background: #f6faf9;
@@ -919,7 +920,7 @@ p {
     border-radius: 10px;
     border: none;
     background: rgba(255, 255, 255, .9);
-    color: #004a44;
+    color: #16bbaa;
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(0, 0, 0, .12);
     z-index: 99;
@@ -983,7 +984,7 @@ p {
 }
 
 .hh-gallery-01-thumbs .swiper-slide-thumb-active {
-    border-color: #004a44;
+    border-color: #16bbaa;
     transform: translateY(-1px);
 }
 
@@ -1001,12 +1002,11 @@ p {
 .hh-gallery-01-agent .card-head {
     border-radius: 14px;
     padding: 30px 18px;
-    background-color: #fff;
-    color: #666;
+    background: linear-gradient(90deg, #00B4A2 0%, #00D5C3 100%);
+    color: #ffff;
     display: flex;
     gap: 12px;
     align-items: center;
-    border: 1px #666 solid;
 }
 
 .hh-gallery-01-agent .avatar {
@@ -1030,13 +1030,13 @@ p {
 
 .hh-gallery-01-agent .info span {
     opacity: .95;
-    color: #9db2b0;
+    color: #ffff;
 }
 
 .hh-gallery-01-agent .info em {
     font-style: normal;
     opacity: .95;
-    color: #9db2b0;
+    color: #ffff;
 }
 
 .hh-gallery-01-agent .cta-row {
@@ -1058,8 +1058,14 @@ p {
     justify-content: center;
     gap: 8px;
     transition: filter .2s ease-in-out;
-    background-color: #004a44;
+    background-color: #16bbaa;
     color: #fff;
+}
+
+.hh-gallery-01-agent .cta-row .wa {
+    background-color: #fff;
+    color: #111;
+    border: 1px #e8eaed solid;
 }
 
 .hh-gallery-01-agent .cta-row .call img,
@@ -1067,10 +1073,14 @@ p {
     filter: brightness(0) invert(1);
 }
 
+.hh-gallery-01-agent .cta-row .wa img {
+    filter: brightness(0);
+}
+
 /* .hh-gallery-01-agent .cta-row .call {
     background: #fff;
-    color: #004a44;
-    border: 1px solid #004a44;
+    color: #16bbaa;
+    border: 1px solid #16bbaa;
 } */
 
 /* .hh-gallery-01-agent .cta-row .call img {
@@ -1079,8 +1089,8 @@ p {
 
 /* .hh-gallery-01-agent .cta-row .wa {
     background: #fff;
-    color: #004a44;
-    border: 1px solid #004a44;
+    color: #16bbaa;
+    border: 1px solid #16bbaa;
 }
 
 .hh-gallery-01-agent .cta-row .call:hover {
@@ -1224,7 +1234,7 @@ p {
 }
 
 .hh-details-01 .tab-content .tab-pane h3 {
-    color: #004a44;
+    color: #16bbaa;
     padding: 15px 0;
     margin: 0;
     font-size: 20px;
@@ -1320,7 +1330,7 @@ p {
 .project-header h6 {
     font-size: 1.1rem;
     /* font-weight: 500; */
-    color: #004a44;
+    color: #16bbaa;
     margin-bottom: 20px;
 }
 
@@ -1405,7 +1415,7 @@ p {
 .hh-details-01 .floor-grid span {
     display: block;
     font-weight: 500;
-    color: #004a44;
+    color: #16bbaa;
 }
 
 .hh-details-01 .floor-grid em {
@@ -1444,7 +1454,7 @@ p {
     align-items: center;
     gap: 12px;
     margin-bottom: 15px;
-    /* border-bottom: 1px #004a44 solid; */
+    /* border-bottom: 1px #16bbaa solid; */
     padding-bottom: 7px;
 }
 
@@ -1490,7 +1500,7 @@ p {
     align-items: center;
     gap: 8px;
     margin-bottom: 6px;
-    color: #004a44;
+    color: #16bbaa;
     font-weight: 500;
     font-size: 14px;
 }
@@ -1529,7 +1539,7 @@ p {
 .hh-details-01 .agent-card input:focus,
 .hh-details-01 .agent-card select:focus,
 .hh-details-01 .agent-card textarea:focus {
-    border-color: #004a44;
+    border-color: #16bbaa;
     box-shadow: none;
 }
 
@@ -1599,7 +1609,7 @@ p {
 }
 
 .hh-details-01 .switch input:checked+i {
-    background: #004a44;
+    background: #16bbaa;
 }
 
 .hh-details-01 .switch input:checked+i::after {
@@ -1617,7 +1627,7 @@ p {
     height: 46px;
     border-radius: 10px;
     border: 0;
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
     font-weight: 500;
     cursor: pointer;
@@ -1668,7 +1678,7 @@ p {
 .hh-details-01 .calc-card .input-wrap .adorn {
     padding: 0 10px;
     background: #f3f7f6;
-    color: #004a44;
+    color: #16bbaa;
     font-weight: 500;
     height: 44px;
     display: flex;
@@ -1709,9 +1719,9 @@ p {
 }
 
 .hh-developer-01 .dev-ico {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     background: rgba(255, 255, 255, .22);
     display: flex;
     align-items: center;
@@ -1759,17 +1769,22 @@ p {
 }
 
 .hh-developer-01 .stat {
-    /* background: #f1fbfa; */
-    border: 1px solid #d9eeeb;
+    background: #fafafb;
     border-radius: 12px;
     padding: 14px;
     text-align: center;
+    width: 100%;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .hh-developer-01 .stat strong {
     display: block;
     font-size: 22px;
-    color: #004a44;
+    color: #16bbaa;
     margin-bottom: 4px;
     font-weight: 500;
 }
@@ -1852,7 +1867,7 @@ p {
 
 .hh-floorplans-01 .fp-view:hover,
 .hh-floorplans-01 .fp-view:focus-visible {
-    background: #26ecb0;
+    background: #16bbaa;
     box-shadow: 0 16px 32px rgba(24, 163, 148, 0.25);
     transform: translateY(-2px);
     color: #fff;
@@ -1895,7 +1910,7 @@ p {
 }
 
 .hh-floorplans-01 .fp-aside::-webkit-scrollbar-thumb {
-    background-color: #004a44;
+    background-color: #16bbaa;
     border-radius: 10px;
 }
 
@@ -1907,7 +1922,7 @@ p {
 .hh-floorplans-01 .fp-aside {
     scrollbar-width: thin;
     /* thin scrollbar */
-    scrollbar-color: #004a44 transparent;
+    scrollbar-color: #16bbaa transparent;
 }
 
 
@@ -1959,7 +1974,7 @@ p {
     display: block;
     font-size: 14px;
     font-weight: 500;
-    color: #004a44;
+    color: #16bbaa;
 }
 
 .hh-floorplans-01 .fp-box-head span {
@@ -1995,7 +2010,7 @@ p {
 }
 
 .hh-floorplans-01 .fp-meta b {
-    color: #004a44;
+    color: #16bbaa;
     font-size: 13px;
     font-weight: 500;
 }
@@ -2009,7 +2024,7 @@ p {
 
 /* when selected */
 .hh-floorplans-01 .fp-box[aria-selected="true"] {
-    background: #004a44;
+    background: #16bbaa;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
     outline: 0;
 }
@@ -2091,7 +2106,7 @@ p {
 
 .hh-floorplans-01 .fp-lightbox-close:hover,
 .hh-floorplans-01 .fp-lightbox-close:focus-visible {
-    background: #26ecb0;
+    background: #16bbaa;
     color: #fff;
     box-shadow: 0 18px 36px rgba(24, 163, 148, 0.35);
     transform: translateY(-2px);
@@ -2137,7 +2152,7 @@ p {
 
 .hh-floorplans-01 .fp-lightbox-nav:hover,
 .hh-floorplans-01 .fp-lightbox-nav:focus-visible {
-    background: #26ecb0;
+    background: #16bbaa;
     box-shadow: 0 18px 40px rgba(24, 163, 148, 0.35);
     transform: translateY(-2px);
 }
@@ -2256,7 +2271,7 @@ p {
 .hh-invest-01 .hi-grid strong {
     display: block;
     font-size: 22px;
-    color: #004a44;
+    color: #16bbaa;
     margin-bottom: 4px;
     font-weight: 500;
 }
@@ -2299,12 +2314,12 @@ p {
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: #26ecb0;
+    background: #e5f6f5;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
-    font-weight: 100;
+    color: #18afa1;
+    font-weight: 500;
     font-size: 14px;
 }
 
@@ -2327,9 +2342,9 @@ p {
 
 .hh-invest-01 .plan-item .amt b {
     display: block;
-    color: #004a44;
+    color: #16bbaa;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 4px;
 }
 
@@ -2394,7 +2409,7 @@ p {
     height: 42px;
     padding: 0 21px;
     background: #f3f7f6;
-    color: #004a44;
+    color: #16bbaa;
     font-weight: 500;
     display: flex;
     align-items: center
@@ -2435,7 +2450,7 @@ p {
     width: 100%;
     height: 6px;
     border-radius: 999px;
-    background: #26ecb0;
+    background: #16bbaa;
     outline: none
 }
 
@@ -2485,7 +2500,7 @@ p {
 
 .hh-invest-01 .pill span {
     display: block;
-    color: #004a44;
+    color: #16bbaa;
     font-size: 12px;
     margin-bottom: 4px
 }
@@ -2500,7 +2515,7 @@ p {
 
 .hh-invest-01 .pill strong {
     font-size: 18px;
-    color: #004a44;
+    color: #16bbaa;
     font-weight: 400;
 }
 
@@ -2534,7 +2549,7 @@ p {
     height: 44px;
     border: 0;
     border-radius: 10px;
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
     font-weight: 500;
     cursor: pointer;
@@ -2549,9 +2564,9 @@ p {
 /* ===== Prime Location & Connectivity ===== */
 .hh-location-01 {
     font-family: "Hind Madurai", sans-serif !important;
-    color: #fff;
+    color: #333;
     padding-bottom: 50px;
-    background-color: #004a44;
+    background-color: #fff;
     padding: 50px 0;
 }
 
@@ -2565,6 +2580,7 @@ p {
 
 .hh-location-01 .locationP {
     padding-left: 0px;
+    color: #333;
 }
 
 .hh-location-01 .hh-location-01-head img {
@@ -2576,6 +2592,7 @@ p {
 .hh-location-01 .hh-location-01-head h3 {
     margin: 0;
     font-size: 22px;
+    color: #333;
 }
 
 /* Map card */
@@ -2664,7 +2681,7 @@ p {
     width: 40px;
     height: 40px;
     border-radius: 14px;
-    background: #004a44;
+    background: #16bbaa;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2825,7 +2842,7 @@ p {
 .hh-location-01 .hh-location-01-contact .head strong {
     font-size: 16px;
     font-weight: 500;
-    color: #004a44;
+    color: #16bbaa;
 }
 
 .hh-location-01-contact button{
@@ -2836,7 +2853,7 @@ p {
 .hh-location-01 .hh-location-01-contact .call {
     border-radius: 5px;
     border: 0;
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
     font-weight: 500;
     cursor: pointer;
@@ -2852,7 +2869,7 @@ p {
 .hh-location-01 .hh-location-01-contact .email {
     border-radius: 5px;
     background: #fff;
-    color: #004a44;
+    color: #16bbaa;
     border: 1px solid #e6eceb;
     cursor: pointer;
     padding: 10px 20px;
@@ -2885,13 +2902,9 @@ p {
 
 /* Property videos */
 
-
-
-
-/* ===== CTA Banner ===== */
 /* ===== CTA Section ===== */
 .hh-cta-01 {
-    background: linear-gradient(135deg, #e8efee 0%, #f8fafa 100%);
+    background: linear-gradient(90deg, #00B4A2 0%, #00D5C3 100%);
     padding: 70px 0;
     font-family: "Hind Madurai", sans-serif !important;
 }
@@ -2905,7 +2918,7 @@ p {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    border-left: 5px solid #004a44;
+    border-left: 5px solid #16bbaa;
 }
 
 /* Permit Heading */
@@ -2913,12 +2926,13 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
 }
 
 .permit-heading h6 {
     font-size: 20px;
     font-weight: 600;
-    color: #004a44;
+    color: #16bbaa;
     margin: 0;
 }
 
@@ -2950,12 +2964,13 @@ p {
 
 /* ===== CTA Banner ===== */
 .hh-cta-01 .cta-banner {
-    background: #004a44;
+    
+    /* background: #16bbaa; */
     color: #fff;
     border-radius: 12px;
     padding: 40px 32px;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    /* box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1); */
+    text-align: center;
 }
 
 .hh-cta-01 .cta-banner h3 {
@@ -2976,6 +2991,7 @@ p {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .hh-cta-01 .cta-btn {
@@ -2990,7 +3006,7 @@ p {
 
 .hh-cta-01 .cta-btn.primary {
     background: #fff;
-    color: #004a44;
+    color: #111;
     border: none;
 }
 
@@ -3007,7 +3023,7 @@ p {
 
 .hh-cta-01 .cta-btn.secondary:hover {
     background: #fff;
-    color: #004a44;
+    color: #16bbaa;
     transform: translateY(-2px);
 }
 
@@ -3042,8 +3058,8 @@ p {
 }
 
 .hh-register-01 .reg-card {
-    background: #e6eceb;
-    border: 1px solid #e6eceb;
+    background: #f9fafb;
+    border: 1px solid #f9fafb;
     border-radius: 12px;
     padding: 45px 30px;
     margin: 30px 0;
@@ -3070,7 +3086,7 @@ p {
 .hh-register-01 .reg-card label {
     display: block;
     font-weight: 500;
-    color: #004a44;
+    color: #16bbaa;
     margin-bottom: 6px;
     font-size: 14px;
 }
@@ -3153,7 +3169,7 @@ p {
     height: 44px;
     border: 0;
     border-radius: 7px;
-    background: #004a44;
+    background: #16bbaa;
     color: #fff;
     font-weight: 500;
     cursor: pointer;
@@ -3177,7 +3193,7 @@ p {
 }
 
 .hh-register-01 .reg-note a {
-    color: #004a44;
+    color: #16bbaa;
     text-decoration: underline;
 }
 
@@ -3187,7 +3203,7 @@ p {
 
 .footer-section-five {
     position: relative;
-    background-color: #004a44;
+    background-color: #16bbaa;
     /* dark green base */
     background-image: url("../images/banner/footer.png");
     background-repeat: repeat;
@@ -3451,7 +3467,7 @@ body.no-scroll {
 
 /* Button 1: Green Glossy */
 .btn-green-glossy {
-    /* background: linear-gradient(135deg, #004a44, #4caf50); */
+    /* background: linear-gradient(135deg, #16bbaa, #4caf50); */
     background: linear-gradient(245deg, #0f635c, #067e74);
     color: #fff;
 }
@@ -3466,7 +3482,7 @@ body.no-scroll {
 .popup-form .appointment-form .form-group textarea,
 .popup-form .appointment-form .form-group input[type="tel"] {
     width: 100%;
-    border: 1px solid #004a44;
+    border: 1px solid #16bbaa;
     border-radius: 6px;
     padding: 6px 14px;
     box-shadow: none;
@@ -3479,7 +3495,7 @@ body.no-scroll {
 .popup-form .appointment-form .form-group select:focus,
 .popup-form .appointment-form .form-group textarea:focus,
 .popup-form .appointment-form .form-group input[type="tel"]:focus {
-    border-color: #004a44;
+    border-color: #16bbaa;
     /* subtle focus color */
     box-shadow: 0 0 6px rgba(0, 150, 136, 0.3);
     /* smooth glow */
@@ -3730,13 +3746,13 @@ body.no-scroll {
     height: 40px;
     border-radius: 50%;
     /* background: #e9f6f4; */
-    /* background-color: #004a44; */
+    /* background-color: #16bbaa; */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 22px;
     /* color: #0c9f84; */
-    color: #004a44;
+    color: #16bbaa;
 }
 
 .amenities-list li span {
@@ -3752,7 +3768,7 @@ body.no-scroll {
 
 
 .info-section {
-    background: #004a44;
+    background: #16bbaa;
     padding: 50px 0;
 }
 
@@ -3762,7 +3778,7 @@ body.no-scroll {
     border-radius: 12px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     background-color: #fff;
-    color: #004a44;
+    color: #16bbaa;
     border-color: #fff;
 }
 
@@ -3771,7 +3787,7 @@ body.no-scroll {
 }
 
 .info-card .details {
-    color: #004a44;
+    color: #16bbaa;
     font-size: 14px;
     /* font-weight: 600; */
 }
@@ -3946,7 +3962,7 @@ body.no-scroll {
     .project-header h6 {
         font-size: 16px;
         /* font-weight: 500; */
-        color: #004a44;
+        color: #16bbaa;
         margin-bottom: 20px;
     }
 
@@ -4052,7 +4068,7 @@ body.no-scroll {
 /* selected OR hover */
 .hh-floorplans-01 .fp-box[aria-selected="true"],
 .hh-floorplans-01 .fp-box:hover {
-    background: #004a44;
+    background: #16bbaa;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
     outline: 0;
 }

@@ -6,10 +6,10 @@ require_once __DIR__ . '/includes/config.php';
 
 hh_session_start();
 
+$propertyId = isset($_GET['id']) ? (int) ($_GET['id'] ?? 0) : 0;
+
 $leadFormError = $_SESSION['offplan_lead_error'] ?? null;
 unset($_SESSION['offplan_lead_error']);
-
-$propertyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($propertyId <= 0) {
     http_response_code(404);
@@ -235,7 +235,20 @@ $permitBarcode = is_string($property['permit_barcode'] ?? '') && $property['perm
     : null;
 
 $videoLink = trim((string) ($property['video_link'] ?? ''));
+$videoTitle = trim((string) ($property['video_title'] ?? ''));
+$videoSubtitle = trim((string) ($property['video_subtitle'] ?? ''));
+$videoDuration = trim((string) ($property['video_duration'] ?? ''));
+$videoViews = trim((string) ($property['video_views'] ?? ''));
+$videoTagsRaw = $decodeList($property['video_tags'] ?? null);
+$videoTags = array_values(array_filter(array_map(
+    static fn($tag): string => is_string($tag) ? trim($tag) : '',
+    $videoTagsRaw
+), static fn($tag): bool => $tag !== ''));
 $locationMap = trim((string) ($property['location_map'] ?? ''));
+$locationHighlight = trim((string) ($property['location_highlight'] ?? ''));
+if ($locationHighlight === '' && isset($property['property_location'])) {
+    $locationHighlight = trim((string) $property['property_location']);
+}
 $brochure = trim((string) ($property['brochure'] ?? ''));
 if ($brochure !== '') {
     $normalizedBrochure = $normalizeImagePath($brochure);
@@ -349,7 +362,7 @@ $paymentSchedule = array_filter([
 ], static fn($item) => (isset($item['percentage']) && trim((string) $item['percentage']) !== '') || (isset($item['amount']) && trim((string) $item['amount']) !== ''));
 
 $propertyTitle = trim((string) ($property['property_title'] ?? ''));
-$titleText = $propertyTitle !== '' ? $propertyTitle : 'Property Details';
+$titleText = $propertyTitle !== '' ? $propertyTitle : 'Rent Property Details';
 $metaTitle = trim((string) ($property['meta_title'] ?? ''));
 if ($metaTitle === '') {
     $metaTitle = $titleText;
@@ -406,7 +419,7 @@ $developerStats = array_values(array_filter([
         style="background-image: url('<?= htmlspecialchars($primaryImage, ENT_QUOTES, 'UTF-8') ?>');">
         <!-- Top bar fixed at top of hero -->
         <div class="hh-property-hero-top">
-            <a href="rent-properties.php" class="hh-property-hero-back">← Back to Listings</a>
+            <a href="rent-properties.php" class="hh-property-hero-back">← Back to Rent Listings</a>
             <div class="hh-property-hero-top-actions">
                 <button type="button" class="hh-primarypill" onclick="openPopup()"><img width="14"
                         src="assets/flaticons/phone.png" alt=""> Contact Us</button>
@@ -447,7 +460,7 @@ $developerStats = array_values(array_filter([
                                 <?php else: ?>
                                     <?= htmlspecialchars($startingPriceValue, ENT_QUOTES, 'UTF-8') ?>
                                 <?php endif; ?>
-                                <span>Starting from</span>
+                                <span style="display: block;">Starting from</span>
                             </div>
                         <?php endif; ?>
                         <?php if ($specItems): ?>
@@ -475,17 +488,13 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-    
-
-
-
     <!-- parent: .hh-gallery-01 -->
     <div class="hh-gallery-01 ">
         <div class="container">
-
-            <!-- Header -->
+            <!-- Gallery + Agent -->
             <div class="row">
-                <div class="col-12">
+                <!-- Left: Gallery -->
+                <div class="col-12 col-lg-8">
                     <div class="hh-gallery-01-head " data-animation-in="animate__fadeInDown"
                         data-animation-out="animate__fadeOutUp">
                         <h3>Property Gallery</h3>
@@ -508,13 +517,6 @@ $developerStats = array_values(array_filter([
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Gallery + Agent -->
-            <div class="row">
-                <!-- Left: Gallery -->
-                <div class="col-12 col-lg-8">
                     <div class="hh-gallery-01-wrap " data-animation-in="animate__fadeInLeft"
                         data-animation-out="animate__fadeOutLeft">
 
@@ -576,16 +578,12 @@ $developerStats = array_values(array_filter([
                         data-animation-out="animate__flipOutY">
                         <div class="card-head">
                             <div class="avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2Zm0 12c4.2 0 8 2.1 8 5v3H4v-3c0-2.9 3.8-5 8-5Z"
-                                        fill="#fff" />
-                                </svg>
+                                <img src="assets/icons/profile.png" alt="" width="100%">
                             </div>
                             <div class="info">
                                 <strong>Sarah Al-Mansouri</strong>
                                 <span>Senior Property Consultant</span>
-                                <em>★★★★★ · 5.0 Rating</em>
+                                <em><b style="color: #fff; font-size: 18px;">★★★★★</b> · 5.0 Rating</em>
                             </div>
                         </div>
 
@@ -707,7 +705,6 @@ $developerStats = array_values(array_filter([
                             <!-- parent: .hh-amenities-01 -->
                             <div class="hh-amenities-01 ">
                                 <div class="container-fluid">
-                                    <h3>Key Features & Amenities</h3>
                                     <?php if ($amenitiesList): ?>
                                         <ul class="amenities-list">
                                             <?php foreach ($amenitiesList as $amenity): ?>
@@ -740,7 +737,7 @@ $developerStats = array_values(array_filter([
                         <!-- Floor Plan -->
                         <div id="hh-tab-floor" class="tab-pane fade" role="tabpanel" aria-labelledby="hh-tab-floor-btn">
                             <div class="hh-floorplans-01 ">
-                                <div class="container-fluid">
+                                <div class="container-fluid p-0">
                                     <?php if ($floorPlans): ?>
                                         <div class="row">
                                             <div class="col-12 col-lg-7">
@@ -819,22 +816,19 @@ $developerStats = array_values(array_filter([
                         <div id="hh-tab-developer" class="tab-pane fade" role="tabpanel"
                             aria-labelledby="hh-tab-developer-btn">
                             <div class="hh-developer-01">
-                                <div class="container-fluid">
+                                <div class="container-fluid p-0">
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <h4>About the Developer</h4>
-                                        </div>
                                         <div class="col-12">
                                             <section class="dev-card " data-animation-in="animate__flipInX"
                                                 data-animation-out="animate__flipOutX">
-                                                <!-- <div class="dev-head">
+                                                <div class="dev-head">
                                                     <div class="dev-ico">
                                                         <img src="assets/flaticons/residential.png" width="25" alt="">
                                                     </div>
                                                     <div class="dev-title">
                                                         <strong><?= htmlspecialchars($property['developer_name'] ?: 'Developer', ENT_QUOTES, 'UTF-8') ?></strong>
                                                     </div>
-                                                </div> -->
+                                                </div>
                                                 <div class="dev-body">
 
                                                     <div class="row justify-content-start align-items-center">
@@ -880,23 +874,22 @@ $developerStats = array_values(array_filter([
                 <!-- Right: sidebar -->
                 <div class="col-12 col-lg-4">
                     <aside>
-                        
+
                         <div class="agent-card " id="contactAgent" data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
-                            
+
                             <div class="agent-head">
                                 <div class="avatar">
                                     <img src="assets/icons/chat.png" alt="">
                                 </div>
                                 <div class="agent-info">
                                     <strong>Contact Agent</strong>
-                                    <!-- <span>Schedule your private viewing</span> -->
                                 </div>
                             </div>
 
                             <form method="POST" action="process_offplan_lead">
                                 <input type="hidden" name="redirect"
-                                    value="property-details.php?id=<?= (int) $propertyId ?>#contactAgent">
+                                    value="rent-properties-details.php?id=<?= (int) $propertyId ?>#contactAgent">
                                 <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                                 <input type="hidden" name="property_title"
                                     value="<?= htmlspecialchars($titleText, ENT_QUOTES, 'UTF-8') ?>">
@@ -1093,137 +1086,212 @@ $developerStats = array_values(array_filter([
             <!-- Heading -->
             <div class="row">
                 <div class="col-12">
-                    <div class="" data-animation-in="animate__fadeInDown" data-animation-out="animate__fadeOutUp">
-                        <div class="hh-location-01-head">
-                            <!-- <img src="assets/icons/location.png" alt="" /> -->
-                            <h3>Prime Location &amp; Connectivity</h3>
+                    <div class="hh-location-card-head">
+                            <div class="hh-location-card-icon">
+                                <img src="assets/icons/location.png" alt="Interactive map icon">
+                            </div>
+                            <div class="hh-location-card-text">
+                                <strong>Prime Location & Connectivity</strong>
+                                <?php if ($locationHighlight !== ''): ?>
+                                    <span><?= htmlspecialchars($locationHighlight, ENT_QUOTES, 'UTF-8') ?></span>
+                                <?php else: ?>
+                                    <span>Explore the neighbourhood and nearby amenities.</span>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                        <?php if (!empty($property['property_location'])): ?>
-                            <p class="locationP">Located at
-                                <?= htmlspecialchars($property['property_location'], ENT_QUOTES, 'UTF-8') ?>.</p>
-                        <?php endif; ?>
-                    </div>
                 </div>
             </div>
 
             <!-- Main grid -->
-            <div class="row">
-                <!-- LEFT: Map + Landmarks (col-lg-8) -->
-                <div class="col-12 col-lg-12 mb-5" data-animation-in="animate__fadeInLeft"
+            <div class="row g-4">
+                <div class="col-lg-8 col-lg-8" data-animation-in="animate__fadeInLeft"
                     data-animation-out="animate__fadeOutLeft">
-                    <div class="row">
-                        <!-- Map card -->
-                        <div class="col-12 col-md-6">
-                            <div class="hh-location-01-map " data-animation-in="animate__fadeIn"
-                                data-animation-out="animate__fadeOut">
-                                <?php if ($locationMap !== ''): ?>
-                                    <?php if (stripos($locationMap, '<iframe') !== false): ?>
-                                        <?= $locationMap ?>
-                                    <?php else: ?>
-                                        <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
-                                            height="375px" style="border:0;" allowfullscreen loading="lazy"
-                                            referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                    <?php endif; ?>
+                    <div class="hh-location-01-map-card">
+                        
+                        <div class="hh-location-01-map" data-animation-in="animate__fadeIn"
+                            data-animation-out="animate__fadeOut">
+                            <?php if ($locationMap !== ''): ?>
+                                <?php if (stripos($locationMap, '<iframe') !== false): ?>
+                                    <?= $locationMap ?>
                                 <?php else: ?>
-                                    <div class="map-placeholder">Location map coming soon.</div>
+                                    <iframe src="<?= htmlspecialchars($locationMap, ENT_QUOTES, 'UTF-8') ?>" width="100%"
+                                        height="375px" style="border:0;" allowfullscreen loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade"></iframe>
                                 <?php endif; ?>
-                            </div>
+                            <?php else: ?>
+                                <div class="map-placeholder">
+                                    <img src="assets/icons/globe.png" alt="Map coming soon">
+                                    <strong>Location map coming soon</strong>
+                                    <span>We're preparing an interactive experience for this property.</span>
+                                </div>
+                            <?php endif; ?>
                         </div>
+                    </div>
 
-                        <!-- Landmarks list -->
-                        <div class="col-12 col-md-6" id="LandMarkList">
-                            <div class="hh-location-01-landmarks">
-                                <?php if ($locationAccess): ?>
-                                    <ul class="list-unstyled landmarks-list">
-                                        <?php foreach ($locationAccess as $item): ?>
-                                            <li class="d-flex align-items-center mb-2">
-                                                <div class="d-flex align-items-center">
-                                                    <img class="dot me-2" src="assets/icons/dot-green.png" alt="">
-                                                    <span class="fw-semibold">
-                                                        <?= htmlspecialchars($item['landmark'], ENT_QUOTES, 'UTF-8') ?>
-                                                    </span>
-                                                </div>
-                                                <div class="text-end">
-                                                    <?php if ($item['distance'] !== ''): ?>
-                                                        <span class="me-2"><?= htmlspecialchars($item['distance'], ENT_QUOTES, 'UTF-8') ?></span>
-                                                    <?php endif; ?>
-                                                    <?php if ($item['category'] !== ''): ?>
-                                                        <span class="text-white"><?= htmlspecialchars($item['category'], ENT_QUOTES, 'UTF-8') ?></span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                <?php else: ?>
-                                    <p class="mb-0">Connectivity details will be available soon.</p>
-                                <?php endif; ?>
-                            </div>
+                    <div class="hh-location-01-landmarks" id="LandMarkList">
+                        <div class="hh-landmarks-head">
+                            <strong>Nearby Landmarks</strong>
+                            <span>Stay connected to the best spots around the community.</span>
+                        </div>
+                        <?php if ($locationAccess): ?>
+                            <?php
+                            $landmarkIconKeywords = [
+                                'mall' => 'assets/icons/community.svg',
+                                'marina' => 'assets/icons/community.svg',
+                                'airport' => 'assets/icons/globe.png',
+                                'metro' => 'assets/icons/location.png',
+                                'station' => 'assets/icons/location.png',
+                                'school' => 'assets/icons/community.svg',
+                                'hospital' => 'assets/icons/eye.svg',
+                                'beach' => 'assets/icons/community.svg',
+                                'park' => 'assets/icons/community.svg',
+                                'tower' => 'assets/icons/home.svg',
+                            ];
+                            $defaultLandmarkIcon = 'assets/icons/location.png';
+                            ?>
+                            <div class="hh-landmarks-grid">
+                                <?php foreach ($locationAccess as $item): ?>
+                                    <?php
+                                    $landmarkRaw = is_string($item['landmark']) ? $item['landmark'] : '';
+                                    $categoryRaw = is_string($item['category']) ? $item['category'] : '';
+                                    $distanceRaw = is_string($item['distance']) ? $item['distance'] : '';
 
-                            <div>
-                                <!-- Permit card -->
-                                <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
-                                    data-animation-out="animate__fadeOut">
-                                    <div class="head">
-                                        <strong>Property Permit</strong>
-                                    </div>
+                                    $categoryValue = trim($categoryRaw);
+                                    $distanceValue = trim($distanceRaw);
+                                    $landmarkKey = strtolower($landmarkRaw);
+                                    $categoryKey = strtolower($categoryValue);
 
-                                    <div class="qr-row d-flex justify-content-between align-items-center">
-                                        <!-- Left Side (QR + Permit Details) -->
-                                        <div class="d-flex align-items-center gap-3">
-                                            <?php if ($permitBarcode): ?>
-                                                <img class="qr"
-                                                    src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                                    alt="Permit QR" width="80" />
-                                            <?php endif; ?>
+                                    $iconPath = $defaultLandmarkIcon;
+                                    foreach ($landmarkIconKeywords as $keyword => $path) {
+                                        if (($categoryKey !== '' && str_contains($categoryKey, $keyword)) ||
+                                            ($landmarkKey !== '' && str_contains($landmarkKey, $keyword))
+                                        ) {
+                                            $iconPath = $path;
+                                            break;
+                                        }
+                                    }
 
-                                            <div class="permit-box">
-                                                <span>Permit Number</span>
-                                                <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                                <?php if ($completionDate): ?>
-                                                    <em>Completion :
-                                                        <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                                <?php endif; ?>
+                                    $metaParts = array_values(array_filter([
+                                        $distanceValue,
+                                        $categoryValue,
+                                    ], static fn($value): bool => $value !== ''));
+
+                                    $iconAlt = $categoryValue !== '' ? $categoryValue . ' icon' : 'Landmark icon';
+                                    ?>
+                                    <div class="hh-landmark-card">
+                                        <div class="hh-landmark-icon">
+                                            <img src="<?= htmlspecialchars($iconPath, ENT_QUOTES, 'UTF-8') ?>"
+                                                alt="<?= htmlspecialchars($iconAlt, ENT_QUOTES, 'UTF-8') ?>">
+                                        </div>
+                                        <div class="hh-landmark-details">
+                                            <div class="hh-landmark-name">
+                                                <?= htmlspecialchars($landmarkRaw, ENT_QUOTES, 'UTF-8') ?>
                                             </div>
+                                            <?php if ($metaParts): ?>
+                                                <div class="hh-landmark-meta">
+                                                    <?php foreach ($metaParts as $index => $metaPart): ?>
+                                                        <?php if ($index > 0): ?>
+                                                            <span class="hh-landmark-meta-separator">|</span>
+                                                        <?php endif; ?>
+                                                        <span><?= htmlspecialchars($metaPart, ENT_QUOTES, 'UTF-8') ?></span>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="mb-0">Connectivity details will be available soon.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
-                                        <!-- Right Side (Actions) -->
-                                        <div class="map-action d-flex gap-2">
-                                            <button type="button" class="call"
-                                                onclick="window.location.href='tel:+97142554683'">
-                                                <img src="assets/flaticons/phone.png" alt="" width="16" />
-                                                <span>+971 42554683</span>
-                                            </button>
-
-                                            <button type="button" class="email" onclick="openPopup()">
-                                                <img src="assets/flaticons/email.png" alt="" width="16" />
-                                                <span>Email Agent</span>
-                                            </button>
-                                        </div>
+                <div class="col-12 col-lg-4" data-animation-in="animate__fadeInRight"
+                    data-animation-out="animate__fadeOutRight">
+                    <div class="hh-location-01-side">
+                        <div class="hh-location-01-permit">
+                            <div class="head">
+                                <img src="assets/icons/home.svg" alt="Property permit icon">
+                                <strong>Property Permit</strong>
+                            </div>
+                            <?php if ($permitBarcode || ($property['permit_no'] ?? '') !== '' || $completionDate): ?>
+                                <div class="qr-row">
+                                    <?php if ($permitBarcode): ?>
+                                        <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                            alt="Property permit QR code" width="120">
+                                    <?php endif; ?>
+                                    <div class="permit-box">
+                                        <span>Permit Number</span>
+                                        <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                        <?php if ($completionDate): ?>
+                                            <em>Completion: <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
-
-
-                                <!-- Quick contact -->
-                                <!-- <div class="hh-location-01-contact">
-                                    <div class="head">
-                                        <strong>Quick Contact</strong>
-                                    </div>
-
-                                    <button type="button" class="call"
-                                        onclick="window.location.href='tel:+971 42554683'">
-                                        <img src="assets/flaticons/phone.png" alt="" />
-                                        <span>Call Now: +971 42554683</span>
-                                    </button>
-
-                                    <button type="button" class="email" onclick="openPopup()">
-                                        <img src="assets/flaticons/email.png" alt="" />
-                                        <span>Email Agent</span>
-                                    </button>
-                                </div> -->
-                            </div>
-
+                            <?php else: ?>
+                                <p class="mb-0">Permit information will be shared soon.</p>
+                            <?php endif; ?>
                         </div>
 
+                        <div class="hh-location-01-contact">
+                            <div class="head">
+                                <img src="assets/icons/video-call.png" alt="Contact icon">
+                                <strong>Quick Contact</strong>
+                            </div>
+                            <p>Speak with our property specialists for personalised assistance.</p>
+                            <a class="call" href="tel:+97142554683">
+                                <img src="assets/icons/customer-support.png" alt="Call icon">
+                                <span>Call Now: +971 425 54683</span>
+                            </a>
+                            <a class="email" href="mailto:contact@houzzhunt.com">
+                                <img src="assets/icons/message.png" alt="Email icon">
+                                <span>Email Agent</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- parent: .hh-cta-01 -->
+    <div class="hh-cta-01">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <!-- Left: Property Permit -->
+                <!-- <div class="col-lg-6">
+                    <div class="permit-section">
+                        <div class="permit-heading">
+                            <h6>Property Permit</h6>
+                            <?php if ($permitBarcode): ?>
+                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="Permit QR" width="120" />
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="permit-box">
+                            <span>Permit Number</span>
+                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                            <?php if ($completionDate): ?>
+                                <em>Completion:
+                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Right: CTA Banner -->
+                <div class="col-lg-12">
+                    <div class="cta-banner" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                        <h3>Ready to Invest in Your Future?</h3>
+                        <p>Contact our property specialists today for exclusive pricing and expert advice.</p>
+
+                        <div class="cta-actions">
+                            <button onclick="window.location.href='tel:+97142554683'" type="button"
+                                class="cta-btn primary">Call Now</button>
+                            <button type="button" class="cta-btn primary" onclick="openPopup()">Enquire Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1235,7 +1303,6 @@ $developerStats = array_values(array_filter([
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12">
-
                     <form class="reg-card " action="#" method="post" novalidate>
                         <input type="hidden" name="property_id" value="<?= (int) $propertyId ?>">
                         <input type="hidden" name="property_title"
@@ -1294,30 +1361,6 @@ $developerStats = array_values(array_filter([
             </div>
         </div>
     </div>
-
-    <!-- parent: .hh-cta-01 -->
-    <div class="hh-cta-01 ">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-
-                    <div class="cta-banner " data-animation-in="animate__flipInX"
-                        data-animation-out="animate__flipOutX">
-                        <h3>Ready to Invest in Your Future?</h3>
-                        <p>Contact our property specialists today for exclusive pricing.</p>
-
-                        <div class="cta-actions">
-                            <button onclick="window.location.href='tel:+971 42554683'" type="button"
-                                class="cta-btn">Call Now</button>
-                            <button type="button" class="cta-btn" onclick="openPopup()">Enquire Now</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <!-- footer five start -->
     <div class="footer-section-five">
@@ -1498,7 +1541,6 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-
     <!-- Download Brochure -->
     <div class="popup-overlay" id="downloadBrochure">
         <div class="popup-content">
@@ -1551,7 +1593,6 @@ $developerStats = array_values(array_filter([
             </div>
         </div>
     </div>
-
 
     <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendors/jquery/jquery-3.7.1.min.js"></script>
@@ -1652,7 +1693,6 @@ $developerStats = array_values(array_filter([
             animatedElements.forEach((el) => observer.observe(el));
         });
     </script>
-
 
     <script>
         /* ---- Swiper thumbs + main ---- */
@@ -2062,7 +2102,6 @@ $developerStats = array_values(array_filter([
         });
     </script>
 
-
     <script>
         // Initialize multiple inputs with intlTelInput
         function initIntlTelInput(id) {
@@ -2087,7 +2126,6 @@ $developerStats = array_values(array_filter([
         const itiPhone = initIntlTelInput("#phone");
         const itiRiMobile = initIntlTelInput("#ri-mobile");
     </script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -623,8 +623,8 @@ p {
 }
 
 .hh-primarypill {
-    background: #004a44;
-    color: #fff;
+    background: #26ecb0;
+    color: #111;
     border: none;
     padding: 8px 18px;
     border-radius: 10px;
@@ -636,7 +636,7 @@ p {
 }
 
 .hh-primarypill img {
-    filter: brightness(0) invert(1);
+    filter: brightness(0);
 }
 
 /* INFO block bottom-left */
@@ -671,8 +671,8 @@ p {
 
 
 .hh-property-hero-tags .green {
-    background: #26ecb0;
-    color: #111;
+    background: #004a44;
+    color: #fff;
 }
 
 .hh-property-hero h1 {
@@ -821,11 +821,11 @@ p {
     transition: all .2s ease-in-out;
 }
 
-.hh-gallery-01-head-actions .solid {
-    background: #004a44;
+/* .hh-gallery-01-head-actions .solid {
+    background: #;
     color: #fff;
-    border-color: #004a44;
-}
+    border-color: #;
+} */
 
 .hh-gallery-01-head-actions .ghost:hover {
     background: #f6faf9;
@@ -983,7 +983,7 @@ p {
 }
 
 .hh-gallery-01-thumbs .swiper-slide-thumb-active {
-    border-color: #26ecb0;
+    border-color: #004a44;
     transform: translateY(-1px);
 }
 
@@ -1001,18 +1001,19 @@ p {
 .hh-gallery-01-agent .card-head {
     border-radius: 14px;
     padding: 30px 18px;
-    background-color: #004a44;
-    color: #fff;
+    background-color: #fff;
+    color: #666;
     display: flex;
     gap: 12px;
     align-items: center;
+    border: 1px #666 solid;
 }
 
 .hh-gallery-01-agent .avatar {
     width: 44px;
     height: 44px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, .25);
+    background: #9db2b0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1029,11 +1030,13 @@ p {
 
 .hh-gallery-01-agent .info span {
     opacity: .95;
+    color: #9db2b0;
 }
 
 .hh-gallery-01-agent .info em {
     font-style: normal;
     opacity: .95;
+    color: #9db2b0;
 }
 
 .hh-gallery-01-agent .cta-row {
@@ -1055,19 +1058,26 @@ p {
     justify-content: center;
     gap: 8px;
     transition: filter .2s ease-in-out;
+    background-color: #004a44;
+    color: #fff;
 }
 
-.hh-gallery-01-agent .cta-row .call {
+.hh-gallery-01-agent .cta-row .call img,
+.hh-gallery-01-agent .cta-row .wa img {
+    filter: brightness(0) invert(1);
+}
+
+/* .hh-gallery-01-agent .cta-row .call {
     background: #fff;
     color: #004a44;
     border: 1px solid #004a44;
-}
+} */
 
 /* .hh-gallery-01-agent .cta-row .call img {
     filter: brightness(0) invert(1);
 } */
 
-.hh-gallery-01-agent .cta-row .wa {
+/* .hh-gallery-01-agent .cta-row .wa {
     background: #fff;
     color: #004a44;
     border: 1px solid #004a44;
@@ -1079,7 +1089,7 @@ p {
 
 .hh-gallery-01-agent .cta-row .wa:hover {
     background: #eaf7f5;
-}
+} */
 
 .hh-gallery-01-agent .ghost-wide {
     width: 100%;
@@ -1225,7 +1235,7 @@ p {
 .hh-details-01 .hh-tabs {
     background: #f5f8f8;
     border: 1px solid #e6eceb;
-    border-radius: 12px;
+    border-radius: 0px;
     padding: 8px 20px;
     margin-bottom: 0px;
 }
@@ -1683,9 +1693,9 @@ p {
 .hh-developer-01 .dev-card {
     background: #fff;
     border: 1px solid #e6eceb;
-    border-radius: 14px;
+    /* border-radius: 14px; */
     overflow: hidden;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, .06);
+    /* box-shadow: 0 8px 22px rgba(0, 0, 0, .06); */
 }
 
 /* header */
@@ -1775,7 +1785,7 @@ p {
 .hh-floorplans-01 {
     font-family: "Hind Madurai", sans-serif !important;
     color: #1b2b2a;
-    padding: 0;
+    padding: 20px 0;
 }
 
 .hh-floorplans-01 h3 {
@@ -1792,7 +1802,7 @@ p {
 .hh-floorplans-01 .fp-canvas {
     position: relative;
     border: 1px solid #e6eceb;
-    border-radius: 14px;
+    /* border-radius: 14px; */
     overflow: hidden;
     background: #fff;
 }
@@ -1922,11 +1932,12 @@ p {
 }
 
 .hh-floorplans-01 .fp-box[aria-selected="true"] {
-    border-color: #26ecb0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
     outline: 0;
     background: #fff;
 }
+
+
 
 /* box head */
 .hh-floorplans-01 .fp-box-head {
@@ -1941,8 +1952,7 @@ p {
     height: 30px;
     object-fit: contain;
     border-radius: 8px;
-    /* background: #e9f6f4; */
-    padding: 8px;
+    padding: 4px;
 }
 
 .hh-floorplans-01 .fp-box-head strong {
@@ -1989,6 +1999,41 @@ p {
     font-size: 13px;
     font-weight: 500;
 }
+
+
+/* default box */
+.hh-floorplans-01 .fp-box {
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+/* when selected */
+.hh-floorplans-01 .fp-box[aria-selected="true"] {
+    background: #004a44;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
+    outline: 0;
+}
+
+/* apply white colors only inside selected box */
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-box-head strong,
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-box-head span,
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-meta em,
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-meta b {
+    color: #ffffff;
+}
+
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-meta li {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-box-head img {
+    background: transparent;
+    /* border-radius: 8px; */
+    padding: 2px;
+    filter: brightness(0) invert(1);
+}
+
 
 /* responsive tweak */
 @media (max-width: 575.98px) {
@@ -2147,7 +2192,7 @@ p {
 .hh-invest-01 {
     font-family: "Hind Madurai", sans-serif !important;
     color: #1b2b2a;
-    padding-bottom: 50px;
+    padding: 50px 0;
 }
 
 .hh-invest-01 h4 {
@@ -2220,7 +2265,7 @@ p {
     display: block;
     font-weight: 500;
     font-size: 14px;
-    color: #004a44;
+    color: #9db2b0;
 }
 
 .hh-invest-01 .hi-grid em {
@@ -2251,27 +2296,29 @@ p {
 }
 
 .hh-invest-01 .plan-item .pct {
-    width: 59px;
-    height: 56px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    background: linear-gradient(180deg, #e7faf7, #d4f3ef);
+    background: #26ecb0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #0e8f82;
-    font-weight: 500;
-    border: 1px solid #cbeae6
+    color: #333;
+    font-weight: 100;
+    font-size: 14px;
 }
 
 .hh-invest-01 .plan-item .txt strong {
     display: block;
     font-weight: 500;
+    color: #788f8d;
 }
 
 .hh-invest-01 .plan-item .txt span {
     display: block;
     color: #6a7a78;
-    font-size: 13px
+    font-size: 13px;
+    /* display: none; */
 }
 
 .hh-invest-01 .plan-item .amt {
@@ -2290,7 +2337,8 @@ p {
     display: block;
     font-style: normal;
     color: #6b7a78;
-    font-size: 14px
+    font-size: 14px;
+    display: none;
 }
 
 /* Mortgage card */
@@ -2331,7 +2379,7 @@ p {
     font-weight: 500;
     margin-bottom: 6px;
     font-size: 14px;
-    color: #666;
+    color: #9db2b0;
 }
 
 .hh-invest-01 .amount {
@@ -2367,13 +2415,13 @@ p {
 
 .hh-invest-01 .range-row span {
     font-size: 14px;
-    color: #666;
+    color: #9db2b0;
 }
 
 .hh-invest-01 .range-row span b {
     font-weight: 500;
     font-size: 14px;
-    color: #222;
+    color: #9db2b0;
 }
 
 .hh-invest-01 .r-label {
@@ -2387,7 +2435,7 @@ p {
     width: 100%;
     height: 6px;
     border-radius: 999px;
-    background: linear-gradient(90deg, #17a596 0%, #18c0af 100%);
+    background: #26ecb0;
     outline: none
 }
 
@@ -2437,18 +2485,17 @@ p {
 
 .hh-invest-01 .pill span {
     display: block;
-    color: #6a7a78;
+    color: #004a44;
     font-size: 12px;
     margin-bottom: 4px
 }
 
 .hh-invest-01 .pill.gray {
-    background: #f5f7f7
+    background: #fff;
 }
 
 .hh-invest-01 .pill.green {
-    background: #e8fbf7;
-    border-color: #ccefe8
+    background: #fff;
 }
 
 .hh-invest-01 .pill strong {
@@ -2471,12 +2518,12 @@ p {
 }
 
 .hh-invest-01 .totals span {
-    color: #6a7a78;
+    color: #9db2b0;
     font-size: 14px;
 }
 
 .hh-invest-01 .totals b {
-    color: #004a44;
+    color: #9db2b0;
     font-size: 12px;
     font-weight: 500;
 }
@@ -2614,21 +2661,25 @@ p {
 }
 
 .hh-landmark-icon {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 14px;
-    background: #e9f6f3;
+    background: #004a44;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    border-radius: 50%;
 }
 
 .hh-landmark-icon img {
-    width: 26px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
+    /* filter: invert(22%) sepia(88%) saturate(500%) hue-rotate(116deg) brightness(90%) contrast(95%); */
+    filter: brightness(0) invert(1);
 }
+
 
 .hh-landmark-details {
     display: flex;
@@ -2838,74 +2889,150 @@ p {
 
 
 /* ===== CTA Banner ===== */
+/* ===== CTA Section ===== */
 .hh-cta-01 {
-    padding: 50px 0;
+    background: linear-gradient(135deg, #e8efee 0%, #f8fafa 100%);
+    padding: 70px 0;
     font-family: "Hind Madurai", sans-serif !important;
-    background-color: #e6eceb;
-    width: 100%;
 }
 
-.hh-cta-01 .cta-banner {
-    background: #e6eceb;
-    /* teal, similar to mock */
-    /* color: #fff; */
-    /* border-radius: 12px; */
-    padding: 28px 16px;
+/* Align permit + CTA side by side */
+.hh-cta-01 .permit-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    padding: 24px 28px;
     display: flex;
     flex-direction: column;
+    gap: 18px;
+    border-left: 5px solid #004a44;
+}
+
+/* Permit Heading */
+.permit-heading {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
-    gap: 0px;
+}
+
+.permit-heading h6 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #004a44;
+    margin: 0;
+}
+
+.permit-heading .qr {
+    width: 130px;
+    height: auto;
+    border: 2px solid #e0e5e4;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+/* Permit Info Box */
+.permit-box span {
+    font-size: 15px;
+    color: #555;
+}
+
+.permit-box b {
+    font-size: 20px;
+    color: #222;
+    margin: 3px 0;
+}
+
+.permit-box em {
+    font-size: 14px;
+    color: #777;
+    font-style: normal;
+}
+
+/* ===== CTA Banner ===== */
+.hh-cta-01 .cta-banner {
+    background: #004a44;
+    color: #fff;
+    border-radius: 12px;
+    padding: 40px 32px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+    text-align: left;
 }
 
 .hh-cta-01 .cta-banner h3 {
-    margin: 0;
-    font-weight: 500;
-    font-size: 32px;
-    letter-spacing: .2px;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
 .hh-cta-01 .cta-banner p {
-    margin: 2px 0 20px 0px;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: #e6eceb;
 }
 
+/* Buttons */
 .hh-cta-01 .cta-actions {
     display: flex;
-    gap: 22px;
-    margin-top: 6px;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-.hh-cta-01 .cta-actions .cta-btn {
-    min-width: 180px;
-    height: 44px;
+.hh-cta-01 .cta-btn {
+    min-width: 160px;
+    height: 46px;
     border-radius: 8px;
-    border: 0;
-    background: #fff;
-    color: #004a44;
     font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, .10);
-    transition: transform .15s ease-in-out, filter .2s ease-in-out;
+    font-size: 15px;
+    transition: all 0.25s ease;
 }
 
-.hh-cta-01 .cta-actions .cta-btn:hover {
-    filter: brightness(1.04);
-    transform: translateY(-1px);
+.hh-cta-01 .cta-btn.primary {
+    background: #fff;
+    color: #004a44;
+    border: none;
 }
 
-@media (max-width: 575.98px) {
-    .hh-cta-01 .cta-actions {
+.hh-cta-01 .cta-btn.primary:hover {
+    background: #f3f8f8;
+    transform: translateY(-2px);
+}
+
+.hh-cta-01 .cta-btn.secondary {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+}
+
+.hh-cta-01 .cta-btn.secondary:hover {
+    background: #fff;
+    color: #004a44;
+    transform: translateY(-2px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+    .hh-cta-01 {
+        padding: 50px 0;
+    }
+
+    .permit-section,
+    .cta-banner {
+        text-align: center;
+        align-items: center;
+    }
+
+    .permit-heading {
         flex-direction: column;
-        gap: 12px;
-        width: 100%;
+        gap: 10px;
     }
 
-    .hh-cta-01 .cta-actions .cta-btn {
-        width: 100%;
+    .permit-section {
+        padding: 20px;
     }
 }
+
 
 /* ===== Register Interest (scoped) ===== */
 .hh-register-01 {
@@ -3603,13 +3730,13 @@ body.no-scroll {
     height: 40px;
     border-radius: 50%;
     /* background: #e9f6f4; */
-    background-color: #004a44;
+    /* background-color: #004a44; */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 22px;
     /* color: #0c9f84; */
-    color: #26ecb0;
+    color: #004a44;
 }
 
 .amenities-list li span {
@@ -3901,8 +4028,10 @@ body.no-scroll {
 
 .hh-amenities-01 {
     background: #f1faf7;
-    padding: 0;
-    border-radius: 12px;
+    padding: 20px;
+    /* border-radius: 12px; */
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .hh-amenities-01 h3 {
@@ -3911,6 +4040,52 @@ body.no-scroll {
     color: #0f5347;
     margin-bottom: 16px;
 }
+
+
+/* default box */
+.hh-floorplans-01 .fp-box {
+    background: #fff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* selected OR hover */
+.hh-floorplans-01 .fp-box[aria-selected="true"],
+.hh-floorplans-01 .fp-box:hover {
+    background: #004a44;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
+    outline: 0;
+}
+
+/* white text for selected or hover */
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-box-head strong,
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-box-head span,
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-meta em,
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-meta b,
+.hh-floorplans-01 .fp-box:hover .fp-box-head strong,
+.hh-floorplans-01 .fp-box:hover .fp-box-head span,
+.hh-floorplans-01 .fp-box:hover .fp-meta em,
+.hh-floorplans-01 .fp-box:hover .fp-meta b {
+    color: #ffffff;
+}
+
+/* list item borders and background */
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-meta li,
+.hh-floorplans-01 .fp-box:hover .fp-meta li {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* image inside box head */
+.hh-floorplans-01 .fp-box[aria-selected="true"] .fp-box-head img,
+.hh-floorplans-01 .fp-box:hover .fp-box-head img {
+    background: transparent;
+    /* border-radius: 8px; */
+    padding: 4px;
+    filter: brightness(0) invert(1);
+}
+
+
 
 @media (max-width: 991.98px) {
     .hh-amenities-01 {

@@ -581,16 +581,12 @@ $developerStats = array_values(array_filter([
                         data-animation-out="animate__flipOutY">
                         <div class="card-head">
                             <div class="avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2Zm0 12c4.2 0 8 2.1 8 5v3H4v-3c0-2.9 3.8-5 8-5Z"
-                                        fill="#fff" />
-                                </svg>
+                                <img src="assets/icons/profile.png" alt="" width="100%">
                             </div>
                             <div class="info">
                                 <strong>Sarah Al-Mansouri</strong>
                                 <span>Senior Property Consultant</span>
-                                <em>★★★★★ · 5.0 Rating</em>
+                                <em><b style="color: #edb608; font-size: 18px;">★★★★★</b> · 5.0 Rating</em>
                             </div>
                         </div>
 
@@ -712,7 +708,6 @@ $developerStats = array_values(array_filter([
                             <!-- parent: .hh-amenities-01 -->
                             <div class="hh-amenities-01 ">
                                 <div class="container-fluid">
-                                    <h3>Key Features & Amenities</h3>
                                     <?php if ($amenitiesList): ?>
                                         <ul class="amenities-list">
                                             <?php foreach ($amenitiesList as $amenity): ?>
@@ -745,8 +740,7 @@ $developerStats = array_values(array_filter([
                         <!-- Floor Plan -->
                         <div id="hh-tab-floor" class="tab-pane fade" role="tabpanel" aria-labelledby="hh-tab-floor-btn">
                             <div class="hh-floorplans-01 ">
-                                <h3>Floor Plans</h3>
-                                <div class="container-fluid">
+                                <div class="container-fluid p-0">
                                     <?php if ($floorPlans): ?>
                                         <div class="row">
                                             <div class="col-12 col-lg-7">
@@ -825,11 +819,8 @@ $developerStats = array_values(array_filter([
                         <div id="hh-tab-developer" class="tab-pane fade" role="tabpanel"
                             aria-labelledby="hh-tab-developer-btn">
                             <div class="hh-developer-01">
-                                <div class="container-fluid">
+                                <div class="container-fluid p-0">
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <h3>About the Developer</h3>
-                                        </div>
                                         <div class="col-12">
                                             <section class="dev-card " data-animation-in="animate__flipInX"
                                                 data-animation-out="animate__flipOutX">
@@ -886,10 +877,10 @@ $developerStats = array_values(array_filter([
                 <!-- Right: sidebar -->
                 <div class="col-12 col-lg-4">
                     <aside>
-                        
+
                         <div class="agent-card " id="contactAgent" data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
-                           
+
                             <div class="agent-head">
                                 <div class="avatar">
                                     <img src="assets/icons/chat.png" alt="">
@@ -934,6 +925,50 @@ $developerStats = array_values(array_filter([
 
                         </div>
                     </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- parent: .hh-cta-01 -->
+    <div class="hh-cta-01">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <!-- Left: Property Permit -->
+                <div class="col-lg-6">
+                    <div class="permit-section">
+                        <div class="permit-heading">
+                            <h6>Property Permit</h6>
+                            <?php if ($permitBarcode): ?>
+                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="Permit QR" width="120" />
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="permit-box">
+                            <span>Permit Number</span>
+                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                            <?php if ($completionDate): ?>
+                                <em>Completion:
+                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: CTA Banner -->
+                <div class="col-lg-6">
+                    <div class="cta-banner" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
+                        <h3>Ready to Invest in Your Future?</h3>
+                        <p>Contact our property specialists today for exclusive pricing and expert advice.</p>
+
+                        <div class="cta-actions">
+                            <button onclick="window.location.href='tel:+97142554683'" type="button"
+                                class="cta-btn primary">Call Now</button>
+                            <button type="button" class="cta-btn secondary" onclick="openPopup()">Enquire Now</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1170,7 +1205,8 @@ $developerStats = array_values(array_filter([
                                             $iconPath = $defaultLandmarkIcon;
                                             foreach ($landmarkIconKeywords as $keyword => $path) {
                                                 if (($categoryKey !== '' && str_contains($categoryKey, $keyword)) ||
-                                                    ($landmarkKey !== '' && str_contains($landmarkKey, $keyword))) {
+                                                    ($landmarkKey !== '' && str_contains($landmarkKey, $keyword))
+                                                ) {
                                                     $iconPath = $path;
                                                     break;
                                                 }
@@ -1210,73 +1246,7 @@ $developerStats = array_values(array_filter([
                                     <p class="mb-0">Connectivity details will be available soon.</p>
                                 <?php endif; ?>
                             </div>
-
-                            <div>
-                                <!-- Permit card -->
-                                <div class="hh-location-01-permit " data-animation-in="animate__fadeIn"
-                                    data-animation-out="animate__fadeOut">
-                                    <div class="head">
-                                        <strong>Property Permit</strong>
-                                    </div>
-
-                                    <div class="qr-row d-flex justify-content-between align-items-center">
-                                        <!-- Left Side (QR + Permit Details) -->
-                                        <div class="d-flex align-items-center gap-3">
-                                            <?php if ($permitBarcode): ?>
-                                                <img class="qr"
-                                                    src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                                    alt="Permit QR" width="80" />
-                                            <?php endif; ?>
-
-                                            <div class="permit-box">
-                                                <span>Permit Number</span>
-                                                <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                                <?php if ($completionDate): ?>
-                                                    <em>Completion :
-                                                        <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-
-                                        <!-- Right Side (Actions) -->
-                                        <div class="map-action d-flex gap-2">
-                                            <button type="button" class="call"
-                                                onclick="window.location.href='tel:+97142554683'">
-                                                <img src="assets/flaticons/phone.png" alt="" width="16" />
-                                                <span>+971 42554683</span>
-                                            </button>
-
-                                            <button type="button" class="email" onclick="openPopup()">
-                                                <img src="assets/flaticons/email.png" alt="" width="16" />
-                                                <span>Email Agent</span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                <!-- Quick contact -->
-                                <!-- <div class="hh-location-01-contact">
-                                    <div class="head">
-                                        <strong>Quick Contact</strong>
-                                    </div>
-
-                                    <button type="button" class="call"
-                                        onclick="window.location.href='tel:+971 42554683'">
-                                        <img src="assets/flaticons/phone.png" alt="" />
-                                        <span>Call Now: +971 42554683</span>
-                                    </button>
-
-                                    <button type="button" class="email" onclick="openPopup()">
-                                        <img src="assets/flaticons/email.png" alt="" />
-                                        <span>Email Agent</span>
-                                    </button>
-                                </div> -->
-                            </div>
-
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -1348,30 +1318,6 @@ $developerStats = array_values(array_filter([
             </div>
         </div>
     </div>
-
-    <!-- parent: .hh-cta-01 -->
-    <div class="hh-cta-01 ">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-
-                    <div class="cta-banner " data-animation-in="animate__flipInX"
-                        data-animation-out="animate__flipOutX">
-                        <h3>Ready to Invest in Your Future?</h3>
-                        <p>Contact our property specialists today for exclusive pricing.</p>
-
-                        <div class="cta-actions">
-                            <button onclick="window.location.href='tel:+971 42554683'" type="button"
-                                class="cta-btn">Call Now</button>
-                            <button type="button" class="cta-btn" onclick="openPopup()">Enquire Now</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <!-- footer five start -->
     <div class="footer-section-five">

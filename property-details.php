@@ -1137,6 +1137,7 @@ $developerStats = array_values(array_filter([
 
                         <!-- Landmarks list -->
                         <div class="col-12 col-md-6" id="LandMarkList">
+                            
                             <div class="hh-location-01-landmarks">
                                 <?php if ($locationAccess): ?>
                                     <ul class="list-unstyled landmarks-list">
@@ -1236,73 +1237,6 @@ $developerStats = array_values(array_filter([
         </div>
     </div>
 
-    <?php if ($videoLink !== ''): ?>
-        <?php
-        $displayVideoTitle = $videoTitle !== '' ? $videoTitle : $titleText;
-        $displayVideoSubtitle = $videoSubtitle !== ''
-            ? $videoSubtitle
-            : 'Explore the property through immersive video content';
-        $videoBadgeList = $videoTags ?: ['Tour'];
-        $videoPreviewImage = $primaryImage;
-        ?>
-        <div class="hh-property-videos ">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12" data-animation-in="animate__fadeInUp"
-                        data-animation-out="animate__fadeOutDown">
-                        <div class="hh-property-videos__card">
-                            <div class="hh-property-videos__header">
-                                <span class="hh-property-videos__icon" aria-hidden="true">
-                                    <img src="assets/icons/property-video.svg" alt="" width="28" height="28">
-                                </span>
-                                <div class="hh-property-videos__header-text">
-                                    <h3>Property Videos</h3>
-                                    <p><?= htmlspecialchars($displayVideoSubtitle, ENT_QUOTES, 'UTF-8') ?></p>
-                                </div>
-                            </div>
-
-                            <div class="hh-property-videos__content">
-                                <?php if ($videoBadgeList): ?>
-                                    <div class="hh-property-videos__badges">
-                                        <?php foreach ($videoBadgeList as $badge): ?>
-                                            <span class="hh-property-videos__badge">
-                                                <?= htmlspecialchars($badge, ENT_QUOTES, 'UTF-8') ?>
-                                            </span>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
-
-                                <a class="hh-property-videos__preview"
-                                    href="<?= htmlspecialchars($videoLink, ENT_QUOTES, 'UTF-8') ?>" target="_blank"
-                                    rel="noopener noreferrer"
-                                    style="background-image: url('<?= htmlspecialchars($videoPreviewImage, ENT_QUOTES, 'UTF-8') ?>');"
-                                    aria-label="Play property video">
-                                    <span class="hh-property-videos__play" aria-hidden="true">
-                                        <img src="assets/icons/play-circle.svg" alt="" width="60" height="60">
-                                    </span>
-                                    <?php if ($videoDuration !== ''): ?>
-                                        <span class="hh-property-videos__duration">
-                                            <?= htmlspecialchars($videoDuration, ENT_QUOTES, 'UTF-8') ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </a>
-
-                                <div class="hh-property-videos__meta">
-                                    <h4><?= htmlspecialchars($displayVideoTitle, ENT_QUOTES, 'UTF-8') ?></h4>
-                                    <?php if ($videoViews !== ''): ?>
-                                        <div class="hh-property-videos__views">
-                                            <img src="assets/icons/eye.svg" alt="" width="22" height="16">
-                                            <span><?= htmlspecialchars($videoViews, ENT_QUOTES, 'UTF-8') ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
 
     <!-- parent: .hh-register-01 -->
     <div class="hh-register-01 ">

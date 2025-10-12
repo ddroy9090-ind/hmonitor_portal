@@ -455,15 +455,15 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.select-dropDownClass').forEach(el => {
-        new Choices(el, {
-            searchEnabled: false,
-            itemSelectText: '',
-            shouldSort: false
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.select-dropDownClass').forEach(el => {
+            new Choices(el, {
+                searchEnabled: false,
+                itemSelectText: '',
+                shouldSort: false
+            });
         });
     });
-});
 </script>
 
 

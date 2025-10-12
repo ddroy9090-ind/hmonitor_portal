@@ -704,7 +704,7 @@ $developerStats = array_values(array_filter([
                             aria-labelledby="hh-tab-features-btn">
                             <!-- parent: .hh-amenities-01 -->
                             <div class="hh-amenities-01 ">
-                                <div class="container-fluid">
+                                <div class="amenities-list-1">
                                     <?php if ($amenitiesList): ?>
                                         <ul class="amenities-list">
                                             <?php foreach ($amenitiesList as $amenity): ?>
@@ -1087,18 +1087,18 @@ $developerStats = array_values(array_filter([
             <div class="row">
                 <div class="col-12">
                     <div class="hh-location-card-head">
-                            <div class="hh-location-card-icon">
-                                <img src="assets/icons/location.png" alt="Interactive map icon">
-                            </div>
-                            <div class="hh-location-card-text">
-                                <strong>Prime Location & Connectivity</strong>
-                                <?php if ($locationHighlight !== ''): ?>
-                                    <span><?= htmlspecialchars($locationHighlight, ENT_QUOTES, 'UTF-8') ?></span>
-                                <?php else: ?>
-                                    <span>Explore the neighbourhood and nearby amenities.</span>
-                                <?php endif; ?>
-                            </div>
+                        <div class="hh-location-card-icon">
+                            <img src="assets/icons/location.png" alt="Interactive map icon">
                         </div>
+                        <div class="hh-location-card-text">
+                            <h4>Prime Location & Connectivity</h4>
+                            <?php if ($locationHighlight !== ''): ?>
+                                <span><?= htmlspecialchars($locationHighlight, ENT_QUOTES, 'UTF-8') ?></span>
+                            <?php else: ?>
+                                <span>Explore the neighbourhood and nearby amenities.</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1107,7 +1107,7 @@ $developerStats = array_values(array_filter([
                 <div class="col-lg-8 col-lg-8" data-animation-in="animate__fadeInLeft"
                     data-animation-out="animate__fadeOutLeft">
                     <div class="hh-location-01-map-card">
-                        
+
                         <div class="hh-location-01-map" data-animation-in="animate__fadeIn"
                             data-animation-out="animate__fadeOut">
                             <?php if ($locationMap !== ''): ?>
@@ -1127,7 +1127,52 @@ $developerStats = array_values(array_filter([
                             <?php endif; ?>
                         </div>
                     </div>
+                </div>
+                <div class="col-12 col-lg-4" data-animation-in="animate__fadeInRight"
+                    data-animation-out="animate__fadeOutRight">
+                    <div class="hh-location-01-side">
+                        <div class="hh-location-01-permit">
+                            <div class="head">
+                                <img src="assets/icons/home.svg" alt="Property permit icon">
+                                <strong>Property Permit</strong>
+                            </div>
+                            <?php if ($permitBarcode || ($property['permit_no'] ?? '') !== '' || $completionDate): ?>
+                                <div class="qr-row">
+                                    <?php if ($permitBarcode): ?>
+                                        <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
+                                            alt="Property permit QR code" width="120">
+                                    <?php endif; ?>
+                                    <div class="permit-box">
+                                        <span>Permit Number</span>
+                                        <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
+                                        <?php if ($completionDate): ?>
+                                            <em>Completion: <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <p class="mb-0">Permit information will be shared soon.</p>
+                            <?php endif; ?>
+                        </div>
 
+                        <div class="hh-location-01-contact">
+                            <div class="head">
+                                <img src="assets/icons/video-call.png" alt="Contact icon">
+                                <strong>Quick Contact</strong>
+                            </div>
+                            <p>Speak with our property specialists for personalised assistance.</p>
+                            <a class="call" href="tel:+97142554683">
+                                <img src="assets/icons/customer-support.png" alt="Call icon">
+                                <span>Call Now: +971 425 54683</span>
+                            </a>
+                            <a class="email" href="mailto:contact@houzzhunt.com">
+                                <img src="assets/icons/message.png" alt="Email icon">
+                                <span>Email Agent</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
                     <div class="hh-location-01-landmarks" id="LandMarkList">
                         <div class="hh-landmarks-head">
                             <strong>Nearby Landmarks</strong>
@@ -1136,16 +1181,16 @@ $developerStats = array_values(array_filter([
                         <?php if ($locationAccess): ?>
                             <?php
                             $landmarkIconKeywords = [
-                                'mall' => 'assets/icons/community.svg',
-                                'marina' => 'assets/icons/community.svg',
-                                'airport' => 'assets/icons/globe.png',
+                                'mall' => 'assets/icons/location.png',
+                                'marina' => 'assets/icons/location.png',
+                                'airport' => 'assets/icons/location.png',
                                 'metro' => 'assets/icons/location.png',
                                 'station' => 'assets/icons/location.png',
-                                'school' => 'assets/icons/community.svg',
-                                'hospital' => 'assets/icons/eye.svg',
-                                'beach' => 'assets/icons/community.svg',
-                                'park' => 'assets/icons/community.svg',
-                                'tower' => 'assets/icons/home.svg',
+                                'school' => 'assets/icons/location.png',
+                                'hospital' => 'assets/icons/location.png',
+                                'beach' => 'assets/icons/location.png',
+                                'park' => 'assets/icons/location.png',
+                                'tower' => 'assets/icons/location.png',
                             ];
                             $defaultLandmarkIcon = 'assets/icons/location.png';
                             ?>
@@ -1206,97 +1251,11 @@ $developerStats = array_values(array_filter([
                         <?php endif; ?>
                     </div>
                 </div>
-
-                <div class="col-12 col-lg-4" data-animation-in="animate__fadeInRight"
-                    data-animation-out="animate__fadeOutRight">
-                    <div class="hh-location-01-side">
-                        <div class="hh-location-01-permit">
-                            <div class="head">
-                                <img src="assets/icons/home.svg" alt="Property permit icon">
-                                <strong>Property Permit</strong>
-                            </div>
-                            <?php if ($permitBarcode || ($property['permit_no'] ?? '') !== '' || $completionDate): ?>
-                                <div class="qr-row">
-                                    <?php if ($permitBarcode): ?>
-                                        <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                            alt="Property permit QR code" width="120">
-                                    <?php endif; ?>
-                                    <div class="permit-box">
-                                        <span>Permit Number</span>
-                                        <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                                        <?php if ($completionDate): ?>
-                                            <em>Completion: <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <p class="mb-0">Permit information will be shared soon.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="hh-location-01-contact">
-                            <div class="head">
-                                <img src="assets/icons/video-call.png" alt="Contact icon">
-                                <strong>Quick Contact</strong>
-                            </div>
-                            <p>Speak with our property specialists for personalised assistance.</p>
-                            <a class="call" href="tel:+97142554683">
-                                <img src="assets/icons/customer-support.png" alt="Call icon">
-                                <span>Call Now: +971 425 54683</span>
-                            </a>
-                            <a class="email" href="mailto:contact@houzzhunt.com">
-                                <img src="assets/icons/message.png" alt="Email icon">
-                                <span>Email Agent</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- parent: .hh-cta-01 -->
-    <div class="hh-cta-01">
-        <div class="container">
-            <div class="row align-items-center gy-4">
-                <!-- Left: Property Permit -->
-                <!-- <div class="col-lg-6">
-                    <div class="permit-section">
-                        <div class="permit-heading">
-                            <h6>Property Permit</h6>
-                            <?php if ($permitBarcode): ?>
-                                <img class="qr" src="<?= htmlspecialchars($permitBarcode, ENT_QUOTES, 'UTF-8') ?>"
-                                    alt="Permit QR" width="120" />
-                            <?php endif; ?>
-                        </div>
 
-                        <div class="permit-box">
-                            <span>Permit Number</span>
-                            <b><?= htmlspecialchars($property['permit_no'] ?: 'Available on request', ENT_QUOTES, 'UTF-8') ?></b>
-                            <?php if ($completionDate): ?>
-                                <em>Completion:
-                                    <?= htmlspecialchars($completionDate, ENT_QUOTES, 'UTF-8') ?></em>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div> -->
-
-                <!-- Right: CTA Banner -->
-                <div class="col-lg-12">
-                    <div class="cta-banner" data-animation-in="animate__flipInX" data-animation-out="animate__flipOutX">
-                        <h3>Ready to Invest in Your Future?</h3>
-                        <p>Contact our property specialists today for exclusive pricing and expert advice.</p>
-
-                        <div class="cta-actions">
-                            <button onclick="window.location.href='tel:+97142554683'" type="button"
-                                class="cta-btn primary">Call Now</button>
-                            <button type="button" class="cta-btn primary" onclick="openPopup()">Enquire Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- parent: .hh-register-01 -->
     <div class="hh-register-01 ">

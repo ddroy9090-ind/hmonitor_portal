@@ -91,12 +91,24 @@ $extractCoordinates = static function (?string $value): ?array {
     return null;
 };
 
+$buildDetailsUrl = static function (string $base, int $id): string {
+    $base = trim($base);
+
+    if ($base === '') {
+        return '#';
+    }
+
+    $separator = strpos($base, '?') === false ? '?' : '&';
+
+    return sprintf('%s%sid=%d', $base, $separator, $id);
+};
+
 $sources = [
     [
         'table' => 'properties_list',
         'category_key' => 'offplan',
         'category_label' => 'Off-Plan',
-        'details_page' => 'property-details.php',
+        'details_page' => 'houzzhunt/property-details',
     ],
     [
         'table' => 'buy_properties_list',
@@ -168,7 +180,7 @@ foreach ($sources as $source) {
             'price' => $price,
             'bedrooms' => $bedrooms,
             'property_type' => $propertyType,
-            'details_url' => sprintf('%s?id=%d', $source['details_page'], $id),
+            'details_url' => $buildDetailsUrl($source['details_page'], $id),
             'latitude' => $coordinates['lat'] ?? null,
             'longitude' => $coordinates['lng'] ?? null,
         ];
@@ -178,4 +190,5 @@ foreach ($sources as $source) {
 $sendResponse([
     'properties' => $properties,
     'generated_at' => gmdate(DATE_ATOM),
+    'google_maps_api_key' => hh_google_maps_api_key(),
 ]);

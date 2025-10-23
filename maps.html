@@ -56,6 +56,27 @@
       z-index: 0;
     }
 
+    #map.map-error-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f9f8;
+    }
+
+    .map-error-box {
+      background: #fff6f5;
+      border: 1px solid rgba(163, 58, 58, 0.35);
+      color: #a33a3a;
+      padding: 18px 22px;
+      border-radius: 12px;
+      max-width: 340px;
+      width: calc(100% - 48px);
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
     .sidebar {
       position: absolute;
       z-index: 1;
@@ -386,6 +407,7 @@
     let map;
     let geocoder;
     let infoWindow;
+    let googleMapsScriptPromise = null;
     const defaultMapCenter = { lat: 25.2048, lng: 55.2708 };
 
     function propertyKey(property) {
@@ -417,6 +439,17 @@
       } catch (error) {
         return '#';
       }
+    }
+
+    function displayMapError(message) {
+      const mapElement = document.getElementById('map');
+      if (!mapElement) {
+        return;
+      }
+
+      const safeMessage = escapeHtml(String(message || ''));
+      mapElement.classList.add('map-error-state');
+      mapElement.innerHTML = `<div class="map-error-box">${safeMessage}</div>`;
     }
 
     function renderSidebar(list) {
@@ -513,6 +546,8 @@
     }
 
     function fetchPropertiesData() {
+      const container = document.getElementById('propertyList');
+
       return fetch('property-map-data.php', {
         method: 'GET',
         headers: {
@@ -530,13 +565,23 @@
           if (!payload || !Array.isArray(payload.properties)) {
             throw new Error('Unexpected response structure');
           }
+
           propertyState.all = payload.properties;
+          propertyState.selectedKey = null;
           applyFilters();
+
+          return payload;
         })
         .catch((error) => {
           console.error('Failed to load property data', error);
-          const container = document.getElementById('propertyList');
-          container.innerHTML = '<div class="error-state">We were unable to load property data at the moment. Please refresh the page or try again later.</div>';
+          if (container) {
+            container.innerHTML = '<div class="error-state">We were unable to load property data at the moment. Please refresh the page or try again later.</div>';
+          }
+          propertyState.all = [];
+          propertyState.filtered = [];
+          clearMarkers();
+
+          throw error;
         });
     }
 
@@ -708,8 +753,58 @@
       });
     }
 
+    function loadGoogleMaps(apiKey) {
+      if (googleMapsScriptPromise) {
+        return googleMapsScriptPromise;
+      }
+
+      googleMapsScriptPromise = new Promise((resolve, reject) => {
+        if (window.google && window.google.maps) {
+          initMap();
+          resolve();
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}`;
+        script.async = true;
+        script.defer = true;
+
+        script.onload = () => {
+          if (window.google && window.google.maps) {
+            initMap();
+            resolve();
+          } else {
+            reject(new Error('Google Maps API unavailable.'));
+          }
+        };
+
+        script.onerror = () => reject(new Error('Failed to load Google Maps script.'));
+        document.head.appendChild(script);
+      }).catch((error) => {
+        console.error('Unable to initialise Google Maps', error);
+        displayMapError('We were unable to load Google Maps at the moment. Please try again later.');
+        throw error;
+      });
+
+      return googleMapsScriptPromise;
+    }
+
     function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
+      if (map) {
+        updateMarkers(propertyState.filtered);
+        return;
+      }
+
+      const mapElement = document.getElementById('map');
+      if (!mapElement) {
+        return;
+      }
+
+      mapElement.classList.remove('map-error-state');
+      mapElement.innerHTML = '';
+
+      map = new google.maps.Map(mapElement, {
         center: defaultMapCenter,
         zoom: 11,
         mapTypeControl: false,
@@ -730,8 +825,27 @@
       });
 
       geocoder = new google.maps.Geocoder();
-      fetchPropertiesData();
+      infoWindow = new google.maps.InfoWindow();
+      updateMarkers(propertyState.filtered);
     }
+
+    function bootstrapMapExperience() {
+      fetchPropertiesData()
+        .then((payload) => {
+          const apiKey = typeof payload.google_maps_api_key === 'string' ? payload.google_maps_api_key.trim() : '';
+          if (apiKey === '') {
+            displayMapError('Google Maps is currently unavailable because the API key is not configured.');
+            return null;
+          }
+
+          return loadGoogleMaps(apiKey);
+        })
+        .catch((error) => {
+          console.error('Failed to bootstrap the map experience', error);
+        });
+    }
+
+    bootstrapMapExperience();
 
     window.initMap = initMap;
     window.filterBy = filterBy;

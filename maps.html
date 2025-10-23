@@ -6,6 +6,12 @@
   <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+zWATbFveLLNqwo1cAdnxu1VNnjkCkVpWm5H0ao0M="
+    crossorigin="anonymous"
+  />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&display=swap');
 
@@ -20,18 +26,6 @@
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.72);
       --accent: #edbb68;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    :root {
-      --tag-offplan: #0f635c;
-      --tag-buy: #004a44;
-      --tag-rent: #edbb68;
-      --sidebar-width: 380px;
-      --text-muted: #6f6f6f;
     }
 
     * {
@@ -66,6 +60,39 @@
       width: 100%;
       height: 100%;
       z-index: 0;
+    }
+
+    .leaflet-container {
+      font: 14px "Hind Madurai", sans-serif;
+      background: var(--background);
+    }
+
+    .leaflet-control-zoom {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .leaflet-control-zoom a {
+      background: rgba(11, 27, 43, 0.92);
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .leaflet-control-zoom a:last-child {
+      border-bottom: none;
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      background: rgba(13, 30, 48, 0.92);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .leaflet-popup-content {
+      margin: 14px 18px;
+      min-width: 220px;
     }
 
     .sidebar {
@@ -370,6 +397,11 @@
     </div>
   </div>
 
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="anonymous"
+  ></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <script>
     const state = {
@@ -378,6 +410,7 @@
       markers: new Map(),
       activePropertyKey: null,
       map: null,
+      mapLibrary: 'mapbox',
       categoryMeta: new Map([
         ['offplan', { label: 'Off-Plan', colour: getComputedStyle(document.documentElement).getPropertyValue('--offplan-colour') }],
         ['buy', { label: 'Buy', colour: getComputedStyle(document.documentElement).getPropertyValue('--buy-colour') }],
@@ -415,15 +448,44 @@
         applyFilters();
 
         if (!state.accessToken) {
-          showOverlay('Map unavailable', 'A Mapbox access token has not been configured. Please update the Mapbox key to enable the interactive map.');
+          initialiseLeafletMap();
           return;
         }
 
         mapboxgl.accessToken = state.accessToken;
-        initialiseMap();
+        initialiseMapbox();
       })
       .catch(() => {
         showOverlay('Map unavailable', 'We were unable to load the property dataset. Please try again later.');
+      });
+
+    function initialiseMapbox() {
+      state.mapLibrary = 'mapbox';
+
+      if (!state.properties.length) {
+        showOverlay('Map unavailable', 'No properties with map locations were found.');
+      }
+
+      try {
+        state.map = new mapboxgl.Map({
+          container: elements.mapContainer,
+          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          center: [55.2708, 25.2048],
+          zoom: 9.5,
+          pitch: 55,
+          bearing: -20,
+          antialias: true,
+        });
+      } catch (error) {
+        showOverlay('Map unavailable', 'The interactive map could not be initialised.');
+        return;
+      }
+
+      state.map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
+      state.map.on('load', () => {
+        state.mapReady = true;
+        hideOverlay();
+        refreshMarkers();
       });
 
     function initialiseMap() {
@@ -453,6 +515,45 @@
       });
 
       return googleMapsScriptPromise;
+    }
+
+    function initialiseLeafletMap() {
+      state.mapLibrary = 'leaflet';
+
+      if (typeof L === 'undefined') {
+        showOverlay('Map unavailable', 'The map could not be initialised because the required libraries failed to load.');
+        return;
+      }
+
+      try {
+        state.map = L.map(elements.mapContainer, {
+          zoomControl: false,
+          attributionControl: false,
+        });
+      } catch (error) {
+        showOverlay('Map unavailable', 'The interactive map could not be initialised.');
+        return;
+      }
+
+      const tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+      });
+      tiles.addTo(state.map);
+      L.control.zoom({ position: 'topright' }).addTo(state.map);
+
+      state.mapReady = true;
+      hideOverlay();
+
+      const coords = collectCoordinates();
+      if (coords.length) {
+        const bounds = L.latLngBounds(coords.map(({ latitude, longitude }) => [latitude, longitude]));
+        state.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      } else {
+        state.map.setView([25.2048, 55.2708], 9.5);
+      }
+
+      refreshMarkers();
     }
 
     function normaliseProperty(property) {
@@ -612,30 +713,100 @@
         return;
       }
 
-      state.markers.forEach(markerData => {
-        markerData.marker.remove();
+      state.markers.forEach(({ marker }) => {
+        if (!marker) {
+          return;
+        }
+
+        if (state.mapLibrary === 'mapbox' && typeof marker.remove === 'function') {
+          marker.remove();
+        } else if (state.mapLibrary === 'leaflet') {
+          if (typeof marker.remove === 'function') {
+            marker.remove();
+          } else if (state.map && typeof state.map.removeLayer === 'function') {
+            state.map.removeLayer(marker);
+          }
+        }
       });
       state.markers.clear();
+
+      const coords = [];
 
       state.filtered.forEach(property => {
         if (!isFinite(property.longitude) || !isFinite(property.latitude)) {
           return;
         }
 
-        const markerElement = document.createElement('div');
-        markerElement.className = `marker ${property.category_key}`;
-        markerElement.addEventListener('click', () => focusProperty(property.key, true));
+        if (state.mapLibrary === 'mapbox') {
+          const markerElement = document.createElement('div');
+          markerElement.className = `marker ${property.category_key}`;
+          markerElement.addEventListener('click', () => focusProperty(property.key, true));
 
-        const marker = new mapboxgl.Marker({ element: markerElement, anchor: 'bottom' })
-          .setLngLat([property.longitude, property.latitude])
-          .setPopup(createPopup(property))
-          .addTo(state.map);
+          const marker = new mapboxgl.Marker({ element: markerElement, anchor: 'bottom' })
+            .setLngLat([property.longitude, property.latitude])
+            .setPopup(createMapboxPopup(property))
+            .addTo(state.map);
 
-        state.markers.set(property.key, { marker, property });
+          state.markers.set(property.key, { marker, property });
+        } else if (state.mapLibrary === 'leaflet') {
+          const marker = L.marker([property.latitude, property.longitude], {
+            icon: L.divIcon({
+              className: '',
+              html: `<div class="marker ${property.category_key}"></div>`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 32],
+            }),
+          });
+
+          marker.on('click', () => focusProperty(property.key, true));
+          marker.bindPopup(createLeafletPopup(property));
+          marker.addTo(state.map);
+
+          state.markers.set(property.key, { marker, property });
+        }
+
+        coords.push({ latitude: property.latitude, longitude: property.longitude });
       });
+
+      updateViewport(coords);
     }
 
-    function createPopup(property) {
+    function collectCoordinates() {
+      return state.filtered
+        .filter(property => isFinite(property.latitude) && isFinite(property.longitude))
+        .map(property => ({ latitude: property.latitude, longitude: property.longitude }));
+    }
+
+    function updateViewport(coords) {
+      if (!state.mapReady || !coords.length) {
+        return;
+      }
+
+      if (state.mapLibrary === 'mapbox' && typeof mapboxgl !== 'undefined') {
+        let bounds = null;
+        coords.forEach(({ latitude, longitude }) => {
+          const point = [longitude, latitude];
+          if (!bounds) {
+            bounds = new mapboxgl.LngLatBounds(point, point);
+          } else {
+            bounds.extend(point);
+          }
+        });
+
+        if (bounds && typeof state.map.fitBounds === 'function') {
+          state.map.fitBounds(bounds, { padding: 80, maxZoom: 14, duration: 800 });
+        }
+      } else if (state.mapLibrary === 'leaflet') {
+        const latLngs = coords.map(({ latitude, longitude }) => [latitude, longitude]);
+        if (latLngs.length === 1) {
+          state.map.flyTo(latLngs[0], 13.5, { animate: true, duration: 0.8 });
+        } else if (latLngs.length) {
+          state.map.fitBounds(L.latLngBounds(latLngs), { padding: [40, 40], maxZoom: 14 });
+        }
+      }
+    }
+
+    function buildPopupContent(property) {
       const content = document.createElement('div');
       const title = document.createElement('h3');
       title.textContent = property.display_name;
@@ -667,7 +838,15 @@
       link.textContent = 'Open property details';
       content.appendChild(link);
 
-      return new mapboxgl.Popup({ offset: 18, closeOnMove: true }).setDOMContent(content);
+      return content;
+    }
+
+    function createMapboxPopup(property) {
+      return new mapboxgl.Popup({ offset: 18, closeOnMove: true }).setDOMContent(buildPopupContent(property));
+    }
+
+    function createLeafletPopup(property) {
+      return buildPopupContent(property).outerHTML;
     }
 
     function focusProperty(key, fromMarker = false) {
@@ -675,14 +854,24 @@
       highlightActiveCard();
 
       const markerData = state.markers.get(key);
-      if (markerData && state.mapReady) {
-        const { property, marker } = markerData;
+      if (!markerData || !state.mapReady) {
+        return;
+      }
+
+      const { property, marker } = markerData;
+
+      if (state.mapLibrary === 'mapbox') {
         state.map.flyTo({ center: [property.longitude, property.latitude], zoom: 13.5, pitch: 50, bearing: -10, essential: true });
         if (!fromMarker) {
           const popup = marker.getPopup();
           if (popup) {
             popup.addTo(state.map);
           }
+        }
+      } else if (state.mapLibrary === 'leaflet') {
+        state.map.flyTo([property.latitude, property.longitude], 13.5, { animate: true, duration: 0.8 });
+        if (!fromMarker && typeof marker.openPopup === 'function') {
+          marker.openPopup();
         }
       }
     }
@@ -698,6 +887,10 @@
       elements.overlay.hidden = false;
       elements.overlay.querySelector('strong').textContent = title;
       elements.overlayDetails.textContent = message;
+    }
+
+    function hideOverlay() {
+      elements.overlay.hidden = true;
     }
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>

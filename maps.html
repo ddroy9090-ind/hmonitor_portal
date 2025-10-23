@@ -487,6 +487,9 @@
         hideOverlay();
         refreshMarkers();
       });
+
+      renderSidebar(state.filtered);
+      refreshMarkers();
     }
 
     function initialiseLeafletMap() {
@@ -865,5 +868,6 @@
       elements.overlay.hidden = true;
     }
   </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
 </body>
 </html>

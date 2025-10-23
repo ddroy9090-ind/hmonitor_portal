@@ -3,19 +3,35 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Houzzhunt Maps</title>
+  <title>HouzzHunt Maps</title>
   <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    :root {
+      --tag-offplan: #0f635c;
+      --tag-buy: #004a44;
+      --tag-rent: #edbb68;
+      --sidebar-width: 380px;
+      --text-muted: #6f6f6f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       font-size: 16px !important;
       font-family: "Hind Madurai", sans-serif !important;
       line-height: 1.4 !important;
+      background: #f9f9f9;
+      color: #0f635c;
+    }
+
+    a {
+      color: inherit;
     }
 
     .heading-title>span {
@@ -28,6 +44,8 @@
       background-clip: text;
       text-fill-color: transparent;
       font-weight: 300;
+      display: inline-block;
+      margin-bottom: 10px;
     }
 
     #map {
@@ -35,100 +53,29 @@
       top: 0;
       bottom: 0;
       width: 100%;
+      z-index: 0;
     }
 
     .sidebar {
       position: absolute;
       z-index: 1;
-      width: 360px;
+      width: var(--sidebar-width);
       height: 100%;
       overflow-y: auto;
       background: #ffffff;
-      color: white;
-      padding: 20px;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-      padding-bottom: 0;
+      color: #0f635c;
+      padding: 24px 24px 32px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
     }
 
-    .area-card {
-      background: #ffff;
-      margin: 10px 0;
-      border-radius: 10px;
-      padding: 15px;
-      transition: background 0.3s;
-      cursor: pointer;
-      color: #555252;
-      border: 1px #d8d8d8 solid;
-      font-weight: 400;
-      font-family: "Hind Madurai", sans-serif !important;
-      font-size: 16px;
-    }
-
-    .area-card strong {
-      font-weight: 500;
-      color: #111;
-    }
-
-    .area-card small {
-      font-size: 16px !important;
-      display: inline-block;
-      margin: 2px 0;
-    }
-
-    /* .area-card:hover {
-      background: #077b71;
-    } */
-
-    .tag {
-      background: #004a44;
-      color: white;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      margin-left: 10px;
-      float: right;
-    }
-
-    input#searchInput {
-      width: 92%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    input#searchInput:focus {
-      outline: none;
-      border: 1px solid #ccc;
-    }
-
-    .filters {
-      margin: 10px 0;
-    }
-
-    .filter-btn {
-      background: #004a44;
-      color: white;
-      border: none;
-      padding: 6px 16px;
-      margin-right: 5px;
-      margin-bottom: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .filter-btn.active {
-      background: #edbb68;
-    }
-
-
-    /* ---Newly Css Added------- */
     .logo-center {
       display: flex;
       width: 100%;
-      align-items: baseline;
-      gap: 30px;
+      align-items: center;
+      gap: 18px;
     }
 
     .logo-center .home {
@@ -136,17 +83,231 @@
     }
 
     img.logo {
-      width: 210px;
-      margin-bottom: 15px;
+      width: 200px;
+      margin-bottom: 0;
       position: relative;
-      top: 15px;
+      top: 4px;
+    }
+
+    .sidebar p.description {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 15px;
+    }
+
+    input#searchInput {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #d8d8d8;
+      font-size: 15px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input#searchInput:focus {
+      outline: none;
+      border: 1px solid #0f635c;
+      box-shadow: 0 0 0 3px rgba(15, 99, 92, 0.12);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      background: #004a44;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 74, 68, 0.18);
+    }
+
+    .filter-btn.active {
+      background: #edbb68;
+      color: #0f403b;
+      box-shadow: 0 4px 10px rgba(237, 187, 104, 0.35);
+    }
+
+    #propertyList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 24px;
+    }
+
+    .property-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      border: 1px solid #e5e5e5;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .property-card:hover {
+      border-color: #0f635c;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .property-card.active {
+      border-color: #edbb68;
+      box-shadow: 0 10px 22px rgba(237, 187, 104, 0.25);
+    }
+
+    .property-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      color: #172b29;
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .property-title span {
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .tag-offplan {
+      background: var(--tag-offplan);
+    }
+
+    .tag-buy {
+      background: var(--tag-buy);
+    }
+
+    .tag-rent {
+      background: var(--tag-rent);
+      color: #2f2810;
+    }
+
+    .property-meta {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+    }
+
+    .property-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .property-meta strong {
+      color: #0f403b;
+      font-weight: 600;
+    }
+
+    .details-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #004a44;
+      text-decoration: none;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .details-link:hover {
+      text-decoration: underline;
+    }
+
+    .empty-state,
+    .error-state,
+    .loading-state {
+      padding: 16px;
+      border-radius: 12px;
+      background: #f4f9f8;
+      color: var(--text-muted);
+      font-size: 15px;
+      border: 1px dashed rgba(15, 99, 92, 0.25);
+    }
+
+    .error-state {
+      background: #fff6f5;
+      color: #a33a3a;
+      border-color: rgba(163, 58, 58, 0.35);
+    }
+
+    .loading-state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .loading-spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(15, 99, 92, 0.15);
+      border-top-color: var(--tag-offplan);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .map-legend {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
     }
 
     /* Thin Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
-      /* For horizontal scrollbar */
     }
 
     ::-webkit-scrollbar-track {
@@ -162,15 +323,22 @@
       background: #edbb68;
     }
 
-    @media(max-width: 768px) {
+    @media(max-width: 992px) {
+      :root {
+        --sidebar-width: 100%;
+      }
+
       .sidebar {
+        position: relative;
         width: 100%;
         height: auto;
-        position: relative;
+        padding-bottom: 24px;
       }
 
       #map {
-        height: 60vh;
+        position: relative;
+        width: 100%;
+        height: 65vh;
       }
     }
   </style>
@@ -180,90 +348,396 @@
   <div class="sidebar">
     <div class="logo-center">
       <a href="index.php">
-        <img src="assets/home.png" alt="" class="home">
+        <img src="assets/home.png" alt="Back to home" class="home">
       </a>
       <img src="assets/images/logo/green-logo.svg" alt="HouzzHunt Logo" class="logo" />
     </div>
     <h2 class="heading-title"><span class="whiteYellow">Explore Dubai with HouzzHunt</span></h2>
-    <p style="color: #0f635c;">Discover handpicked neighborhoods curated for refined lifestyles from waterfront marvels
-      to skyline icons</p>
-    <input type="text" id="searchInput" placeholder="Search areas..." oninput="searchAreas(this.value)">
+    <p class="description">Discover every HouzzHunt property at a glance. Filter between Off-Plan launches, ready-to-buy homes,
+      and curated rentals to find the perfect match for your lifestyle.</p>
+    <input type="text" id="searchInput" placeholder="Search properties or communities..." oninput="searchProperties(this.value)">
     <div class="filters">
-      <button class="filter-btn active" onclick="filterBy('All', this)">All</button>
-      <button class="filter-btn" onclick="filterBy('Luxury', this)">Luxury</button>
-      <button class="filter-btn" onclick="filterBy('Waterfront', this)">Waterfront</button>
-      <button class="filter-btn" onclick="filterBy('Business', this)">Business</button>
+      <button class="filter-btn active" data-filter="all" onclick="filterBy('all', this)">All</button>
+      <button class="filter-btn" data-filter="offplan" onclick="filterBy('offplan', this)">Off-Plan</button>
+      <button class="filter-btn" data-filter="buy" onclick="filterBy('buy', this)">Buy</button>
+      <button class="filter-btn" data-filter="rent" onclick="filterBy('rent', this)">Rent</button>
     </div>
-    <div id="areaList"></div>
+    <div class="map-legend">
+      <span class="legend-item"><span class="legend-dot" style="background: var(--tag-offplan);"></span>Off-Plan</span>
+      <span class="legend-item"><span class="legend-dot" style="background: var(--tag-buy);"></span>Buy</span>
+      <span class="legend-item"><span class="legend-dot" style="background: var(--tag-rent);"></span>Rent</span>
+    </div>
+    <div id="propertyList">
+      <div class="loading-state"><span class="loading-spinner" aria-hidden="true"></span>Loading properties...</div>
+    </div>
   </div>
-  <div id="map"></div>
+  <div id="map" role="presentation"></div>
   <script>
-    mapboxgl.accessToken = 'pk.eyJ1Ijoicm95Ym95MTIiLCJhIjoiY21kZmxkanB1MGU3OTJsc2tkM2M5YTVpOCJ9.NJjmLcJNy41-TrEPumhX_g';
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/satellite-streets-v12',
-      center: [55.27, 25.20],
-      zoom: 10,
-      pitch: 60,
-      bearing: -20,
-      antialias: true
-    });
+    const propertyState = {
+      all: [],
+      filtered: [],
+      activeFilter: 'all',
+      searchTerm: '',
+      markerData: new Map(),
+      markers: [],
+      selectedKey: null,
+    };
 
-    const areas = [
-      { name: "Downtown Dubai", tag: "Premium", coords: [55.276, 25.197], price: "2.5M AED", growth: "+12%", props: 450 },
-      { name: "Dubai Marina", tag: "Waterfront", coords: [55.138, 25.080], price: "1.8M AED", growth: "+8%", props: 320 },
-      { name: "Palm Jumeirah", tag: "Luxury", coords: [55.15, 25.11], price: "4.2M AED", growth: "+15%", props: 180 },
-      { name: "Business Bay", tag: "Business", coords: [55.2744, 25.1851], price: "1.2M AED", growth: "+10%", props: 380 },
-      { name: "JBR", tag: "Waterfront", coords: [55.1322, 25.0781], price: "2.1M AED", growth: "+11%", props: 260 },
-      { name: "JVC", tag: "Affordable", coords: [55.2116, 25.0611], price: "950K AED", growth: "+9%", props: 520 },
-      { name: "Meydan", tag: "Luxury", coords: [55.305, 25.185], price: "3.1M AED", growth: "+6%", props: 150 },
-      { name: "Dubai Creek", tag: "Waterfront", coords: [55.3415, 25.2343], price: "2.2M AED", growth: "+10%", props: 210 },
-      { name: "Dubai Area 1", tag: "Waterfront", coords: [55.2176, 25.0332], price: "4.2M AED", growth: "+6%", props: 324 },
-      { name: "Dubai Area 2", tag: "Business", coords: [55.1445, 25.2215], price: "2.1M AED", growth: "+8%", props: 343 },
-      { name: "Dubai Area 3", tag: "Premium", coords: [55.0161, 25.1071], price: "2.5M AED", growth: "+15%", props: 585 },
-      { name: "Dubai Area 4", tag: "Premium", coords: [55.2458, 25.1377], price: "1.8M AED", growth: "+6%", props: 452 },
-      { name: "Dubai Area 5", tag: "Premium", coords: [55.2001, 25.1116], price: "950K AED", growth: "+12%", props: 203 },
-      // ... 20 more areas similarly structured (omitted for brevity)
-    ];
+    let map;
+    let geocoder;
+    let infoWindow;
+    const defaultMapCenter = { lat: 25.2048, lng: 55.2708 };
+
+    function propertyKey(property) {
+      return `${property.category_key}:${property.id}`;
+    }
+
+    function escapeHtml(value) {
+      if (typeof value !== 'string') {
+        return '';
+      }
+
+      return value.replace(/[&<>"']/g, (match) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[match]);
+    }
+
+    function sanitiseUrl(url) {
+      if (typeof url !== 'string' || url.trim() === '') {
+        return '#';
+      }
+
+      try {
+        const absolute = new URL(url, window.location.origin);
+        return absolute.pathname + absolute.search + absolute.hash;
+      } catch (error) {
+        return '#';
+      }
+    }
 
     function renderSidebar(list) {
-      const areaList = document.getElementById("areaList");
-      areaList.innerHTML = "";
-      list.forEach(a => {
-        const div = document.createElement("div");
-        div.className = "area-card";
-        div.innerHTML = `<strong>${a.name}</strong> <span class="tag">${a.tag}</span><br/>
-      <small>Avg Price: ${a.price}</small><br/>
-      <small>Growth: ${a.growth}</small><br/>
-      <small>Properties: ${a.props}</small>`;
-        div.onclick = () => map.flyTo({ center: a.coords, zoom: 14 });
-        areaList.appendChild(div);
+      const container = document.getElementById('propertyList');
+      container.innerHTML = '';
+
+      if (!Array.isArray(list) || list.length === 0) {
+        container.innerHTML = '<div class="empty-state">No properties match your filters yet. Try adjusting the search or filter to explore more options.</div>';
+        return;
+      }
+
+      list.forEach((property) => {
+        const key = propertyKey(property);
+        const card = document.createElement('div');
+        card.className = 'property-card';
+        card.dataset.propertyKey = key;
+        card.innerHTML = `
+          <div class="property-title">
+            <span>${escapeHtml(property.display_name || property.title)}</span>
+            <span class="tag tag-${property.category_key}">${escapeHtml(property.category_label)}</span>
+          </div>
+          <div class="property-meta">
+            ${property.location ? `<span><strong>Location:</strong> ${escapeHtml(property.location)}</span>` : ''}
+            ${property.property_type ? `<span><strong>Type:</strong> ${escapeHtml(property.property_type)}</span>` : ''}
+            ${property.bedrooms ? `<span><strong>Bedrooms:</strong> ${escapeHtml(property.bedrooms)}</span>` : ''}
+            ${property.price ? `<span><strong>Price:</strong> ${escapeHtml(property.price)}</span>` : ''}
+          </div>
+          <a class="details-link" href="${sanitiseUrl(property.details_url)}">View details</a>
+        `;
+
+        card.addEventListener('click', (event) => {
+          if (event.target.closest('a')) {
+            return;
+          }
+
+          focusProperty(property, card);
+        });
+
+        if (propertyState.selectedKey === key) {
+          card.classList.add('active');
+        }
+
+        container.appendChild(card);
       });
     }
 
-    function filterBy(tag, element) {
-      document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
-      element.classList.add("active");
-      if (tag === "All") renderSidebar(areas);
-      else renderSidebar(areas.filter(a => a.tag === tag));
+    function setActiveCard(cardElement) {
+      document.querySelectorAll('.property-card.active').forEach((activeCard) => {
+        activeCard.classList.remove('active');
+      });
+
+      if (cardElement) {
+        cardElement.classList.add('active');
+      }
     }
 
-    function searchAreas(keyword) {
-      const results = areas.filter(a => a.name.toLowerCase().includes(keyword.toLowerCase()));
-      renderSidebar(results);
+    function filterBy(filterKey, buttonElement) {
+      propertyState.activeFilter = filterKey;
+      document.querySelectorAll('.filter-btn').forEach((button) => button.classList.remove('active'));
+      if (buttonElement) {
+        buttonElement.classList.add('active');
+      }
+      applyFilters();
     }
 
-    renderSidebar(areas);
-    areas.forEach(a => {
-      const marker = new mapboxgl.Marker({ color: "#edbb68" })
-        .setLngLat(a.coords)
-        .setPopup(new mapboxgl.Popup().setHTML(`<strong>${a.name}</strong><br/>Avg Price: ${a.price}<br/>Growth: ${a.growth}<br/>Properties: ${a.props}`))
-        .addTo(map);
+    function searchProperties(keyword) {
+      propertyState.searchTerm = typeof keyword === 'string' ? keyword.trim().toLowerCase() : '';
+      applyFilters();
+    }
 
-      marker.getElement().addEventListener('mouseenter', () => marker.togglePopup());
-      marker.getElement().addEventListener('mouseleave', () => marker.togglePopup());
-    });
+    function applyFilters() {
+      const { activeFilter, searchTerm } = propertyState;
+      const filtered = propertyState.all.filter((property) => {
+        const matchesFilter = activeFilter === 'all' || property.category_key === activeFilter;
+        if (!matchesFilter) {
+          return false;
+        }
+
+        if (searchTerm === '') {
+          return true;
+        }
+
+        const haystack = [property.display_name, property.title, property.location, property.property_type]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+
+        return haystack.includes(searchTerm);
+      });
+
+      propertyState.filtered = filtered;
+      renderSidebar(filtered);
+      updateMarkers(filtered);
+    }
+
+    function fetchPropertiesData() {
+      return fetch('property-map-data.php', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        credentials: 'same-origin',
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((payload) => {
+          if (!payload || !Array.isArray(payload.properties)) {
+            throw new Error('Unexpected response structure');
+          }
+          propertyState.all = payload.properties;
+          applyFilters();
+        })
+        .catch((error) => {
+          console.error('Failed to load property data', error);
+          const container = document.getElementById('propertyList');
+          container.innerHTML = '<div class="error-state">We were unable to load property data at the moment. Please refresh the page or try again later.</div>';
+        });
+    }
+
+    function ensurePosition(property) {
+      if (property.position && typeof property.position.lat === 'number' && typeof property.position.lng === 'number') {
+        return Promise.resolve(property.position);
+      }
+
+      if (typeof property.latitude === 'number' && typeof property.longitude === 'number') {
+        property.position = { lat: property.latitude, lng: property.longitude };
+        return Promise.resolve(property.position);
+      }
+
+      if (!geocoder || !property.location) {
+        return Promise.resolve(null);
+      }
+
+      if (!property.geocodePromise) {
+        property.geocodePromise = new Promise((resolve) => {
+          geocoder.geocode({ address: property.location }, (results, status) => {
+            if (status === 'OK' && results && results[0]) {
+              const location = results[0].geometry.location;
+              property.position = { lat: location.lat(), lng: location.lng() };
+              resolve(property.position);
+            } else {
+              console.warn('Geocode failed for property', property, status);
+              resolve(null);
+            }
+          });
+        });
+      }
+
+      return property.geocodePromise;
+    }
+
+    function getMarkerStyle(categoryKey) {
+      const styles = {
+        offplan: { fillColor: '#0f635c', strokeColor: '#0b413c' },
+        buy: { fillColor: '#004a44', strokeColor: '#002f2b' },
+        rent: { fillColor: '#edbb68', strokeColor: '#c9963d' },
+      };
+
+      return styles[categoryKey] || styles.buy;
+    }
+
+    function createMarker(property, position) {
+      const style = getMarkerStyle(property.category_key);
+      const marker = new google.maps.Marker({
+        position,
+        map,
+        title: property.display_name || property.title,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 9,
+          fillColor: style.fillColor,
+          fillOpacity: 0.95,
+          strokeColor: style.strokeColor,
+          strokeOpacity: 0.9,
+          strokeWeight: 2,
+        },
+      });
+
+      marker.addListener('click', () => {
+        window.location.href = sanitiseUrl(property.details_url);
+      });
+
+      marker.addListener('mouseover', () => {
+        showInfoWindow(property, marker);
+      });
+
+      marker.addListener('mouseout', () => {
+        hideInfoWindow();
+      });
+
+      return marker;
+    }
+
+    function showInfoWindow(property, marker) {
+      if (!infoWindow) {
+        infoWindow = new google.maps.InfoWindow();
+      }
+
+      const content = `
+        <div style="min-width:200px;max-width:240px;font-family:'Hind Madurai',sans-serif;">
+          <div style="font-weight:600;font-size:15px;margin-bottom:6px;color:#0f403b;">${escapeHtml(property.display_name || property.title)}</div>
+          ${property.location ? `<div style=\"font-size:13px;color:#5a5a5a;margin-bottom:4px;\">${escapeHtml(property.location)}</div>` : ''}
+          ${property.price ? `<div style=\"font-size:13px;color:#5a5a5a;margin-bottom:6px;\"><strong style=\"color:#0f635c;\">Price:</strong> ${escapeHtml(property.price)}</div>` : ''}
+          <div>
+            <a href="${sanitiseUrl(property.details_url)}" style="font-size:13px;color:#004a44;font-weight:600;text-decoration:none;">View details</a>
+          </div>
+        </div>`;
+
+      infoWindow.setContent(content);
+      infoWindow.open({ anchor: marker, map, shouldFocus: false });
+    }
+
+    function hideInfoWindow() {
+      if (infoWindow) {
+        infoWindow.close();
+      }
+    }
+
+    function clearMarkers() {
+      propertyState.markers.forEach((marker) => marker.setMap(null));
+      propertyState.markers = [];
+      propertyState.markerData.clear();
+    }
+
+    function updateMarkers(properties) {
+      if (!map) {
+        return;
+      }
+
+      clearMarkers();
+      const creationPromises = properties.map((property) => ensurePosition(property).then((position) => {
+        if (!position) {
+          return null;
+        }
+        const marker = createMarker(property, position);
+        const key = propertyKey(property);
+        propertyState.markers.push(marker);
+        propertyState.markerData.set(key, { marker, property, position });
+        return marker;
+      }));
+
+      Promise.all(creationPromises).then((results) => {
+        const validMarkers = results.filter(Boolean);
+        if (validMarkers.length === 0) {
+          map.setCenter(defaultMapCenter);
+          map.setZoom(11);
+          return;
+        }
+
+        const bounds = new google.maps.LatLngBounds();
+        validMarkers.forEach((marker) => {
+          const pos = marker.getPosition();
+          if (pos) {
+            bounds.extend(pos);
+          }
+        });
+
+        try {
+          map.fitBounds(bounds);
+        } catch (error) {
+          console.warn('Unable to fit bounds', error);
+        }
+      });
+    }
+
+    function focusProperty(property, cardElement) {
+      const key = propertyKey(property);
+      propertyState.selectedKey = key;
+      setActiveCard(cardElement);
+
+      const markerInfo = propertyState.markerData.get(key);
+      if (markerInfo) {
+        map.panTo(markerInfo.position);
+        map.setZoom(Math.max(map.getZoom(), 14));
+        showInfoWindow(property, markerInfo.marker);
+        return;
+      }
+
+      ensurePosition(property).then((position) => {
+        if (!position) {
+          return;
+        }
+        map.panTo(position);
+        map.setZoom(Math.max(map.getZoom(), 14));
+      });
+    }
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: defaultMapCenter,
+        zoom: 11,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: true,
+        clickableIcons: true,
+        styles: [
+          {
+            featureType: 'poi',
+            stylers: [{ visibility: 'off' }],
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.icon',
+            stylers: [{ visibility: 'off' }],
+          },
+        ],
+      });
+
+      geocoder = new google.maps.Geocoder();
+      fetchPropertiesData();
+    }
+
+    window.initMap = initMap;
+    window.filterBy = filterBy;
+    window.searchProperties = searchProperties;
   </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
 </body>
 
 </html>

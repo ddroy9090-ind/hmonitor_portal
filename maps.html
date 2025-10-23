@@ -63,6 +63,113 @@
       background: #f4f9f8;
     }
 
+    #map.map-fallback-embed {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 18px;
+      background: #f4f9f8;
+      padding: 40px 32px 32px calc(var(--sidebar-width) + 32px);
+      overflow-y: auto;
+    }
+
+    .map-fallback-message {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      color: #0f635c;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 520px;
+    }
+
+    .map-fallback-message strong {
+      font-size: 18px;
+    }
+
+    .map-fallback-message span {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .map-fallback-frame {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      width: min(720px, calc(100% - 24px));
+      min-height: 360px;
+    }
+
+    .map-fallback-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .map-fallback-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      height: 100%;
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .map-fallback-details {
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: 14px;
+      padding: 18px 22px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .map-fallback-property strong {
+      font-size: 17px;
+      color: #004a44;
+    }
+
+    .map-fallback-highlight {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .map-fallback-details .details-link {
+      font-size: 14px;
+      color: #004a44;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1024px) {
+      #map.map-fallback-embed {
+        padding: 24px;
+      }
+
+      .map-fallback-frame,
+      .map-fallback-message,
+      .map-fallback-details {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #map.map-fallback-embed {
+        position: static;
+        width: 100%;
+        order: 2;
+        padding: 24px 16px 32px;
+      }
+    }
+
     .map-error-box {
       background: #fff6f5;
       border: 1px solid rgba(163, 58, 58, 0.35);
@@ -408,6 +515,9 @@
     let geocoder;
     let infoWindow;
     let googleMapsScriptPromise = null;
+    let fallbackMode = false;
+    let fallbackEmbedFrame = null;
+    let fallbackDetailsContainer = null;
     const defaultMapCenter = { lat: 25.2048, lng: 55.2708 };
 
     function propertyKey(property) {
@@ -450,6 +560,74 @@
       const safeMessage = escapeHtml(String(message || ''));
       mapElement.classList.add('map-error-state');
       mapElement.innerHTML = `<div class="map-error-box">${safeMessage}</div>`;
+    }
+
+    function activateEmbedFallback(properties) {
+      fallbackMode = true;
+
+      const mapElement = document.getElementById('map');
+      if (!mapElement) {
+        return;
+      }
+
+      mapElement.classList.remove('map-error-state');
+      mapElement.classList.add('map-fallback-embed');
+      mapElement.innerHTML = `
+        <div class="map-fallback-message">
+          <strong>Interactive Google Map unavailable</strong>
+          <span>Configure your Google Maps API key or retry once connectivity is restored to unlock the live property explorer. Until then, preview the Prime Location &amp; Connectivity map for each listing below.</span>
+        </div>
+        <div class="map-fallback-frame"></div>
+        <div class="map-fallback-details"></div>
+      `;
+
+      fallbackEmbedFrame = mapElement.querySelector('.map-fallback-frame');
+      fallbackDetailsContainer = mapElement.querySelector('.map-fallback-details');
+      clearMarkers();
+
+      const firstCandidate = Array.isArray(properties)
+        ? properties.find((property) => property && property.location_embed_url) || properties[0] || null
+        : null;
+      updateFallbackEmbed(firstCandidate);
+    }
+
+    function updateFallbackEmbed(property) {
+      if (!fallbackMode) {
+        return;
+      }
+
+      if (!fallbackEmbedFrame || !fallbackDetailsContainer) {
+        return;
+      }
+
+      if (!property) {
+        fallbackEmbedFrame.innerHTML = '<div class="map-fallback-placeholder">Select a property from the list to view its Prime Location &amp; Connectivity preview.</div>';
+        fallbackDetailsContainer.innerHTML = '';
+        return;
+      }
+
+      const safeName = escapeHtml(property.display_name || property.title || 'Property');
+      const highlight = property.location_highlight || property.location || '';
+
+      if (property.location_embed_url) {
+        const safeSrc = escapeHtml(property.location_embed_url);
+        fallbackEmbedFrame.innerHTML = `<iframe src="${safeSrc}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+      } else if (property.location) {
+        const fallbackUrl = `https://www.google.com/maps?q=${encodeURIComponent(property.location)}&output=embed`;
+        fallbackEmbedFrame.innerHTML = `<iframe src="${fallbackUrl}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+      } else {
+        fallbackEmbedFrame.innerHTML = '<div class="map-fallback-placeholder">A map preview is not available for this property yet.</div>';
+      }
+
+      const highlightHtml = highlight ? `<span class="map-fallback-highlight">${escapeHtml(highlight)}</span>` : '';
+      const detailsHref = sanitiseUrl(property.details_url);
+      fallbackDetailsContainer.innerHTML = `
+        <div class="map-fallback-property">
+          <strong>${safeName}</strong>
+          ${highlightHtml}
+          <a class="details-link" href="${detailsHref}">View property details</a>
+        </div>
+      `;
     }
 
     function renderSidebar(list) {
@@ -543,6 +721,11 @@
       propertyState.filtered = filtered;
       renderSidebar(filtered);
       updateMarkers(filtered);
+
+      if (fallbackMode) {
+        const candidate = filtered.find((property) => property.location_embed_url) || filtered[0] || null;
+        updateFallbackEmbed(candidate);
+      }
     }
 
     function fetchPropertiesData() {
@@ -685,12 +868,24 @@
     }
 
     function clearMarkers() {
+      if (fallbackMode) {
+        propertyState.markers = [];
+        propertyState.markerData.clear();
+        return;
+      }
+
       propertyState.markers.forEach((marker) => marker.setMap(null));
       propertyState.markers = [];
       propertyState.markerData.clear();
     }
 
     function updateMarkers(properties) {
+      if (fallbackMode) {
+        propertyState.markerData.clear();
+        propertyState.markers = [];
+        return;
+      }
+
       if (!map) {
         return;
       }
@@ -735,6 +930,11 @@
       const key = propertyKey(property);
       propertyState.selectedKey = key;
       setActiveCard(cardElement);
+
+      if (fallbackMode) {
+        updateFallbackEmbed(property);
+        return;
+      }
 
       const markerInfo = propertyState.markerData.get(key);
       if (markerInfo) {
@@ -783,7 +983,11 @@
         document.head.appendChild(script);
       }).catch((error) => {
         console.error('Unable to initialise Google Maps', error);
-        displayMapError('We were unable to load Google Maps at the moment. Please try again later.');
+        if (!fallbackMode) {
+          activateEmbedFallback(propertyState.all);
+        } else {
+          displayMapError('We were unable to load Google Maps at the moment. Please try again later.');
+        }
         throw error;
       });
 
@@ -834,7 +1038,7 @@
         .then((payload) => {
           const apiKey = typeof payload.google_maps_api_key === 'string' ? payload.google_maps_api_key.trim() : '';
           if (apiKey === '') {
-            displayMapError('Google Maps is currently unavailable because the API key is not configured.');
+            activateEmbedFallback(payload.properties);
             return null;
           }
 

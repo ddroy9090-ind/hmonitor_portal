@@ -91,6 +91,61 @@ $extractCoordinates = static function (?string $value): ?array {
     return null;
 };
 
+$extractMapEmbedUrl = static function (?string $mapValue, string $location, ?array $coordinates): ?string {
+    if (is_string($mapValue)) {
+        $candidate = trim(html_entity_decode($mapValue, ENT_QUOTES | ENT_HTML5));
+
+        if ($candidate !== '') {
+            if (stripos($candidate, '<iframe') !== false) {
+                if (preg_match('/src\s*=\s*["\']([^"\']+)["\']/i', $candidate, $matches) === 1) {
+                    $candidate = trim(html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5));
+                } else {
+                    $candidate = '';
+                }
+            }
+
+            if ($candidate !== '') {
+                if (str_starts_with($candidate, 'http://')) {
+                    $candidate = 'https://' . substr($candidate, 7);
+                }
+
+                if (!str_starts_with($candidate, 'https://') && !str_starts_with($candidate, '//')) {
+                    $candidate = '';
+                }
+            }
+
+            if ($candidate !== '') {
+                if (str_starts_with($candidate, '//')) {
+                    $candidate = 'https:' . $candidate;
+                }
+
+                $parts = @parse_url($candidate);
+                if (is_array($parts) && isset($parts['host'])) {
+                    $host = strtolower($parts['host']);
+                    $isGoogleHost = preg_match('/(^|\.)google\.[a-z.]+$/', $host) === 1;
+
+                    if ($isGoogleHost && (str_contains($candidate, '/maps/embed') || str_contains($candidate, 'output=embed'))) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+    }
+
+    if ($coordinates !== null) {
+        $lat = number_format((float) $coordinates['lat'], 6, '.', '');
+        $lng = number_format((float) $coordinates['lng'], 6, '.', '');
+
+        return sprintf('https://www.google.com/maps?q=%s,%s&z=15&output=embed', $lat, $lng);
+    }
+
+    if ($location !== '') {
+        return 'https://www.google.com/maps?q=' . rawurlencode($location) . '&output=embed';
+    }
+
+    return null;
+};
+
 $buildDetailsUrl = static function (string $base, int $id): string {
     $base = trim($base);
 
@@ -130,6 +185,10 @@ foreach ($sources as $source) {
     $table = $source['table'];
     $columns = ['id', 'property_title', 'property_location', 'location_map', 'starting_price', 'bedroom', 'property_type'];
 
+    if ($columnExists($pdo, $table, 'location_highlight')) {
+        $columns[] = 'location_highlight';
+    }
+
     if ($columnExists($pdo, $table, 'project_name')) {
         $columns[] = 'project_name';
     }
@@ -163,8 +222,13 @@ foreach ($sources as $source) {
         $bedrooms = $normaliseString($row['bedroom'] ?? '');
         $propertyType = $normaliseString($row['property_type'] ?? '');
         $locationMap = $normaliseString($row['location_map'] ?? '');
+        $locationHighlight = $normaliseString($row['location_highlight'] ?? '');
+        if ($locationHighlight === '' && $location !== '') {
+            $locationHighlight = $location;
+        }
 
         $coordinates = $extractCoordinates($locationMap);
+        $mapEmbedUrl = $extractMapEmbedUrl($locationMap, $location, $coordinates);
 
         if ($location === '' && $coordinates === null) {
             continue;
@@ -177,12 +241,14 @@ foreach ($sources as $source) {
             'title' => $title,
             'display_name' => $displayName,
             'location' => $location,
+            'location_highlight' => $locationHighlight,
             'price' => $price,
             'bedrooms' => $bedrooms,
             'property_type' => $propertyType,
             'details_url' => $buildDetailsUrl($source['details_page'], $id),
             'latitude' => $coordinates['lat'] ?? null,
             'longitude' => $coordinates['lng'] ?? null,
+            'location_embed_url' => $mapEmbedUrl,
         ];
     }
 }

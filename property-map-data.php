@@ -257,4 +257,5 @@ $sendResponse([
     'properties' => $properties,
     'generated_at' => gmdate(DATE_ATOM),
     'google_maps_api_key' => hh_google_maps_api_key(),
+    'mapbox_access_token' => hh_mapbox_access_token(),
 ]);

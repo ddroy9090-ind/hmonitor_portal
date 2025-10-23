@@ -14,6 +14,9 @@ if (!defined('HH_CONFIG_INITIALIZED')) {
     // ---- Google Maps ----
     define('HH_GOOGLE_MAPS_API_KEY', getenv('GOOGLE_MAPS_API_KEY') ?: '');
 
+    // ---- Mapbox ----
+    define('HH_MAPBOX_ACCESS_TOKEN', getenv('MAPBOX_ACCESS_TOKEN') ?: '');
+
     // ---- reCAPTCHA (unchanged) ----
     define('HH_RECAPTCHA_SITE_KEY', getenv('RECAPTCHA_SITE_KEY') ?: '6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM');
     define('HH_RECAPTCHA_SECRET_KEY', getenv('RECAPTCHA_SECRET_KEY') ?: '6LfsT9IrAAAAAHdqpDxlj9-1rnq-p1e3vIE3Cohn');
@@ -64,6 +67,13 @@ if (!function_exists('hh_google_maps_api_key')) {
     function hh_google_maps_api_key(): string
     {
         return HH_GOOGLE_MAPS_API_KEY;
+    }
+}
+
+if (!function_exists('hh_mapbox_access_token')) {
+    function hh_mapbox_access_token(): string
+    {
+        return HH_MAPBOX_ACCESS_TOKEN;
     }
 }
 

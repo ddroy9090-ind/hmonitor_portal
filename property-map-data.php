@@ -223,7 +223,9 @@ foreach ($sources as $source) {
         $propertyType = $normaliseString($row['property_type'] ?? '');
         $locationMap = $normaliseString($row['location_map'] ?? '');
         $locationHighlight = $normaliseString($row['location_highlight'] ?? '');
-        if ($locationHighlight === '' && $location !== '') {
+        if ($location === '' && $locationHighlight !== '') {
+            $location = $locationHighlight;
+        } elseif ($locationHighlight === '' && $location !== '') {
             $locationHighlight = $location;
         }
 

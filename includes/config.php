@@ -11,6 +11,9 @@ if (!defined('HH_CONFIG_INITIALIZED')) {
     define('HH_DB_USER', getenv('DB_USER') ?: 'root');
     define('HH_DB_PASS', getenv('DB_PASS') ?: '');
 
+    // ---- Google Maps ----
+    define('HH_GOOGLE_MAPS_API_KEY', getenv('GOOGLE_MAPS_API_KEY') ?: '');
+
     // ---- reCAPTCHA (unchanged) ----
     define('HH_RECAPTCHA_SITE_KEY', getenv('RECAPTCHA_SITE_KEY') ?: '6LfsT9IrAAAAALx6HawW63nF2e1c9nLRJwXNDxTM');
     define('HH_RECAPTCHA_SECRET_KEY', getenv('RECAPTCHA_SECRET_KEY') ?: '6LfsT9IrAAAAAHdqpDxlj9-1rnq-p1e3vIE3Cohn');
@@ -54,6 +57,13 @@ if (!function_exists('hh_recaptcha_secret_key')) {
     function hh_recaptcha_secret_key(): string
     {
         return HH_RECAPTCHA_SECRET_KEY;
+    }
+}
+
+if (!function_exists('hh_google_maps_api_key')) {
+    function hh_google_maps_api_key(): string
+    {
+        return HH_GOOGLE_MAPS_API_KEY;
     }
 }
 

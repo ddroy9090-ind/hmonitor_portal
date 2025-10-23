@@ -487,6 +487,34 @@
         hideOverlay();
         refreshMarkers();
       });
+
+    function initialiseMap() {
+      if (!state.properties.length) {
+        showOverlay('Map unavailable', 'No properties with map locations were found.');
+      }
+
+      try {
+        state.map = new mapboxgl.Map({
+          container: elements.mapContainer,
+          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          center: [55.2708, 25.2048],
+          zoom: 9.5,
+          pitch: 55,
+          bearing: -20,
+          antialias: true,
+        });
+      } catch (error) {
+        showOverlay('Map unavailable', 'The interactive map could not be initialised.');
+        return;
+      }
+
+      state.map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
+      state.map.on('load', () => {
+        state.mapReady = true;
+        refreshMarkers();
+      });
+
+      return googleMapsScriptPromise;
     }
 
     function initialiseLeafletMap() {
@@ -865,5 +893,6 @@
       elements.overlay.hidden = true;
     }
   </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
 </body>
 </html>

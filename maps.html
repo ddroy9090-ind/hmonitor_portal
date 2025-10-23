@@ -26,6 +26,18 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --tag-offplan: #0f635c;
+      --tag-buy: #004a44;
+      --tag-rent: #edbb68;
+      --sidebar-width: 380px;
+      --text-muted: #6f6f6f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: "Hind Madurai", sans-serif;
@@ -439,6 +451,8 @@
         state.mapReady = true;
         refreshMarkers();
       });
+
+      return googleMapsScriptPromise;
     }
 
     function normaliseProperty(property) {
@@ -686,5 +700,6 @@
       elements.overlayDetails.textContent = message;
     }
   </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
 </body>
 </html>

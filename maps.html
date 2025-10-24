@@ -9,6 +9,12 @@
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
   />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-o9N1j7kPDbmg1Lw4s7B3p90cg3qEt3O7r3lYZyGaF1w="
+    crossorigin=""
+  />
   <style>
     :root {
       --primary: #006666;
@@ -223,154 +229,47 @@
       position: relative;
       flex: 1;
       border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, #0b5875 0%, #0f8290 40%, #35a17d 100%);
       overflow: hidden;
       box-shadow: var(--shadow-soft);
       min-height: 420px;
+      background: #0f172a;
     }
 
-    .map-canvas::before,
-    .map-canvas::after {
-      content: "";
+    #propertyMap {
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-      background-size: 22px 22px;
-      opacity: 0.45;
-    }
-
-    .map-canvas::after {
-      background-image: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.18) 0%,
-        rgba(255, 255, 255, 0) 55%
-      );
-      opacity: 0.8;
+      width: 100%;
+      height: 100%;
     }
 
     .map-legend {
       position: absolute;
-      top: 24px;
-      left: 24px;
+      top: 18px;
+      left: 18px;
       display: flex;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
       padding: 12px 16px;
       border-radius: 16px;
-      background: rgba(15, 23, 42, 0.35);
+      background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(12px);
       color: #fff;
       font-size: 13px;
+      z-index: 500;
     }
 
-    .map-legend span {
+    .legend-item {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .map-legend span::before {
-      content: "";
+    .legend-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: currentColor;
-    }
-
-    .map-marker {
-      position: absolute;
-      width: 42px;
-      height: 42px;
-      background: #fff;
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      display: grid;
-      place-items: center;
-      color: var(--primary);
-      box-shadow: 0 18px 30px rgba(15, 23, 42, 0.28);
-    }
-
-    .map-marker span {
-      transform: rotate(45deg);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .marker-1 {
-      top: 38%;
-      left: 42%;
-    }
-
-    .marker-2 {
-      top: 56%;
-      left: 58%;
-      background: #ff8a65;
-      color: #fff;
-    }
-
-    .marker-3 {
-      top: 28%;
-      left: 68%;
-      background: #3b82f6;
-      color: #fff;
-    }
-
-    .map-property-card {
-      position: absolute;
-      top: 22px;
-      right: 24px;
-      width: clamp(260px, 24vw, 320px);
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 18px;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(12px);
-    }
-
-    .map-property-card h3 {
-      margin: 0;
-      font-size: 16px;
-      color: var(--heading);
-    }
-
-    .map-property-card .price {
-      font-weight: 600;
-      color: var(--primary);
-    }
-
-    .map-property-card .meta {
-      display: flex;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--neutral-500);
-    }
-
-    .map-property-card .actions {
-      display: flex;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--neutral-500);
-    }
-
-    .map-property-card .actions button {
-      border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .map-property-card .actions .primary {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 12px 22px rgba(36, 199, 137, 0.25);
-    }
-
-    .map-property-card .actions .secondary {
-      background: rgba(15, 23, 42, 0.06);
-      color: var(--primary-dark);
+      display: inline-block;
     }
 
     .results-meta {
@@ -396,6 +295,14 @@
       flex-direction: column;
       gap: 12px;
       box-shadow: var(--shadow-soft);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .property-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.16);
     }
 
     .property-card .thumbnail {
@@ -435,13 +342,39 @@
       gap: 6px;
     }
 
-    .badge.new { background: rgba(59, 130, 246, 0.16); color: #1d4ed8; }
-    .badge.hot { background: rgba(244, 114, 182, 0.18); color: #be185d; }
-    .badge.plan { background: rgba(234, 179, 8, 0.18); color: #b45309; }
+    .badge.new {
+      background: rgba(59, 130, 246, 0.16);
+      color: #1d4ed8;
+    }
+
+    .badge.hot {
+      background: rgba(244, 114, 182, 0.18);
+      color: #be185d;
+    }
+
+    .badge.plan {
+      background: rgba(234, 179, 8, 0.18);
+      color: #b45309;
+    }
+
+    .badge.buy {
+      background: rgba(16, 185, 129, 0.2);
+      color: #047857;
+    }
+
+    .badge.rent {
+      background: rgba(99, 102, 241, 0.18);
+      color: #4338ca;
+    }
+
+    .badge.offplan {
+      background: rgba(249, 115, 22, 0.18);
+      color: #c2410c;
+    }
 
     .property-card h4 {
       margin: 0;
-      font-size: 16px;
+      font-size: 15px;
       color: var(--heading);
     }
 
@@ -453,64 +386,52 @@
       font-size: 13px;
     }
 
-    .property-card .price {
+    .property-card .details .price {
       font-size: 16px;
       font-weight: 600;
-      color: var(--primary-dark);
+      color: var(--primary);
     }
 
     .property-card .actions {
       display: flex;
       gap: 10px;
-      margin-top: auto;
+      font-size: 12px;
+      color: var(--neutral-500);
     }
 
-    .property-card .actions button {
-      flex: 1;
+    .property-card .actions span {
+      background: rgba(15, 23, 42, 0.06);
       border-radius: 12px;
-      padding: 10px 0;
-      border: none;
+      padding: 8px 12px;
       font-weight: 600;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .property-card .actions .primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .property-card .actions .secondary {
-      background: #e2e8f0;
       color: var(--primary-dark);
     }
 
-    @media (max-width: 1024px) {
+    .empty-state {
+      grid-column: 1 / -1;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      text-align: center;
+      color: var(--neutral-500);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .loading-indicator {
+      text-align: center;
+      padding: 24px;
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+
+    @media (max-width: 960px) {
       .page {
         flex-direction: column;
       }
 
-      .sidebar {
-        width: 100%;
-      }
-
-      .map-section {
-        order: -1;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .map-property-card {
-        position: static;
-        width: 100%;
-      }
-
-      .map-marker {
-        display: none;
-      }
-
-      .map-canvas {
-        min-height: 320px;
+      .map-legend {
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
   </style>
@@ -567,102 +488,340 @@
     </aside>
 
     <section class="map-section">
-      <div class="tabs">
-        <button class="active" type="button">Buy</button>
-        <button type="button">Rent</button>
-        <button type="button">Off-Plan</button>
-        <button type="button">Commercial</button>
+      <div class="tabs" role="tablist">
+        <button class="active" type="button" data-category="all" role="tab" aria-selected="true">
+          All
+        </button>
+        <button type="button" data-category="buy" role="tab" aria-selected="false">Buy</button>
+        <button type="button" data-category="rent" role="tab" aria-selected="false">Rent</button>
+        <button type="button" data-category="offplan" role="tab" aria-selected="false">
+          Off-Plan
+        </button>
       </div>
 
-      <div class="map-canvas" aria-label="Static map preview">
-        <div class="map-legend">
-          <span style="color: #3b82f6">Schools</span>
-          <span style="color: #94a3b8">Transit</span>
-          <span style="color: #f97316">Shopping</span>
-        </div>
-        <div class="map-marker marker-1"><span>HT</span></div>
-        <div class="map-marker marker-2"><span>02</span></div>
-        <div class="map-marker marker-3"><span>AE</span></div>
-
-        <article class="map-property-card">
-          <div class="badge-set">
-            <span class="badge new">New</span>
-            <span class="badge hot">Off-Plan</span>
-          </div>
-          <h3>AED 1.6M</h3>
-          <div class="price">Off-Plan 2BR with Payment Plan</div>
-          <div class="meta">
-            <span>Dubai Hills Estate</span>
-            <span>2 Beds</span>
-            <span>1,230 sq.ft</span>
-          </div>
-          <div class="actions">
-            <button class="secondary" type="button">Schedule Tour</button>
-            <button class="primary" type="button">View Details</button>
-          </div>
-        </article>
+      <div class="map-canvas" aria-label="Interactive property map">
+        <div id="propertyMap" role="application" aria-label="Property locations"></div>
+        <div class="map-legend" id="mapLegend" aria-hidden="true"></div>
       </div>
 
       <div class="results-meta">
-        <span>3 properties shown</span>
-        <span>Sorted by: Featured</span>
+        <span id="resultsCount">Loading properties...</span>
+        <span id="resultsInfo">&nbsp;</span>
       </div>
 
-      <div class="property-grid">
-        <article class="property-card">
-          <div class="thumbnail">Dubai Hills Estate</div>
-          <div class="badge-set">
-            <span class="badge new">New</span>
-            <span class="badge plan">Off-Plan</span>
-          </div>
-          <h4>Parkside 2BR with Golf Course Views</h4>
-          <div class="details">
-            <span>Dubai Hills Estate, Dubai</span>
-            <span>2 Beds &bull; 2 Baths &bull; 1,180 sq.ft</span>
-            <span class="price">AED 1.6M</span>
-          </div>
-          <div class="actions">
-            <button class="secondary" type="button">Compare</button>
-            <button class="primary" type="button">View Details</button>
-          </div>
-        </article>
-
-        <article class="property-card">
-          <div class="thumbnail" style="background: linear-gradient(135deg, #f97316, #facc15);">Palm Jumeirah</div>
-          <div class="badge-set">
-            <span class="badge hot">Featured</span>
-          </div>
-          <h4>Luxury Waterfront 3BR Residence</h4>
-          <div class="details">
-            <span>Palm Jumeirah, Dubai</span>
-            <span>3 Beds &bull; 4 Baths &bull; 2,540 sq.ft</span>
-            <span class="price">AED 6.9M</span>
-          </div>
-          <div class="actions">
-            <button class="secondary" type="button">Save</button>
-            <button class="primary" type="button">View Details</button>
-          </div>
-        </article>
-
-        <article class="property-card">
-          <div class="thumbnail" style="background: linear-gradient(135deg, #6366f1, #22d3ee);">Downtown Dubai</div>
-          <div class="badge-set">
-            <span class="badge new">Hot</span>
-            <span class="badge plan">Off-Plan</span>
-          </div>
-          <h4>Skyline View 1BR with Payment Plan</h4>
-          <div class="details">
-            <span>Downtown Dubai, Dubai</span>
-            <span>1 Bed &bull; 1 Bath &bull; 890 sq.ft</span>
-            <span class="price">AED 1.1M</span>
-          </div>
-          <div class="actions">
-            <button class="secondary" type="button">Schedule Tour</button>
-            <button class="primary" type="button">View Details</button>
-          </div>
-        </article>
+      <div class="property-grid" id="propertyGrid">
+        <div class="loading-indicator" id="loadingState">Fetching the latest listings...</div>
       </div>
     </section>
   </main>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-o9N1j7kPDbmg1Lw4s7B3p90cg3qEt3O7r3lYZyGaF1w="
+    crossorigin=""
+  ></script>
+  <script>
+    (function () {
+      const CATEGORY_CONFIG = {
+        all: { label: 'All', color: '#0ea5e9' },
+        buy: { label: 'Buy', color: '#10b981' },
+        rent: { label: 'Rent', color: '#6366f1' },
+        offplan: { label: 'Off-Plan', color: '#f97316' },
+      };
+
+      const state = {
+        properties: [],
+        markers: [],
+        activeCategory: 'all',
+      };
+
+      const mapCanvas = document.getElementById('propertyMap');
+      const propertyGrid = document.getElementById('propertyGrid');
+      const resultsCount = document.getElementById('resultsCount');
+      const resultsInfo = document.getElementById('resultsInfo');
+      const legend = document.getElementById('mapLegend');
+      const loadingState = document.getElementById('loadingState');
+      const tabs = Array.from(document.querySelectorAll('.tabs button[data-category]'));
+
+      let map;
+      let markersLayer;
+
+      const escapeHtml = (value) => {
+        const div = document.createElement('div');
+        div.textContent = value == null ? '' : String(value);
+        return div.innerHTML;
+      };
+
+      const initMap = () => {
+        map = L.map(mapCanvas, {
+          scrollWheelZoom: false,
+        }).setView([25.2048, 55.2708], 11);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        }).addTo(map);
+
+        markersLayer = L.layerGroup().addTo(map);
+      };
+
+      const createMarkerIcon = (color, label) => {
+        const safeLabel = escapeHtml(label).slice(0, 3).toUpperCase();
+        const html = `
+          <div style="
+            background:${color};
+            color:#fff;
+            width:44px;
+            height:44px;
+            border-radius:50% 50% 50% 0;
+            transform:rotate(-45deg);
+            display:grid;
+            place-items:center;
+            box-shadow:0 18px 30px rgba(15, 23, 42, 0.28);
+            font-weight:700;
+            font-size:13px;
+          ">
+            <span style="transform:rotate(45deg);">${safeLabel}</span>
+          </div>`;
+
+        return L.divIcon({
+          className: 'property-marker',
+          html,
+          iconSize: [44, 44],
+          iconAnchor: [22, 42],
+          popupAnchor: [0, -32],
+        });
+      };
+
+      const renderLegend = () => {
+        legend.innerHTML = '';
+        legend.setAttribute('aria-hidden', 'false');
+
+        Object.entries(CATEGORY_CONFIG).forEach(([key, config]) => {
+          if (key === 'all') {
+            return;
+          }
+
+          const item = document.createElement('span');
+          item.className = 'legend-item';
+          item.style.color = config.color;
+
+          const dot = document.createElement('span');
+          dot.className = 'legend-dot';
+          item.appendChild(dot);
+
+          const text = document.createElement('span');
+          text.textContent = config.label;
+          item.appendChild(text);
+
+          legend.appendChild(item);
+        });
+      };
+
+      const clearMarkers = () => {
+        markersLayer.clearLayers();
+        state.markers = [];
+      };
+
+      const fitMapToMarkers = () => {
+        if (state.markers.length === 0) {
+          map.setView([25.2048, 55.2708], 11);
+          return;
+        }
+
+        const group = L.featureGroup(state.markers);
+        map.fitBounds(group.getBounds(), { padding: [24, 24], maxZoom: 16 });
+      };
+
+      const renderProperties = () => {
+        const category = state.activeCategory;
+        const filtered = state.properties.filter((property) => {
+          if (category === 'all') {
+            return true;
+          }
+
+          return property.category_key === category;
+        });
+
+        resultsCount.textContent =
+          filtered.length === 1
+            ? '1 property shown'
+            : `${filtered.length} properties shown`;
+
+        resultsInfo.textContent =
+          category === 'all'
+            ? 'Displaying Buy, Rent, and Off-Plan listings'
+            : `Category: ${CATEGORY_CONFIG[category].label}`;
+
+        propertyGrid.innerHTML = '';
+
+        if (filtered.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'No properties available for the selected category yet.';
+          propertyGrid.appendChild(empty);
+        } else {
+          filtered.forEach((property) => {
+            const card = document.createElement('a');
+            card.className = 'property-card';
+            card.href = property.details_url || '#';
+            card.setAttribute('aria-label', `View details for ${property.display_name}`);
+
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            thumbnail.textContent = property.location_highlight || property.location || 'View';
+            card.appendChild(thumbnail);
+
+            const badges = document.createElement('div');
+            badges.className = 'badge-set';
+
+            const categoryBadge = document.createElement('span');
+            categoryBadge.className = `badge ${property.category_key}`;
+            categoryBadge.textContent = CATEGORY_CONFIG[property.category_key].label;
+            badges.appendChild(categoryBadge);
+
+            if (property.property_type) {
+              const typeBadge = document.createElement('span');
+              typeBadge.className = 'badge new';
+              typeBadge.textContent = property.property_type;
+              badges.appendChild(typeBadge);
+            }
+
+            card.appendChild(badges);
+
+            const title = document.createElement('h4');
+            title.textContent = property.display_name || property.title || 'View property';
+            card.appendChild(title);
+
+            const details = document.createElement('div');
+            details.className = 'details';
+
+            const location = document.createElement('span');
+            location.textContent = property.location || 'Location available on request';
+            details.appendChild(location);
+
+            if (property.bedrooms) {
+              const bedroomInfo = document.createElement('span');
+              bedroomInfo.textContent = property.bedrooms;
+              details.appendChild(bedroomInfo);
+            }
+
+            if (property.price) {
+              const price = document.createElement('span');
+              price.className = 'price';
+              price.textContent = property.price;
+              details.appendChild(price);
+            }
+
+            card.appendChild(details);
+
+            const actions = document.createElement('div');
+            actions.className = 'actions';
+            const actionLabel = document.createElement('span');
+            actionLabel.textContent = 'View Details';
+            actions.appendChild(actionLabel);
+            card.appendChild(actions);
+
+            propertyGrid.appendChild(card);
+          });
+        }
+
+        clearMarkers();
+
+        filtered.forEach((property) => {
+          if (typeof property.latitude !== 'number' || typeof property.longitude !== 'number') {
+            return;
+          }
+
+          const categoryColor = CATEGORY_CONFIG[property.category_key]?.color || '#0f172a';
+          const marker = L.marker([property.latitude, property.longitude], {
+            icon: createMarkerIcon(categoryColor, property.category_key),
+          });
+
+          const popupContent = `
+            <div style="min-width:180px;">
+              <strong>${escapeHtml(property.display_name || property.title)}</strong><br />
+              <span>${escapeHtml(property.location || '')}</span><br />
+              <a href="${escapeHtml(property.details_url || '#')}" style="color:${categoryColor};font-weight:600;display:inline-block;margin-top:8px;">View details</a>
+            </div>
+          `;
+
+          marker.bindPopup(popupContent);
+          marker.on('click', () => {
+            marker.openPopup();
+          });
+
+          marker.addTo(markersLayer);
+          state.markers.push(marker);
+        });
+
+        fitMapToMarkers();
+      };
+
+      const setActiveCategory = (category) => {
+        state.activeCategory = category;
+
+        tabs.forEach((tab) => {
+          const isActive = tab.dataset.category === category;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        renderProperties();
+      };
+
+      const fetchProperties = async () => {
+        try {
+          const response = await fetch('property-map-data.php', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch property data (HTTP ${response.status})`);
+          }
+
+          const payload = await response.json();
+
+          if (!payload || !Array.isArray(payload.properties)) {
+            throw new Error('Unexpected response format');
+          }
+
+          state.properties = payload.properties.filter((property) =>
+            ['buy', 'rent', 'offplan'].includes(property.category_key)
+          );
+
+          renderLegend();
+          setActiveCategory('all');
+        } catch (error) {
+          console.error(error);
+          resultsCount.textContent = 'Unable to load properties right now.';
+          resultsInfo.textContent = 'Please try again later.';
+
+          propertyGrid.innerHTML = '';
+          const errorState = document.createElement('div');
+          errorState.className = 'empty-state';
+          errorState.textContent = 'There was a problem loading the map data. Please refresh to try again.';
+          propertyGrid.appendChild(errorState);
+        } finally {
+          if (loadingState) {
+            loadingState.remove();
+          }
+        }
+      };
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const category = tab.dataset.category;
+          if (category && category !== state.activeCategory) {
+            setActiveCategory(category);
+          }
+        });
+      });
+
+      initMap();
+      renderLegend();
+      fetchProperties();
+    })();
+  </script>
 </body>
 </html>

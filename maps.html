@@ -12,8 +12,8 @@
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-o9N1j7kPDbmg1Lw4s7B3p90cg3qEt3O7r3lYZyGaF1w="
-    crossorigin=""
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="anonymous"
   />
   <style>
     :root {
@@ -310,20 +310,49 @@
       border-radius: 16px;
       overflow: hidden;
       height: 150px;
-      background: linear-gradient(135deg, #38bdf8, #34d399);
+      background: #e2e8f0;
       display: flex;
       align-items: flex-end;
       justify-content: flex-start;
       padding: 18px;
-      color: #fff;
+      color: var(--heading);
       font-weight: 600;
     }
 
-    .property-card .thumbnail::after {
+    .property-card .thumbnail img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .property-card .thumbnail.has-image {
+      color: #fff;
+    }
+
+    .property-card .thumbnail.has-image::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.05), rgba(15, 23, 42, 0.35));
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0) 45%, rgba(15, 23, 42, 0.65) 100%);
+      z-index: 1;
+    }
+
+    .property-card .thumbnail.no-image {
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      color: #fff;
+    }
+
+    .property-card .thumbnail.no-image::after {
+      content: none;
+    }
+
+    .property-card .thumbnail-label {
+      position: relative;
+      z-index: 2;
     }
 
     .property-card .badge-set {
@@ -405,6 +434,10 @@
       padding: 8px 12px;
       font-weight: 600;
       color: var(--primary-dark);
+    }
+
+    .property-card:hover .thumbnail img {
+      transform: scale(1.05);
     }
 
     .empty-state {
@@ -516,8 +549,8 @@
   </main>
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-o9N1j7kPDbmg1Lw4s7B3p90cg3qEt3O7r3lYZyGaF1w="
-    crossorigin=""
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"
   ></script>
   <script>
     (function () {
@@ -666,11 +699,29 @@
             const card = document.createElement('a');
             card.className = 'property-card';
             card.href = property.details_url || '#';
-            card.setAttribute('aria-label', `View details for ${property.display_name}`);
+            const cardLabel = property.display_name || property.title || 'property';
+            card.setAttribute('aria-label', `View details for ${cardLabel}`);
 
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
-            thumbnail.textContent = property.location_highlight || property.location || 'View';
+
+            if (property.image_url) {
+              thumbnail.classList.add('has-image');
+              const previewImage = document.createElement('img');
+              previewImage.src = property.image_url;
+              previewImage.alt = property.display_name || property.title || 'Property preview';
+              previewImage.loading = 'lazy';
+              previewImage.decoding = 'async';
+              thumbnail.appendChild(previewImage);
+            } else {
+              thumbnail.classList.add('no-image');
+            }
+
+            const thumbnailLabel = document.createElement('span');
+            thumbnailLabel.className = 'thumbnail-label';
+            thumbnailLabel.textContent = property.location_highlight || property.location || 'View';
+            thumbnail.appendChild(thumbnailLabel);
+
             card.appendChild(thumbnail);
 
             const badges = document.createElement('div');

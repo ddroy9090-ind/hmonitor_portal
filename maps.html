@@ -625,6 +625,65 @@
         });
       };
 
+      const resolvePropertyImage = (property) => {
+        if (!property || typeof property !== 'object') {
+          return null;
+        }
+
+        const candidateKeys = [
+          'project_image_url',
+          'projectImageUrl',
+          'project_image',
+          'projectImage',
+          'hero_image_url',
+          'heroImageUrl',
+          'hero_banner_url',
+          'heroBannerUrl',
+          'hero_banner',
+          'heroBanner',
+          'image_url',
+          'imageUrl',
+          'primary_image',
+          'primaryImage',
+        ];
+
+        for (const key of candidateKeys) {
+          const value = property[key];
+          if (typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed) {
+              return trimmed;
+            }
+          }
+        }
+
+        const galleryCandidates = Array.isArray(property.gallery_images)
+          ? property.gallery_images
+          : Array.isArray(property.galleryImages)
+          ? property.galleryImages
+          : [];
+
+        for (const item of galleryCandidates) {
+          if (typeof item === 'string') {
+            const trimmed = item.trim();
+            if (trimmed) {
+              return trimmed;
+            }
+          } else if (item && typeof item === 'object') {
+            for (const value of Object.values(item)) {
+              if (typeof value === 'string') {
+                const trimmed = value.trim();
+                if (trimmed) {
+                  return trimmed;
+                }
+              }
+            }
+          }
+        }
+
+        return null;
+      };
+
       const renderLegend = () => {
         legend.innerHTML = '';
         legend.setAttribute('aria-hidden', 'false');
@@ -721,22 +780,24 @@
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
 
-            if (property.image_url) {
+            const thumbnailUrl = resolvePropertyImage(property);
+
+            if (thumbnailUrl) {
               thumbnail.classList.add('has-image');
               const previewImage = document.createElement('img');
-              previewImage.src = property.image_url;
+              previewImage.src = thumbnailUrl;
               previewImage.alt = property.display_name || property.title || 'Property preview';
               previewImage.loading = 'lazy';
               previewImage.decoding = 'async';
               thumbnail.appendChild(previewImage);
             } else {
               thumbnail.classList.add('no-image');
+              const thumbnailLabel = document.createElement('span');
+              thumbnailLabel.className = 'thumbnail-label';
+              thumbnailLabel.textContent =
+                property.display_name || property.title || 'Preview coming soon';
+              thumbnail.appendChild(thumbnailLabel);
             }
-
-            const thumbnailLabel = document.createElement('span');
-            thumbnailLabel.className = 'thumbnail-label';
-            thumbnailLabel.textContent = property.location_highlight || property.location || 'View';
-            thumbnail.appendChild(thumbnailLabel);
 
             card.appendChild(thumbnail);
 
@@ -768,10 +829,6 @@
             const details = document.createElement('div');
             details.className = 'details';
 
-            const location = document.createElement('span');
-            location.textContent = property.location || 'Location available on request';
-            details.appendChild(location);
-
             if (property.bedrooms) {
               const bedroomInfo = document.createElement('span');
               bedroomInfo.textContent = property.bedrooms;
@@ -785,7 +842,9 @@
               details.appendChild(price);
             }
 
-            card.appendChild(details);
+            if (details.childNodes.length > 0) {
+              card.appendChild(details);
+            }
 
             const actions = document.createElement('div');
             actions.className = 'actions';

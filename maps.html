@@ -2,30 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>HouzzHunt Property Map</title>
-  <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EstateMap &mdash; Property Explorer</title>
+  <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon" />
   <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+zWATbFveLLNqwo1cAdnxu1VNnjkCkVpWm5H0ao0M="
-    crossorigin="anonymous"
   />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&display=swap');
-
     :root {
-      --offplan-colour: #f0a500;
-      --buy-colour: #0f635c;
-      --rent-colour: #1f7a8c;
-      --sidebar-width: min(420px, 100%);
-      --background: #0b1b2b;
-      --panel-bg: rgba(11, 27, 43, 0.82);
-      --panel-border: rgba(255, 255, 255, 0.08);
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255, 255, 255, 0.72);
-      --accent: #edbb68;
+      --primary: #006666;
+      --primary-dark: #003f44;
+      --accent: #24c789;
+      --accent-dark: #1e9d6d;
+      --neutral-100: #ffffff;
+      --neutral-200: #f0f4f8;
+      --neutral-300: #d9e1ec;
+      --neutral-400: #94a3b8;
+      --neutral-500: #64748b;
+      --heading: #0f172a;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+      font-family: "Poppins", sans-serif;
     }
 
     * {
@@ -34,111 +33,114 @@
 
     body {
       margin: 0;
-      font-family: "Hind Madurai", sans-serif;
-      background: var(--background);
-      color: var(--text-primary);
-      overflow: hidden;
+      min-height: 100vh;
+      background: linear-gradient(140deg, #f7f9fc 0%, #eef3fb 100%);
+      color: var(--heading);
+      font-family: "Poppins", sans-serif;
     }
 
     a {
       color: inherit;
-      text-decoration: none;
     }
 
-    .map-app {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
+    .page {
       display: flex;
-      overflow: hidden;
-    }
-
-    #map {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    .leaflet-container {
-      font: 14px "Hind Madurai", sans-serif;
-      background: var(--background);
-    }
-
-    .leaflet-control-zoom {
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-    }
-
-    .leaflet-control-zoom a {
-      background: rgba(11, 27, 43, 0.92);
-      color: var(--text-primary);
-      border-bottom: 1px solid var(--panel-border);
-    }
-
-    .leaflet-control-zoom a:last-child {
-      border-bottom: none;
-    }
-
-    .leaflet-popup-content-wrapper,
-    .leaflet-popup-tip {
-      background: rgba(13, 30, 48, 0.92);
-      color: var(--text-primary);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .leaflet-popup-content {
-      margin: 14px 18px;
-      min-width: 220px;
+      gap: 32px;
+      padding: 30px clamp(16px, 4vw, 40px);
+      min-height: 100vh;
     }
 
     .sidebar {
-      position: relative;
-      z-index: 2;
-      width: var(--sidebar-width);
-      max-width: 100%;
-      height: 100%;
+      width: clamp(280px, 22vw, 360px);
+      background: var(--neutral-100);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 28px;
       display: flex;
       flex-direction: column;
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      padding: 24px;
-      border-right: 1px solid var(--panel-border);
-      overflow: hidden;
+      gap: 22px;
     }
 
-    .sidebar-header {
+    .brand {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 16px;
+      align-items: center;
+      gap: 10px;
     }
 
-    .sidebar-header h1 {
-      font-size: 22px;
-      font-weight: 600;
+    .brand svg {
+      width: 36px;
+      height: 36px;
+      fill: var(--primary);
+    }
+
+    .brand h1 {
       margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary-dark);
     }
 
-    .sidebar-header span {
+    .location-search {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .location-search label {
       font-size: 14px;
-      color: var(--text-secondary);
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input-group input,
+    .input-group select {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid var(--neutral-300);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      background: #f8fafc;
+    }
+
+    .input-group button {
+      padding: 12px 18px;
+      background: var(--neutral-100);
+      border-radius: 12px;
+      border: 1px solid var(--neutral-300);
+      font-weight: 500;
+      color: var(--primary);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .input-group button:hover {
+      background: var(--neutral-200);
     }
 
     .filters {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      margin-bottom: 16px;
+      gap: 18px;
+    }
+
+    .filters h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--heading);
     }
 
     .filter-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .filter-group label {
@@ -146,728 +148,521 @@
       align-items: center;
       gap: 10px;
       font-size: 14px;
-      color: var(--text-secondary);
+      color: var(--neutral-500);
       cursor: pointer;
-      user-select: none;
     }
 
-    .filter-group input[type="checkbox"] {
+    .filter-group label input {
       width: 18px;
       height: 18px;
-      accent-color: var(--accent);
+      accent-color: var(--primary);
     }
 
-    .search-input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--panel-border);
-      background: rgba(12, 28, 45, 0.6);
-      color: var(--text-primary);
+    .filter-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .filter-actions button {
+      flex: 1;
+      border-radius: 12px;
+      padding: 12px 0;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-actions .primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 12px 22px rgba(0, 102, 102, 0.2);
+    }
+
+    .filter-actions .secondary {
+      background: #e2e8f0;
+      color: var(--primary-dark);
+    }
+
+    .map-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-lg);
+      padding: 14px 22px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tabs button {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--neutral-500);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tabs button.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(0, 102, 102, 0.18);
+    }
+
+    .map-canvas {
+      position: relative;
+      flex: 1;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #0b5875 0%, #0f8290 40%, #35a17d 100%);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      min-height: 420px;
+    }
+
+    .map-canvas::before,
+    .map-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+      background-size: 22px 22px;
+      opacity: 0.45;
+    }
+
+    .map-canvas::after {
+      background-image: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0) 55%
+      );
+      opacity: 0.8;
+    }
+
+    .map-legend {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(12px);
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .map-legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .map-legend span::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .map-marker {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      background: #fff;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      box-shadow: 0 18px 30px rgba(15, 23, 42, 0.28);
+    }
+
+    .map-marker span {
+      transform: rotate(45deg);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .marker-1 {
+      top: 38%;
+      left: 42%;
+    }
+
+    .marker-2 {
+      top: 56%;
+      left: 58%;
+      background: #ff8a65;
+      color: #fff;
+    }
+
+    .marker-3 {
+      top: 28%;
+      left: 68%;
+      background: #3b82f6;
+      color: #fff;
+    }
+
+    .map-property-card {
+      position: absolute;
+      top: 22px;
+      right: 24px;
+      width: clamp(260px, 24vw, 320px);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .map-property-card h3 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--heading);
+    }
+
+    .map-property-card .price {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .map-property-card .meta {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--neutral-500);
+    }
+
+    .map-property-card .actions {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--neutral-500);
+    }
+
+    .map-property-card .actions button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .map-property-card .actions .primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 12px 22px rgba(36, 199, 137, 0.25);
+    }
+
+    .map-property-card .actions .secondary {
+      background: rgba(15, 23, 42, 0.06);
+      color: var(--primary-dark);
+    }
+
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 6px;
+      color: var(--neutral-500);
       font-size: 14px;
     }
 
-    .search-input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .property-summary {
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .property-list {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
     }
 
     .property-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--radius-md);
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      padding: 14px 16px;
-      background: rgba(13, 30, 48, 0.85);
-      border-radius: 14px;
-      border: 1px solid transparent;
-      transition: border-color 0.2s ease, background 0.2s ease;
-      cursor: pointer;
+      gap: 12px;
+      box-shadow: var(--shadow-soft);
     }
 
-    .property-card[data-active="true"] {
-      border-color: var(--accent);
-      background: rgba(237, 187, 104, 0.18);
-    }
-
-    .property-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .property-meta {
-      font-size: 13px;
-      color: var(--text-secondary);
+    .property-card .thumbnail {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      height: 150px;
+      background: linear-gradient(135deg, #38bdf8, #34d399);
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 18px;
+      color: #fff;
+      font-weight: 600;
     }
 
-    .property-tag {
+    .property-card .thumbnail::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.05), rgba(15, 23, 42, 0.35));
+    }
+
+    .property-card .badge-set {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      background: rgba(255, 255, 255, 0.1);
     }
 
-    .property-tag.offplan { background: rgba(240, 165, 0, 0.18); color: var(--offplan-colour); }
-    .property-tag.buy { background: rgba(15, 99, 92, 0.18); color: var(--buy-colour); }
-    .property-tag.rent { background: rgba(31, 122, 140, 0.18); color: var(--rent-colour); }
+    .badge.new { background: rgba(59, 130, 246, 0.16); color: #1d4ed8; }
+    .badge.hot { background: rgba(244, 114, 182, 0.18); color: #be185d; }
+    .badge.plan { background: rgba(234, 179, 8, 0.18); color: #b45309; }
 
-    .property-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .property-actions a {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .empty-state {
-      padding: 24px;
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 14px;
-      background: rgba(13, 30, 48, 0.85);
-      border-radius: 16px;
-      border: 1px solid var(--panel-border);
-    }
-
-    .mapboxgl-popup-content {
-      font-family: "Hind Madurai", sans-serif;
-      background: rgba(13, 30, 48, 0.9);
-      color: var(--text-primary);
-      border-radius: 14px;
-      padding: 16px 18px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-    }
-
-    .mapboxgl-popup-content h3 {
-      margin: 0 0 6px;
+    .property-card h4 {
+      margin: 0;
       font-size: 16px;
+      color: var(--heading);
     }
 
-    .mapboxgl-popup-content .popup-meta {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-bottom: 10px;
+    .property-card .details {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .mapboxgl-popup-content a {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
+      gap: 6px;
+      color: var(--neutral-500);
       font-size: 13px;
     }
 
-    .marker {
-      width: 26px;
-      height: 26px;
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      border: 2px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+    .property-card .price {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .property-card .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .property-card .actions button {
+      flex: 1;
+      border-radius: 12px;
+      padding: 10px 0;
+      border: none;
+      font-weight: 600;
       cursor: pointer;
+      font-size: 13px;
     }
 
-    .marker::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 10px;
-      height: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
+    .property-card .actions .primary {
+      background: var(--primary);
+      color: #fff;
     }
 
-    .marker.offplan { background: var(--offplan-colour); }
-    .marker.buy { background: var(--buy-colour); }
-    .marker.rent { background: var(--rent-colour); }
-
-    .overlay-message {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(13, 30, 48, 0.88);
-      border-radius: 16px;
-      padding: 24px 30px;
-      color: var(--text-primary);
-      font-size: 15px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      text-align: center;
-      max-width: 380px;
-      z-index: 3;
-    }
-
-    .overlay-message strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 17px;
+    .property-card .actions .secondary {
+      background: #e2e8f0;
+      color: var(--primary-dark);
     }
 
     @media (max-width: 1024px) {
-      .map-app {
+      .page {
         flex-direction: column;
       }
 
       .sidebar {
-        position: relative;
         width: 100%;
-        height: auto;
-        max-height: 50vh;
       }
 
-      .property-list {
-        max-height: 40vh;
+      .map-section {
+        order: -1;
       }
     }
 
-    @media (max-width: 600px) {
-      .sidebar {
-        padding: 18px 16px;
+    @media (max-width: 680px) {
+      .map-property-card {
+        position: static;
+        width: 100%;
       }
 
-      .sidebar-header h1 {
-        font-size: 18px;
+      .map-marker {
+        display: none;
       }
 
-      .property-card {
-        padding: 12px 14px;
-      }
-
-      .property-title {
-        font-size: 15px;
+      .map-canvas {
+        min-height: 320px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="map-app">
+  <main class="page">
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1>Explore HouzzHunt Properties</h1>
-        <span>Select a property to view its details on the map.</span>
+      <div class="brand">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 2L2 9l1.5 2L6 9.7V19a3 3 0 003 3h6a3 3 0 003-3V9.7l2.5 1.3L22 9 12 2zm3 17a1 1 0 01-1 1H10a1 1 0 01-1-1v-7.12l3-1.56 3 1.56V19z" />
+        </svg>
+        <h1>EstateMap</h1>
       </div>
 
-      <div class="filters">
-        <input class="search-input" type="search" placeholder="Search by name or location" id="searchInput" />
-        <div class="filter-group" id="categoryFilters"></div>
-        <div class="property-summary" id="propertySummary"></div>
-      </div>
+      <section class="location-search">
+        <label for="location">Location / Area</label>
+        <div class="input-group">
+          <input id="location" type="text" placeholder="Search by location, community" />
+        </div>
+        <div class="input-group">
+          <select aria-label="Property type">
+            <option>Buy</option>
+            <option>Rent</option>
+            <option>Off-Plan</option>
+            <option>Commercial</option>
+          </select>
+          <button type="button">Use current location</button>
+        </div>
+      </section>
 
-      <div class="property-list" id="propertyList"></div>
+      <section class="filters">
+        <h2>Basic Filters</h2>
+        <div class="filter-group">
+          <label><input type="checkbox" checked /> Property Details</label>
+          <label><input type="checkbox" /> Amenities</label>
+          <label><input type="checkbox" /> Advanced</label>
+          <label><input type="checkbox" /> Developers</label>
+        </div>
+        <div class="filter-actions">
+          <button class="secondary" type="button">Clear All</button>
+          <button class="primary" type="button">Apply Filters</button>
+        </div>
+      </section>
+
+      <section class="filters">
+        <h2>Popular Communities</h2>
+        <div class="filter-group">
+          <label><input type="checkbox" checked /> Dubai Hills Estate</label>
+          <label><input type="checkbox" /> Palm Jumeirah</label>
+          <label><input type="checkbox" /> Downtown Dubai</label>
+          <label><input type="checkbox" /> Dubai Marina</label>
+        </div>
+      </section>
     </aside>
 
-    <div id="map"></div>
-    <div class="overlay-message" id="overlayMessage" hidden>
-      <strong>Map unavailable</strong>
-      <span id="overlayDetails">Unable to load the interactive map.</span>
-    </div>
-  </div>
-
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin="anonymous"
-  ></script>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-  <script>
-    const state = {
-      properties: [],
-      filtered: [],
-      markers: new Map(),
-      activePropertyKey: null,
-      map: null,
-      mapLibrary: 'mapbox',
-      categoryMeta: new Map([
-        ['offplan', { label: 'Off-Plan', colour: getComputedStyle(document.documentElement).getPropertyValue('--offplan-colour') }],
-        ['buy', { label: 'Buy', colour: getComputedStyle(document.documentElement).getPropertyValue('--buy-colour') }],
-        ['rent', { label: 'Rent', colour: getComputedStyle(document.documentElement).getPropertyValue('--rent-colour') }],
-      ]),
-      enabledCategories: new Set(['offplan', 'buy', 'rent']),
-      mapReady: false,
-      accessToken: '',
-    };
-
-    const elements = {
-      list: document.getElementById('propertyList'),
-      summary: document.getElementById('propertySummary'),
-      filters: document.getElementById('categoryFilters'),
-      overlay: document.getElementById('overlayMessage'),
-      overlayDetails: document.getElementById('overlayDetails'),
-      search: document.getElementById('searchInput'),
-      mapContainer: document.getElementById('map'),
-    };
-
-    fetch('property-map-data.php')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to load property data.');
-        }
-        return response.json();
-      })
-      .then(payload => {
-        state.accessToken = (payload.mapbox_access_token || '').trim();
-        state.properties = Array.isArray(payload.properties)
-          ? payload.properties.map(normaliseProperty)
-          : [];
-
-        buildCategoryFilters();
-        applyFilters();
-
-        if (!state.accessToken) {
-          initialiseLeafletMap();
-          return;
-        }
-
-        mapboxgl.accessToken = state.accessToken;
-        initialiseMapbox();
-      })
-      .catch(() => {
-        showOverlay('Map unavailable', 'We were unable to load the property dataset. Please try again later.');
-      });
-
-    function initialiseMapbox() {
-      state.mapLibrary = 'mapbox';
-
-      if (!state.properties.length) {
-        showOverlay('Map unavailable', 'No properties with map locations were found.');
-      }
-
-      try {
-        state.map = new mapboxgl.Map({
-          container: elements.mapContainer,
-          style: 'mapbox://styles/mapbox/satellite-streets-v12',
-          center: [55.2708, 25.2048],
-          zoom: 9.5,
-          pitch: 55,
-          bearing: -20,
-          antialias: true,
-        });
-      } catch (error) {
-        showOverlay('Map unavailable', 'The interactive map could not be initialised.');
-        return;
-      }
-
-      state.map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
-      state.map.on('load', () => {
-        state.mapReady = true;
-        hideOverlay();
-        refreshMarkers();
-      });
-
-      renderSidebar(state.filtered);
-      refreshMarkers();
-    }
-
-    function initialiseLeafletMap() {
-      state.mapLibrary = 'leaflet';
-
-      if (typeof L === 'undefined') {
-        showOverlay('Map unavailable', 'The map could not be initialised because the required libraries failed to load.');
-        return;
-      }
-
-      try {
-        state.map = L.map(elements.mapContainer, {
-          zoomControl: false,
-          attributionControl: false,
-        });
-      } catch (error) {
-        showOverlay('Map unavailable', 'The interactive map could not be initialised.');
-        return;
-      }
-
-      const tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-      });
-      tiles.addTo(state.map);
-      L.control.zoom({ position: 'topright' }).addTo(state.map);
-
-      state.mapReady = true;
-      hideOverlay();
-
-      const coords = collectCoordinates();
-      if (coords.length) {
-        const bounds = L.latLngBounds(coords.map(({ latitude, longitude }) => [latitude, longitude]));
-        state.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
-      } else {
-        state.map.setView([25.2048, 55.2708], 9.5);
-      }
-
-      refreshMarkers();
-    }
-
-    function normaliseProperty(property) {
-      const id = Number(property.id) || 0;
-      const categoryKey = typeof property.category_key === 'string' ? property.category_key.toLowerCase() : '';
-      const displayName = (property.display_name || property.title || '').trim();
-      const location = (property.location || '').trim();
-      const key = `${categoryKey}-${id}`;
-      return {
-        ...property,
-        id,
-        category_key: categoryKey,
-        display_name: displayName || 'Untitled property',
-        location,
-        key,
-        latitude: typeof property.latitude === 'number' ? property.latitude : Number(property.latitude),
-        longitude: typeof property.longitude === 'number' ? property.longitude : Number(property.longitude),
-        details_url: (property.details_url || '#').trim() || '#',
-        price: (property.price || '').trim(),
-        bedrooms: (property.bedrooms || '').trim(),
-        property_type: (property.property_type || '').trim(),
-      };
-    }
-
-    function buildCategoryFilters() {
-      elements.filters.innerHTML = '';
-      state.categoryMeta.forEach((meta, key) => {
-        const label = document.createElement('label');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = state.enabledCategories.has(key);
-        checkbox.dataset.category = key;
-        checkbox.addEventListener('change', () => {
-          if (checkbox.checked) {
-            state.enabledCategories.add(key);
-          } else {
-            state.enabledCategories.delete(key);
-          }
-          applyFilters();
-        });
-
-        const swatch = document.createElement('span');
-        swatch.style.width = '10px';
-        swatch.style.height = '10px';
-        swatch.style.borderRadius = '50%';
-        swatch.style.background = meta.colour || 'var(--accent)';
-        swatch.style.display = 'inline-flex';
-
-        const text = document.createElement('span');
-        text.textContent = meta.label;
-
-        label.append(checkbox, swatch, text);
-        elements.filters.appendChild(label);
-      });
-
-      if (!elements.search.dataset.bound) {
-        elements.search.addEventListener('input', () => {
-          applyFilters();
-        });
-        elements.search.dataset.bound = 'true';
-      }
-    }
-
-    function applyFilters() {
-      const query = elements.search.value.trim().toLowerCase();
-      state.filtered = state.properties.filter((property) => {
-        if (!state.enabledCategories.has(property.category_key)) {
-          return false;
-        }
-
-        if (query !== '') {
-          const haystack = `${property.display_name} ${property.location}`.toLowerCase();
-          if (!haystack.includes(query)) {
-            return false;
-          }
-        }
-
-        return true;
-      });
-
-      renderSidebar(state.filtered);
-      refreshMarkers();
-    }
-
-    function renderSidebar(properties) {
-      elements.list.innerHTML = '';
-
-      if (!properties.length) {
-        elements.list.innerHTML = '<div class="empty-state">No properties match the current filters.</div>';
-      } else {
-        properties.forEach((property) => {
-          const card = document.createElement('div');
-          card.className = 'property-card';
-          card.dataset.key = property.key;
-          card.addEventListener('click', () => focusProperty(property.key));
-
-          const title = document.createElement('div');
-          title.className = 'property-title';
-          title.textContent = property.display_name;
-
-          const meta = document.createElement('div');
-          meta.className = 'property-meta';
-
-          const tag = document.createElement('span');
-          tag.className = `property-tag ${property.category_key}`;
-          tag.textContent = state.categoryMeta.get(property.category_key)?.label || 'Property';
-          meta.appendChild(tag);
-
-          if (property.location) {
-            const location = document.createElement('span');
-            location.textContent = property.location;
-            meta.appendChild(location);
-          }
-
-          if (property.property_type) {
-            const type = document.createElement('span');
-            type.textContent = property.property_type;
-            meta.appendChild(type);
-          }
-
-          const actions = document.createElement('div');
-          actions.className = 'property-actions';
-
-          if (property.price) {
-            const price = document.createElement('span');
-            price.textContent = property.price;
-            actions.appendChild(price);
-          }
-
-          if (property.bedrooms) {
-            const bedrooms = document.createElement('span');
-            bedrooms.textContent = `${property.bedrooms} Bedrooms`;
-            actions.appendChild(bedrooms);
-          }
-
-          const detailsLink = document.createElement('a');
-          detailsLink.href = property.details_url || '#';
-          detailsLink.target = '_blank';
-          detailsLink.rel = 'noopener';
-          detailsLink.textContent = 'View details';
-          actions.appendChild(detailsLink);
-
-          card.append(title, meta, actions);
-          elements.list.appendChild(card);
-        });
-      }
-
-      const total = properties.length;
-      const summaryText = total === 1 ? 'Showing 1 property' : `Showing ${total} properties`;
-      elements.summary.textContent = summaryText;
-
-      highlightActiveCard();
-    }
-
-    function refreshMarkers() {
-      if (!state.mapReady) {
-        return;
-      }
-
-      state.markers.forEach(({ marker }) => {
-        if (!marker) {
-          return;
-        }
-
-        if (state.mapLibrary === 'mapbox' && typeof marker.remove === 'function') {
-          marker.remove();
-        } else if (state.mapLibrary === 'leaflet') {
-          if (typeof marker.remove === 'function') {
-            marker.remove();
-          } else if (state.map && typeof state.map.removeLayer === 'function') {
-            state.map.removeLayer(marker);
-          }
-        }
-      });
-      state.markers.clear();
-
-      const coords = [];
-
-      state.filtered.forEach(property => {
-        if (!isFinite(property.longitude) || !isFinite(property.latitude)) {
-          return;
-        }
-
-        if (state.mapLibrary === 'mapbox') {
-          const markerElement = document.createElement('div');
-          markerElement.className = `marker ${property.category_key}`;
-          markerElement.addEventListener('click', () => focusProperty(property.key, true));
-
-          const marker = new mapboxgl.Marker({ element: markerElement, anchor: 'bottom' })
-            .setLngLat([property.longitude, property.latitude])
-            .setPopup(createMapboxPopup(property))
-            .addTo(state.map);
-
-          state.markers.set(property.key, { marker, property });
-        } else if (state.mapLibrary === 'leaflet') {
-          const marker = L.marker([property.latitude, property.longitude], {
-            icon: L.divIcon({
-              className: '',
-              html: `<div class="marker ${property.category_key}"></div>`,
-              iconSize: [32, 32],
-              iconAnchor: [16, 32],
-            }),
-          });
-
-          marker.on('click', () => focusProperty(property.key, true));
-          marker.bindPopup(createLeafletPopup(property));
-          marker.addTo(state.map);
-
-          state.markers.set(property.key, { marker, property });
-        }
-
-        coords.push({ latitude: property.latitude, longitude: property.longitude });
-      });
-
-      updateViewport(coords);
-    }
-
-    function collectCoordinates() {
-      return state.filtered
-        .filter(property => isFinite(property.latitude) && isFinite(property.longitude))
-        .map(property => ({ latitude: property.latitude, longitude: property.longitude }));
-    }
-
-    function updateViewport(coords) {
-      if (!state.mapReady || !coords.length) {
-        return;
-      }
-
-      if (state.mapLibrary === 'mapbox' && typeof mapboxgl !== 'undefined') {
-        let bounds = null;
-        coords.forEach(({ latitude, longitude }) => {
-          const point = [longitude, latitude];
-          if (!bounds) {
-            bounds = new mapboxgl.LngLatBounds(point, point);
-          } else {
-            bounds.extend(point);
-          }
-        });
-
-        if (bounds && typeof state.map.fitBounds === 'function') {
-          state.map.fitBounds(bounds, { padding: 80, maxZoom: 14, duration: 800 });
-        }
-      } else if (state.mapLibrary === 'leaflet') {
-        const latLngs = coords.map(({ latitude, longitude }) => [latitude, longitude]);
-        if (latLngs.length === 1) {
-          state.map.flyTo(latLngs[0], 13.5, { animate: true, duration: 0.8 });
-        } else if (latLngs.length) {
-          state.map.fitBounds(L.latLngBounds(latLngs), { padding: [40, 40], maxZoom: 14 });
-        }
-      }
-    }
-
-    function buildPopupContent(property) {
-      const content = document.createElement('div');
-      const title = document.createElement('h3');
-      title.textContent = property.display_name;
-      content.appendChild(title);
-
-      const meta = document.createElement('div');
-      meta.className = 'popup-meta';
-      if (property.location) {
-        const loc = document.createElement('span');
-        loc.textContent = property.location;
-        meta.appendChild(loc);
-      }
-      if (property.price) {
-        const price = document.createElement('span');
-        price.textContent = property.price;
-        meta.appendChild(price);
-      }
-      if (property.bedrooms) {
-        const beds = document.createElement('span');
-        beds.textContent = `${property.bedrooms} Bedrooms`;
-        meta.appendChild(beds);
-      }
-      content.appendChild(meta);
-
-      const link = document.createElement('a');
-      link.href = property.details_url || '#';
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'Open property details';
-      content.appendChild(link);
-
-      return content;
-    }
-
-    function createMapboxPopup(property) {
-      return new mapboxgl.Popup({ offset: 18, closeOnMove: true }).setDOMContent(buildPopupContent(property));
-    }
-
-    function createLeafletPopup(property) {
-      return buildPopupContent(property).outerHTML;
-    }
-
-    function focusProperty(key, fromMarker = false) {
-      state.activePropertyKey = key;
-      highlightActiveCard();
-
-      const markerData = state.markers.get(key);
-      if (!markerData || !state.mapReady) {
-        return;
-      }
-
-      const { property, marker } = markerData;
-
-      if (state.mapLibrary === 'mapbox') {
-        state.map.flyTo({ center: [property.longitude, property.latitude], zoom: 13.5, pitch: 50, bearing: -10, essential: true });
-        if (!fromMarker) {
-          const popup = marker.getPopup();
-          if (popup) {
-            popup.addTo(state.map);
-          }
-        }
-      } else if (state.mapLibrary === 'leaflet') {
-        state.map.flyTo([property.latitude, property.longitude], 13.5, { animate: true, duration: 0.8 });
-        if (!fromMarker && typeof marker.openPopup === 'function') {
-          marker.openPopup();
-        }
-      }
-    }
-
-    function highlightActiveCard() {
-      const cards = elements.list.querySelectorAll('.property-card');
-      cards.forEach(card => {
-        card.dataset.active = card.dataset.key === state.activePropertyKey ? 'true' : 'false';
-      });
-    }
-
-    function showOverlay(title, message) {
-      elements.overlay.hidden = false;
-      elements.overlay.querySelector('strong').textContent = title;
-      elements.overlayDetails.textContent = message;
-    }
-
-    function hideOverlay() {
-      elements.overlay.hidden = true;
-    }
-  </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+    <section class="map-section">
+      <div class="tabs">
+        <button class="active" type="button">Buy</button>
+        <button type="button">Rent</button>
+        <button type="button">Off-Plan</button>
+        <button type="button">Commercial</button>
+      </div>
+
+      <div class="map-canvas" aria-label="Static map preview">
+        <div class="map-legend">
+          <span style="color: #3b82f6">Schools</span>
+          <span style="color: #94a3b8">Transit</span>
+          <span style="color: #f97316">Shopping</span>
+        </div>
+        <div class="map-marker marker-1"><span>HT</span></div>
+        <div class="map-marker marker-2"><span>02</span></div>
+        <div class="map-marker marker-3"><span>AE</span></div>
+
+        <article class="map-property-card">
+          <div class="badge-set">
+            <span class="badge new">New</span>
+            <span class="badge hot">Off-Plan</span>
+          </div>
+          <h3>AED 1.6M</h3>
+          <div class="price">Off-Plan 2BR with Payment Plan</div>
+          <div class="meta">
+            <span>Dubai Hills Estate</span>
+            <span>2 Beds</span>
+            <span>1,230 sq.ft</span>
+          </div>
+          <div class="actions">
+            <button class="secondary" type="button">Schedule Tour</button>
+            <button class="primary" type="button">View Details</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="results-meta">
+        <span>3 properties shown</span>
+        <span>Sorted by: Featured</span>
+      </div>
+
+      <div class="property-grid">
+        <article class="property-card">
+          <div class="thumbnail">Dubai Hills Estate</div>
+          <div class="badge-set">
+            <span class="badge new">New</span>
+            <span class="badge plan">Off-Plan</span>
+          </div>
+          <h4>Parkside 2BR with Golf Course Views</h4>
+          <div class="details">
+            <span>Dubai Hills Estate, Dubai</span>
+            <span>2 Beds &bull; 2 Baths &bull; 1,180 sq.ft</span>
+            <span class="price">AED 1.6M</span>
+          </div>
+          <div class="actions">
+            <button class="secondary" type="button">Compare</button>
+            <button class="primary" type="button">View Details</button>
+          </div>
+        </article>
+
+        <article class="property-card">
+          <div class="thumbnail" style="background: linear-gradient(135deg, #f97316, #facc15);">Palm Jumeirah</div>
+          <div class="badge-set">
+            <span class="badge hot">Featured</span>
+          </div>
+          <h4>Luxury Waterfront 3BR Residence</h4>
+          <div class="details">
+            <span>Palm Jumeirah, Dubai</span>
+            <span>3 Beds &bull; 4 Baths &bull; 2,540 sq.ft</span>
+            <span class="price">AED 6.9M</span>
+          </div>
+          <div class="actions">
+            <button class="secondary" type="button">Save</button>
+            <button class="primary" type="button">View Details</button>
+          </div>
+        </article>
+
+        <article class="property-card">
+          <div class="thumbnail" style="background: linear-gradient(135deg, #6366f1, #22d3ee);">Downtown Dubai</div>
+          <div class="badge-set">
+            <span class="badge new">Hot</span>
+            <span class="badge plan">Off-Plan</span>
+          </div>
+          <h4>Skyline View 1BR with Payment Plan</h4>
+          <div class="details">
+            <span>Downtown Dubai, Dubai</span>
+            <span>1 Bed &bull; 1 Bath &bull; 890 sq.ft</span>
+            <span class="price">AED 1.1M</span>
+          </div>
+          <div class="actions">
+            <button class="secondary" type="button">Schedule Tour</button>
+            <button class="primary" type="button">View Details</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

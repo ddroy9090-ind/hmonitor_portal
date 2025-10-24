@@ -159,6 +159,62 @@ $extractMapEmbedUrl = static function (?string $mapValue, string $location, ?arr
     return null;
 };
 
+$decodeList = static function (?string $json): array {
+    if (!is_string($json)) {
+        return [];
+    }
+
+    $json = trim($json);
+    if ($json === '') {
+        return [];
+    }
+
+    try {
+        $decoded = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+    } catch (Throwable $e) {
+        return [];
+    }
+
+    if (!is_array($decoded)) {
+        return [];
+    }
+
+    return array_values(array_filter(
+        $decoded,
+        static fn($value): bool => is_string($value) && $value !== ''
+            || (is_array($value) && !empty(array_filter($value, static fn($v) => $v !== '' && $v !== null)))
+    ));
+};
+
+$uploadsBasePath = 'admin/assets/uploads/properties/';
+$legacyUploadsPrefix = 'assets/uploads/properties/';
+$normalizeImagePath = static function (?string $path) use ($uploadsBasePath, $legacyUploadsPrefix): ?string {
+    if (!is_string($path)) {
+        return null;
+    }
+
+    $path = trim(str_replace('\\', '/', $path));
+    if ($path === '') {
+        return null;
+    }
+
+    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '//')) {
+        return $path;
+    }
+
+    $path = ltrim($path, '/');
+
+    if (str_starts_with($path, $uploadsBasePath)) {
+        return $path;
+    }
+
+    if (str_starts_with($path, $legacyUploadsPrefix)) {
+        return $uploadsBasePath . substr($path, strlen($legacyUploadsPrefix));
+    }
+
+    return $uploadsBasePath . $path;
+};
+
 $buildDetailsUrl = static function (string $base, int $id): string {
     $base = trim($base);
 
@@ -176,7 +232,7 @@ $sources = [
         'table' => 'properties_list',
         'category_key' => 'offplan',
         'category_label' => 'Off-Plan',
-        'details_page' => 'houzzhunt/property-details',
+        'details_page' => '/houzzhunt/property-details',
     ],
     [
         'table' => 'buy_properties_list',
@@ -204,6 +260,14 @@ foreach ($sources as $source) {
 
     if ($columnExists($pdo, $table, 'project_name')) {
         $columns[] = 'project_name';
+    }
+
+    if ($columnExists($pdo, $table, 'hero_banner')) {
+        $columns[] = 'hero_banner';
+    }
+
+    if ($columnExists($pdo, $table, 'gallery_images')) {
+        $columns[] = 'gallery_images';
     }
 
     $selectColumns = array_map(static fn(string $column): string => $quoteIdentifier($column), $columns);
@@ -249,6 +313,37 @@ foreach ($sources as $source) {
             continue;
         }
 
+        $heroBanner = isset($row['hero_banner']) ? $normalizeImagePath($row['hero_banner']) : null;
+
+        $galleryImages = [];
+        if (array_key_exists('gallery_images', $row)) {
+            foreach ($decodeList($row['gallery_images']) as $imageItem) {
+                $candidate = null;
+
+                if (is_string($imageItem) && $imageItem !== '') {
+                    $candidate = $imageItem;
+                } elseif (is_array($imageItem)) {
+                    foreach ($imageItem as $value) {
+                        if (is_string($value) && $value !== '') {
+                            $candidate = $value;
+                            break;
+                        }
+                    }
+                }
+
+                $normalized = $normalizeImagePath($candidate);
+                if ($normalized !== null) {
+                    $galleryImages[] = $normalized;
+                }
+            }
+        }
+
+        if (!$galleryImages && $heroBanner !== null) {
+            $galleryImages[] = $heroBanner;
+        }
+
+        $primaryImage = $heroBanner ?? ($galleryImages[0] ?? null);
+
         $properties[] = [
             'id' => $id,
             'category_key' => $source['category_key'],
@@ -264,6 +359,7 @@ foreach ($sources as $source) {
             'latitude' => $coordinates['lat'] ?? null,
             'longitude' => $coordinates['lng'] ?? null,
             'location_embed_url' => $mapEmbedUrl,
+            'image_url' => $primaryImage,
         ];
     }
 }

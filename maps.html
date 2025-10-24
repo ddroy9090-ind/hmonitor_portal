@@ -690,7 +690,10 @@
       const renderProperties = () => {
         const category = state.activeCategory;
         const filtered = getPropertiesForCategory(category);
-        const pinnedProperties = filtered.filter(hasValidCoordinates);
+        const pinnedProperties =
+          category === 'all'
+            ? state.properties.filter(hasValidCoordinates)
+            : filtered.filter(hasValidCoordinates);
 
         resultsCount.textContent =
           filtered.length === 1

@@ -562,6 +562,7 @@
       };
 
       const CATEGORY_RENDER_ORDER = ['buy', 'rent', 'offplan'];
+      const DUPLICATE_MARKER_OFFSET_STEP = 0.0002;
 
       const state = {
         properties: [],
@@ -690,7 +691,10 @@
       const renderProperties = () => {
         const category = state.activeCategory;
         const filtered = getPropertiesForCategory(category);
-        const pinnedProperties = filtered.filter(hasValidCoordinates);
+        const pinnedProperties =
+          category === 'all'
+            ? state.properties.filter(hasValidCoordinates)
+            : filtered.filter(hasValidCoordinates);
 
         resultsCount.textContent =
           filtered.length === 1
@@ -800,11 +804,27 @@
 
         clearMarkers();
 
+        const coordinateUsage = new Map();
+
         pinnedProperties.forEach((property) => {
+          const baseKey = `${property.latitude.toFixed(6)}:${property.longitude.toFixed(6)}`;
+          const occurrenceIndex = coordinateUsage.get(baseKey) || 0;
+          coordinateUsage.set(baseKey, occurrenceIndex + 1);
+
+          let markerLatitude = property.latitude;
+          let markerLongitude = property.longitude;
+
+          if (occurrenceIndex > 0) {
+            const angle = ((occurrenceIndex - 1) % 6) * (Math.PI / 3);
+            const ringIndex = Math.floor((occurrenceIndex - 1) / 6) + 1;
+            const radius = ringIndex * DUPLICATE_MARKER_OFFSET_STEP;
+            markerLatitude += Math.sin(angle) * radius;
+            markerLongitude += Math.cos(angle) * radius;
+          }
 
           const categoryConfig = CATEGORY_CONFIG[property.category_key];
           const categoryColor = (categoryConfig && categoryConfig.color) || '#0f172a';
-          const marker = L.marker([property.latitude, property.longitude], {
+          const marker = L.marker([markerLatitude, markerLongitude], {
             icon: createMarkerIcon(categoryColor, property.category_label || property.category_key),
           });
 

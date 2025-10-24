@@ -809,7 +809,13 @@
             const previewImage = document.createElement('img');
             const hasResolvedImage = Boolean(thumbnailUrl);
 
-            previewImage.src = hasResolvedImage ? thumbnailUrl : PLACEHOLDER_IMAGE;
+            if (hasResolvedImage) {
+              thumbnail.classList.add('has-image');
+              previewImage.src = thumbnailUrl;
+            } else {
+              thumbnail.classList.add('no-image');
+              previewImage.src = PLACEHOLDER_IMAGE;
+            }
             previewImage.alt = property.display_name || property.title || 'Property preview';
             previewImage.loading = 'lazy';
             previewImage.decoding = 'async';
@@ -821,13 +827,9 @@
 
               previewImage.dataset.fallbackApplied = 'true';
               previewImage.src = PLACEHOLDER_IMAGE;
-              thumbnail.classList.add('placeholder');
+              thumbnail.classList.remove('has-image');
+              thumbnail.classList.add('no-image');
             });
-
-            thumbnail.classList.add('has-image');
-            if (!hasResolvedImage) {
-              thumbnail.classList.add('placeholder');
-            }
 
             thumbnail.appendChild(previewImage);
 

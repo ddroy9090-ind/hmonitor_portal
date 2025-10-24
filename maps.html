@@ -625,6 +625,36 @@
         });
       };
 
+      const PLACEHOLDER_IMAGE = 'assets/images/properties-listing/breez-by-danube-list.webp';
+
+      const normaliseImageSource = (value) => {
+        if (typeof value !== 'string') {
+          return null;
+        }
+
+        const trimmed = value.trim();
+        if (!trimmed) {
+          return null;
+        }
+
+        const lowerTrimmed = trimmed.toLowerCase();
+        if (
+          lowerTrimmed.startsWith('http://') ||
+          lowerTrimmed.startsWith('https://') ||
+          lowerTrimmed.startsWith('//') ||
+          lowerTrimmed.startsWith('data:') ||
+          lowerTrimmed.startsWith('blob:')
+        ) {
+          return trimmed;
+        }
+
+        if (trimmed.startsWith('/')) {
+          return trimmed.replace(/\/+/, '/');
+        }
+
+        return `/${trimmed}`.replace(/\/+/, '/');
+      };
+
       const resolvePropertyImage = (property) => {
         if (!property || typeof property !== 'object') {
           return null;
@@ -648,12 +678,9 @@
         ];
 
         for (const key of candidateKeys) {
-          const value = property[key];
-          if (typeof value === 'string') {
-            const trimmed = value.trim();
-            if (trimmed) {
-              return trimmed;
-            }
+          const value = normaliseImageSource(property[key]);
+          if (value) {
+            return value;
           }
         }
 
@@ -665,17 +692,15 @@
 
         for (const item of galleryCandidates) {
           if (typeof item === 'string') {
-            const trimmed = item.trim();
-            if (trimmed) {
-              return trimmed;
+            const value = normaliseImageSource(item);
+            if (value) {
+              return value;
             }
           } else if (item && typeof item === 'object') {
             for (const value of Object.values(item)) {
-              if (typeof value === 'string') {
-                const trimmed = value.trim();
-                if (trimmed) {
-                  return trimmed;
-                }
+              const normalised = normaliseImageSource(value);
+              if (normalised) {
+                return normalised;
               }
             }
           }
@@ -781,23 +806,30 @@
             thumbnail.className = 'thumbnail';
 
             const thumbnailUrl = resolvePropertyImage(property);
+            const previewImage = document.createElement('img');
+            const hasResolvedImage = Boolean(thumbnailUrl);
 
-            if (thumbnailUrl) {
-              thumbnail.classList.add('has-image');
-              const previewImage = document.createElement('img');
-              previewImage.src = thumbnailUrl;
-              previewImage.alt = property.display_name || property.title || 'Property preview';
-              previewImage.loading = 'lazy';
-              previewImage.decoding = 'async';
-              thumbnail.appendChild(previewImage);
-            } else {
-              thumbnail.classList.add('no-image');
-              const thumbnailLabel = document.createElement('span');
-              thumbnailLabel.className = 'thumbnail-label';
-              thumbnailLabel.textContent =
-                property.display_name || property.title || 'Preview coming soon';
-              thumbnail.appendChild(thumbnailLabel);
+            previewImage.src = hasResolvedImage ? thumbnailUrl : PLACEHOLDER_IMAGE;
+            previewImage.alt = property.display_name || property.title || 'Property preview';
+            previewImage.loading = 'lazy';
+            previewImage.decoding = 'async';
+
+            previewImage.addEventListener('error', () => {
+              if (previewImage.dataset.fallbackApplied === 'true') {
+                return;
+              }
+
+              previewImage.dataset.fallbackApplied = 'true';
+              previewImage.src = PLACEHOLDER_IMAGE;
+              thumbnail.classList.add('placeholder');
+            });
+
+            thumbnail.classList.add('has-image');
+            if (!hasResolvedImage) {
+              thumbnail.classList.add('placeholder');
             }
+
+            thumbnail.appendChild(previewImage);
 
             card.appendChild(thumbnail);
 

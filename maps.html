@@ -625,6 +625,90 @@
         });
       };
 
+      const PLACEHOLDER_IMAGE = 'assets/images/properties-listing/breez-by-danube-list.webp';
+
+      const normaliseImageSource = (value) => {
+        if (typeof value !== 'string') {
+          return null;
+        }
+
+        const trimmed = value.trim();
+        if (!trimmed) {
+          return null;
+        }
+
+        const lowerTrimmed = trimmed.toLowerCase();
+        if (
+          lowerTrimmed.startsWith('http://') ||
+          lowerTrimmed.startsWith('https://') ||
+          lowerTrimmed.startsWith('//') ||
+          lowerTrimmed.startsWith('data:') ||
+          lowerTrimmed.startsWith('blob:')
+        ) {
+          return trimmed;
+        }
+
+        if (trimmed.startsWith('/')) {
+          return trimmed.replace(/\/+/, '/');
+        }
+
+        return `/${trimmed}`.replace(/\/+/, '/');
+      };
+
+      const resolvePropertyImage = (property) => {
+        if (!property || typeof property !== 'object') {
+          return null;
+        }
+
+        const candidateKeys = [
+          'project_image_url',
+          'projectImageUrl',
+          'project_image',
+          'projectImage',
+          'hero_image_url',
+          'heroImageUrl',
+          'hero_banner_url',
+          'heroBannerUrl',
+          'hero_banner',
+          'heroBanner',
+          'image_url',
+          'imageUrl',
+          'primary_image',
+          'primaryImage',
+        ];
+
+        for (const key of candidateKeys) {
+          const value = normaliseImageSource(property[key]);
+          if (value) {
+            return value;
+          }
+        }
+
+        const galleryCandidates = Array.isArray(property.gallery_images)
+          ? property.gallery_images
+          : Array.isArray(property.galleryImages)
+          ? property.galleryImages
+          : [];
+
+        for (const item of galleryCandidates) {
+          if (typeof item === 'string') {
+            const value = normaliseImageSource(item);
+            if (value) {
+              return value;
+            }
+          } else if (item && typeof item === 'object') {
+            for (const value of Object.values(item)) {
+              const normalised = normaliseImageSource(value);
+              if (normalised) {
+                return normalised;
+              }
+            }
+          }
+        }
+
+        return null;
+      };
+
       const renderLegend = () => {
         legend.innerHTML = '';
         legend.setAttribute('aria-hidden', 'false');
@@ -721,22 +805,33 @@
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
 
-            if (property.image_url) {
+            const thumbnailUrl = resolvePropertyImage(property);
+            const previewImage = document.createElement('img');
+            const hasResolvedImage = Boolean(thumbnailUrl);
+
+            if (hasResolvedImage) {
               thumbnail.classList.add('has-image');
-              const previewImage = document.createElement('img');
-              previewImage.src = property.image_url;
-              previewImage.alt = property.display_name || property.title || 'Property preview';
-              previewImage.loading = 'lazy';
-              previewImage.decoding = 'async';
-              thumbnail.appendChild(previewImage);
+              previewImage.src = thumbnailUrl;
             } else {
               thumbnail.classList.add('no-image');
+              previewImage.src = PLACEHOLDER_IMAGE;
             }
+            previewImage.alt = property.display_name || property.title || 'Property preview';
+            previewImage.loading = 'lazy';
+            previewImage.decoding = 'async';
 
-            const thumbnailLabel = document.createElement('span');
-            thumbnailLabel.className = 'thumbnail-label';
-            thumbnailLabel.textContent = property.location_highlight || property.location || 'View';
-            thumbnail.appendChild(thumbnailLabel);
+            previewImage.addEventListener('error', () => {
+              if (previewImage.dataset.fallbackApplied === 'true') {
+                return;
+              }
+
+              previewImage.dataset.fallbackApplied = 'true';
+              previewImage.src = PLACEHOLDER_IMAGE;
+              thumbnail.classList.remove('has-image');
+              thumbnail.classList.add('no-image');
+            });
+
+            thumbnail.appendChild(previewImage);
 
             card.appendChild(thumbnail);
 
@@ -768,10 +863,6 @@
             const details = document.createElement('div');
             details.className = 'details';
 
-            const location = document.createElement('span');
-            location.textContent = property.location || 'Location available on request';
-            details.appendChild(location);
-
             if (property.bedrooms) {
               const bedroomInfo = document.createElement('span');
               bedroomInfo.textContent = property.bedrooms;
@@ -785,7 +876,9 @@
               details.appendChild(price);
             }
 
-            card.appendChild(details);
+            if (details.childNodes.length > 0) {
+              card.appendChild(details);
+            }
 
             const actions = document.createElement('div');
             actions.className = 'actions';

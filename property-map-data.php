@@ -215,6 +215,27 @@ $normalizeImagePath = static function (?string $path) use ($uploadsBasePath, $le
     return $uploadsBasePath . $path;
 };
 
+$formatImageForResponse = static function (?string $path): ?string {
+    if (!is_string($path)) {
+        return null;
+    }
+
+    $path = trim($path);
+    if ($path === '') {
+        return null;
+    }
+
+    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '//')) {
+        return $path;
+    }
+
+    $normalized = '/' . ltrim($path, '/');
+
+    $collapsed = preg_replace('#/+#', '/', $normalized);
+
+    return $collapsed === null || $collapsed === '' ? $normalized : $collapsed;
+};
+
 $buildDetailsUrl = static function (string $base, int $id): string {
     $base = trim($base);
 
@@ -313,9 +334,9 @@ foreach ($sources as $source) {
             continue;
         }
 
-        $heroBanner = isset($row['hero_banner']) ? $normalizeImagePath($row['hero_banner']) : null;
+        $heroBannerPath = isset($row['hero_banner']) ? $normalizeImagePath($row['hero_banner']) : null;
 
-        $galleryImages = [];
+        $rawGalleryImages = [];
         if (array_key_exists('gallery_images', $row)) {
             foreach ($decodeList($row['gallery_images']) as $imageItem) {
                 $candidate = null;
@@ -333,13 +354,23 @@ foreach ($sources as $source) {
 
                 $normalized = $normalizeImagePath($candidate);
                 if ($normalized !== null) {
-                    $galleryImages[] = $normalized;
+                    $rawGalleryImages[] = $normalized;
                 }
             }
         }
 
-        if (!$galleryImages && $heroBanner !== null) {
-            $galleryImages[] = $heroBanner;
+        if (!$rawGalleryImages && $heroBannerPath !== null) {
+            $rawGalleryImages[] = $heroBannerPath;
+        }
+
+        $heroBanner = $formatImageForResponse($heroBannerPath);
+
+        $galleryImages = [];
+        foreach ($rawGalleryImages as $imagePath) {
+            $formatted = $formatImageForResponse($imagePath);
+            if ($formatted !== null) {
+                $galleryImages[] = $formatted;
+            }
         }
 
         $primaryImage = $heroBanner ?? ($galleryImages[0] ?? null);
@@ -360,6 +391,15 @@ foreach ($sources as $source) {
             'longitude' => $coordinates['lng'] ?? null,
             'location_embed_url' => $mapEmbedUrl,
             'image_url' => $primaryImage,
+            'imageUrl' => $primaryImage,
+            'primary_image' => $primaryImage,
+            'primaryImage' => $primaryImage,
+            'hero_banner' => $heroBanner,
+            'heroBanner' => $heroBanner,
+            'hero_banner_url' => $heroBanner,
+            'heroBannerUrl' => $heroBanner,
+            'gallery_images' => $galleryImages,
+            'galleryImages' => $galleryImages,
         ];
     }
 }

@@ -762,7 +762,7 @@ p {
 .hh-property-hero-ctas {
     position: absolute;
     bottom: -110px;
-    right: -5%;
+    right: -18%;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;

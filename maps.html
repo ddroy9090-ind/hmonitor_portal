@@ -561,6 +561,8 @@
         offplan: { label: 'Off-Plan', color: '#f97316' },
       };
 
+      const CATEGORY_RENDER_ORDER = ['buy', 'rent', 'offplan'];
+
       const state = {
         properties: [],
         markers: [],
@@ -666,15 +668,29 @@
         map.fitBounds(group.getBounds(), { padding: [24, 24], maxZoom: 16 });
       };
 
+      const hasValidCoordinates = (property) =>
+        Number.isFinite(property.latitude) && Number.isFinite(property.longitude);
+
+      const getPropertiesForCategory = (category) => {
+        if (category === 'all') {
+          const grouped = CATEGORY_RENDER_ORDER.flatMap((key) =>
+            state.properties.filter((property) => property.category_key === key)
+          );
+
+          const remaining = state.properties.filter(
+            (property) => !CATEGORY_RENDER_ORDER.includes(property.category_key)
+          );
+
+          return [...grouped, ...remaining];
+        }
+
+        return state.properties.filter((property) => property.category_key === category);
+      };
+
       const renderProperties = () => {
         const category = state.activeCategory;
-        const filtered = state.properties.filter((property) => {
-          if (category === 'all') {
-            return true;
-          }
-
-          return property.category_key === category;
-        });
+        const filtered = getPropertiesForCategory(category);
+        const pinnedProperties = filtered.filter(hasValidCoordinates);
 
         resultsCount.textContent =
           filtered.length === 1
@@ -684,7 +700,7 @@
         const activeCategoryConfig = CATEGORY_CONFIG[category];
         resultsInfo.textContent =
           category === 'all'
-            ? 'Displaying Buy, Rent, and Off-Plan listings'
+            ? `Displaying Buy, Rent, and Off-Plan listings · ${pinnedProperties.length} pinned on the map`
             : `Category: ${(activeCategoryConfig && activeCategoryConfig.label) || category}`;
 
         propertyGrid.innerHTML = '';
@@ -784,10 +800,7 @@
 
         clearMarkers();
 
-        filtered.forEach((property) => {
-          if (typeof property.latitude !== 'number' || typeof property.longitude !== 'number') {
-            return;
-          }
+        pinnedProperties.forEach((property) => {
 
           const categoryConfig = CATEGORY_CONFIG[property.category_key];
           const categoryColor = (categoryConfig && categoryConfig.color) || '#0f172a';

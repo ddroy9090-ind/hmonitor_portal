@@ -648,10 +648,11 @@
             ? '1 property shown'
             : `${filtered.length} properties shown`;
 
+        const activeCategoryConfig = CATEGORY_CONFIG[category];
         resultsInfo.textContent =
           category === 'all'
             ? 'Displaying Buy, Rent, and Off-Plan listings'
-            : `Category: ${CATEGORY_CONFIG[category].label}`;
+            : `Category: ${(activeCategoryConfig && activeCategoryConfig.label) || category}`;
 
         propertyGrid.innerHTML = '';
 
@@ -677,7 +678,11 @@
 
             const categoryBadge = document.createElement('span');
             categoryBadge.className = `badge ${property.category_key}`;
-            categoryBadge.textContent = CATEGORY_CONFIG[property.category_key].label;
+            const categoryConfig = CATEGORY_CONFIG[property.category_key];
+            categoryBadge.textContent =
+              (categoryConfig && categoryConfig.label) ||
+              property.category_label ||
+              property.category_key;
             badges.appendChild(categoryBadge);
 
             if (property.property_type) {
@@ -733,9 +738,10 @@
             return;
           }
 
-          const categoryColor = CATEGORY_CONFIG[property.category_key]?.color || '#0f172a';
+          const categoryConfig = CATEGORY_CONFIG[property.category_key];
+          const categoryColor = (categoryConfig && categoryConfig.color) || '#0f172a';
           const marker = L.marker([property.latitude, property.longitude], {
-            icon: createMarkerIcon(categoryColor, property.category_key),
+            icon: createMarkerIcon(categoryColor, property.category_label || property.category_key),
           });
 
           const popupContent = `
@@ -786,9 +792,52 @@
             throw new Error('Unexpected response format');
           }
 
-          state.properties = payload.properties.filter((property) =>
-            ['buy', 'rent', 'offplan'].includes(property.category_key)
-          );
+          const normaliseCategoryKey = (value) => {
+            if (typeof value !== 'string') {
+              return null;
+            }
+
+            const trimmed = value.trim().toLowerCase();
+            if (!trimmed) {
+              return null;
+            }
+
+            if (['off-plan', 'off_plan', 'off plan'].includes(trimmed)) {
+              return 'offplan';
+            }
+
+            return trimmed;
+          };
+
+          const parseCoordinate = (value) => {
+            const number = Number(value);
+            return Number.isFinite(number) ? number : null;
+          };
+
+          state.properties = payload.properties
+            .map((property) => {
+              const normalisedKey = normaliseCategoryKey(
+                property.category_key ?? property.category ?? ''
+              );
+              if (!normalisedKey) {
+                return null;
+              }
+
+              const categoryConfig = CATEGORY_CONFIG[normalisedKey];
+              const normalisedLabel =
+                property.category_label ||
+                (categoryConfig && categoryConfig.label) ||
+                normalisedKey.replace(/\b\w/g, (match) => match.toUpperCase());
+
+              return {
+                ...property,
+                category_key: normalisedKey,
+                category_label: normalisedLabel,
+                latitude: parseCoordinate(property.latitude),
+                longitude: parseCoordinate(property.longitude),
+              };
+            })
+            .filter(Boolean);
 
           renderLegend();
           setActiveCategory('all');

@@ -88,6 +88,19 @@ $extractCoordinates = static function (?string $value): ?array {
         }
     }
 
+    $plainParts = preg_split('/\s*,\s*/', $decoded);
+    if (is_array($plainParts) && count($plainParts) === 2) {
+        $latitude = filter_var($plainParts[0], FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+        $longitude = filter_var($plainParts[1], FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+
+        if ($latitude !== false && $longitude !== false) {
+            return [
+                'lat' => (float) $latitude,
+                'lng' => (float) $longitude,
+            ];
+        }
+    }
+
     return null;
 };
 

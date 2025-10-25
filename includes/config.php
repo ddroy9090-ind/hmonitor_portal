@@ -77,6 +77,40 @@ if (!function_exists('hh_mapbox_access_token')) {
     }
 }
 
+// Polyfills for string helper functions introduced in PHP 8.x so the
+// application can still run on older hosting environments.
+if (!function_exists('str_contains')) {
+    function str_contains(string $haystack, string $needle): bool
+    {
+        return $needle === '' || strpos($haystack, $needle) !== false;
+    }
+}
+
+if (!function_exists('str_starts_with')) {
+    function str_starts_with(string $haystack, string $needle): bool
+    {
+        if ($needle === '') {
+            return true;
+        }
+
+        return strncmp($haystack, $needle, strlen($needle)) === 0;
+    }
+}
+
+if (!function_exists('str_ends_with')) {
+    function str_ends_with(string $haystack, string $needle): bool
+    {
+        if ($needle === '') {
+            return true;
+        }
+
+        $needleLength = strlen($needle);
+
+        return $needleLength <= strlen($haystack)
+            && substr($haystack, -$needleLength) === $needle;
+    }
+}
+
 if (!function_exists('hh_session_start')) {
     function hh_session_start(): void
     {

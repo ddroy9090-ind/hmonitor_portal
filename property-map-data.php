@@ -253,7 +253,7 @@ $sources = [
         'table' => 'properties_list',
         'category_key' => 'offplan',
         'category_label' => 'Off-Plan',
-        'details_page' => '/houzzhunt/property-details',
+        'details_page' => '/property-details',
     ],
     [
         'table' => 'buy_properties_list',
@@ -380,6 +380,8 @@ foreach ($sources as $source) {
             'category_key' => $source['category_key'],
             'category_label' => $source['category_label'],
             'title' => $title,
+            'project_name' => $projectName,
+            'projectName' => $projectName,
             'display_name' => $displayName,
             'location' => $location,
             'location_highlight' => $locationHighlight,

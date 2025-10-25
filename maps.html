@@ -665,6 +665,10 @@
           'projectImageUrl',
           'project_image',
           'projectImage',
+          'project_hero_banner_url',
+          'projectHeroBannerUrl',
+          'project_hero_banner',
+          'projectHeroBanner',
           'hero_image_url',
           'heroImageUrl',
           'hero_banner_url',
@@ -799,8 +803,10 @@
             const card = document.createElement('a');
             card.className = 'property-card';
             card.href = property.details_url || '#';
-            const cardLabel = property.display_name || property.title || 'property';
-            card.setAttribute('aria-label', `View details for ${cardLabel}`);
+            const projectName = property.project_name || property.projectName || '';
+            const displayTitle =
+              projectName || property.display_name || property.title || 'View property';
+            card.setAttribute('aria-label', `View details for ${displayTitle}`);
 
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
@@ -816,7 +822,7 @@
               thumbnail.classList.add('no-image');
               previewImage.src = PLACEHOLDER_IMAGE;
             }
-            previewImage.alt = property.display_name || property.title || 'Property preview';
+            previewImage.alt = `${displayTitle} preview`;
             previewImage.loading = 'lazy';
             previewImage.decoding = 'async';
 
@@ -857,7 +863,7 @@
             card.appendChild(badges);
 
             const title = document.createElement('h4');
-            title.textContent = property.display_name || property.title || 'View property';
+            title.textContent = displayTitle;
             card.appendChild(title);
 
             const details = document.createElement('div');

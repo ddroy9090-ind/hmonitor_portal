@@ -799,8 +799,10 @@
             card.className = 'property-card';
             card.href = property.details_url || '#';
             const projectName = property.project_name || property.projectName || '';
+            const fallbackDisplayName =
+              property.location_highlight || property.location || '';
             const displayTitle =
-              projectName || property.display_name || property.title || 'View property';
+              projectName || fallbackDisplayName || 'Project name unavailable';
             card.setAttribute('aria-label', `View details for ${displayTitle}`);
 
             const thumbnail = document.createElement('div');
@@ -918,9 +920,15 @@
             icon: createMarkerIcon(categoryColor, property.category_label || property.category_key),
           });
 
+          const projectName = property.project_name || property.projectName || '';
+          const fallbackDisplayName =
+            property.location_highlight || property.location || '';
+          const popupTitle =
+            projectName || fallbackDisplayName || 'Project name unavailable';
+
           const popupContent = `
             <div style="min-width:180px;">
-              <strong>${escapeHtml(property.display_name || property.title)}</strong><br />
+              <strong>${escapeHtml(popupTitle)}</strong><br />
               <span>${escapeHtml(property.location || '')}</span><br />
               <a href="${escapeHtml(property.details_url || '#')}" style="color:${categoryColor};font-weight:600;display:inline-block;margin-top:8px;">View details</a>
             </div>

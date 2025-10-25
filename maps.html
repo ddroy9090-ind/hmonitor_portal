@@ -99,6 +99,12 @@
       flex-direction: column;
     }
 
+    .input-group label {
+      font-size: 13px;
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+
     .input-group input,
     .input-group select {
       flex: 1;
@@ -108,7 +114,13 @@
       font-family: inherit;
       font-size: 14px;
       background: #f8fafc;
-      
+
+    }
+
+    .filter-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .input-group button {
@@ -472,41 +484,74 @@
       </div>
 
       <section class="location-search">
-        <label for="location">Location / Area</label>
+        <label for="filterSearchLocation">Search Location</label>
         <div class="input-group">
-          <input id="location" type="text" placeholder="Search by location, community" />
+          <input id="filterSearchLocation" type="text" placeholder="Search by location, community" />
         </div>
         <div class="input-group">
-          <select aria-label="Property type">
-            <option>Buy</option>
-            <option>Rent</option>
-            <option>Off-Plan</option>
-            <option>Commercial</option>
+          <label for="filterCategory">Listing Category</label>
+          <select id="filterCategory" aria-label="Listing category">
+            <option value="all">All</option>
+            <option value="buy">Buy</option>
+            <option value="rent">Rent</option>
+            <option value="offplan">Off-Plan</option>
           </select>
-          <button type="button">Use current location</button>
+          <button type="button" id="useCurrentLocation">Use current location</button>
         </div>
       </section>
 
       <section class="filters">
-        <h2>Basic Filters</h2>
-        <div class="filter-group">
-          <label><input type="checkbox" /> Property Details</label>
-          <label><input type="checkbox" /> Amenities</label>
-          <label><input type="checkbox" /> Advanced</label>
-          <label><input type="checkbox" /> Developers</label>
+        <h2>Project Filters</h2>
+        <div class="filter-fields">
+          <div class="input-group">
+            <label for="filterProjectName">Project Name</label>
+            <input id="filterProjectName" type="text" placeholder="e.g. Creek Waters" />
+          </div>
+          <div class="input-group">
+            <label for="filterLocation">Location</label>
+            <input id="filterLocation" type="text" list="filterLocationOptions" placeholder="e.g. Downtown Dubai" />
+            <datalist id="filterLocationOptions"></datalist>
+          </div>
+          <div class="input-group">
+            <label for="filterPropertyType">Property Type</label>
+            <select id="filterPropertyType">
+              <option value="">Any</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="filterBedrooms">Bedrooms</label>
+            <select id="filterBedrooms">
+              <option value="">Any</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="filterCompletionYear">Completion Year</label>
+            <select id="filterCompletionYear">
+              <option value="">Any</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="filterMinPrice">Min Price</label>
+            <input id="filterMinPrice" type="number" min="0" placeholder="e.g. 500000" />
+          </div>
+          <div class="input-group">
+            <label for="filterMaxPrice">Max Price</label>
+            <input id="filterMaxPrice" type="number" min="0" placeholder="e.g. 2500000" />
+          </div>
         </div>
-        <section class="filters">
+        <div class="filter-actions">
+          <button class="secondary" id="clearFilters" type="button">Clear All</button>
+          <button class="primary" id="applyFilters" type="button">Apply Filters</button>
+        </div>
+      </section>
+
+      <section class="filters">
         <h2>Popular Communities</h2>
         <div class="filter-group">
           <label><input type="checkbox" /> Dubai Hills Estate</label>
           <label><input type="checkbox" /> Palm Jumeirah</label>
           <label><input type="checkbox" /> Downtown Dubai</label>
           <label><input type="checkbox" /> Dubai Marina</label>
-        </div>
-      </section>
-        <div class="filter-actions">
-          <button class="secondary" type="button">Clear All</button>
-          <button class="primary" type="button">Apply Filters</button>
         </div>
       </section>
     </aside>
@@ -556,6 +601,16 @@
         properties: [],
         markers: [],
         activeCategory: 'all',
+        filters: {
+          projectName: '',
+          location: '',
+          propertyType: '',
+          bedrooms: '',
+          searchLocation: '',
+          completionYear: '',
+          minPrice: '',
+          maxPrice: '',
+        },
       };
 
       const mapCanvas = document.getElementById('propertyMap');
@@ -565,6 +620,20 @@
       const legend = document.getElementById('mapLegend');
       const loadingState = document.getElementById('loadingState');
       const tabs = Array.from(document.querySelectorAll('.tabs button[data-category]'));
+      const categorySelect = document.getElementById('filterCategory');
+      const filterElements = {
+        projectName: document.getElementById('filterProjectName'),
+        location: document.getElementById('filterLocation'),
+        propertyType: document.getElementById('filterPropertyType'),
+        bedrooms: document.getElementById('filterBedrooms'),
+        searchLocation: document.getElementById('filterSearchLocation'),
+        completionYear: document.getElementById('filterCompletionYear'),
+        minPrice: document.getElementById('filterMinPrice'),
+        maxPrice: document.getElementById('filterMaxPrice'),
+      };
+      const locationDatalist = document.getElementById('filterLocationOptions');
+      const applyFiltersButton = document.getElementById('applyFilters');
+      const clearFiltersButton = document.getElementById('clearFilters');
 
       let map;
       let markersLayer;
@@ -705,6 +774,277 @@
         return null;
       };
 
+      const normaliseFilterText = (value) => {
+        if (typeof value !== 'string') {
+          return '';
+        }
+
+        return value.trim().toLowerCase();
+      };
+
+      const getCompletionYear = (property) => {
+        if (!property || typeof property !== 'object') {
+          return '';
+        }
+
+        const value =
+          property.completion_year ??
+          property.completionYear ??
+          property.handover_year ??
+          property.handoverYear ??
+          '';
+
+        if (typeof value === 'number') {
+          return Number.isFinite(value) ? String(value) : '';
+        }
+
+        if (typeof value === 'string') {
+          return value.trim();
+        }
+
+        return '';
+      };
+
+      const parsePriceValue = (value) => {
+        if (typeof value === 'number') {
+          return Number.isFinite(value) ? value : null;
+        }
+
+        if (typeof value !== 'string') {
+          return null;
+        }
+
+        const cleaned = value.replace(/[^0-9.]/g, '');
+        if (!cleaned) {
+          return null;
+        }
+
+        const number = Number(cleaned);
+        return Number.isFinite(number) ? number : null;
+      };
+
+      const toFiniteNumber = (value) => {
+        if (value === '' || value === null || value === undefined) {
+          return null;
+        }
+
+        const number = Number(value);
+        return Number.isFinite(number) ? number : null;
+      };
+
+      const populateSelectOptions = (select, values, placeholder = 'Any') => {
+        if (!select) {
+          return;
+        }
+
+        const previousValue = select.value;
+        const fragment = document.createDocumentFragment();
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = placeholder;
+        fragment.appendChild(defaultOption);
+
+        values.forEach((value) => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          fragment.appendChild(option);
+        });
+
+        select.innerHTML = '';
+        select.appendChild(fragment);
+
+        if (values.includes(previousValue)) {
+          select.value = previousValue;
+        } else {
+          select.value = '';
+        }
+      };
+
+      const populateDatalistOptions = (datalist, values) => {
+        if (!datalist) {
+          return;
+        }
+
+        datalist.innerHTML = '';
+
+        values.forEach((value) => {
+          const option = document.createElement('option');
+          option.value = value;
+          datalist.appendChild(option);
+        });
+      };
+
+      const populateFilterOptions = () => {
+        if (!Array.isArray(state.properties)) {
+          return;
+        }
+
+        const propertyTypes = new Set();
+        const bedrooms = new Set();
+        const locations = new Set();
+        const completionYears = new Set();
+
+        state.properties.forEach((property) => {
+          if (!property || typeof property !== 'object') {
+            return;
+          }
+
+          const propertyType = typeof property.property_type === 'string' ? property.property_type.trim() : '';
+          if (propertyType) {
+            propertyTypes.add(propertyType);
+          }
+
+          const bedroomValue = typeof property.bedrooms === 'string' ? property.bedrooms.trim() : '';
+          if (bedroomValue) {
+            bedrooms.add(bedroomValue);
+          }
+
+          const locationValue =
+            (typeof property.location_highlight === 'string' && property.location_highlight.trim()) ||
+            (typeof property.location === 'string' && property.location.trim()) ||
+            '';
+          if (locationValue) {
+            locations.add(locationValue);
+          }
+
+          const completionYear = getCompletionYear(property);
+          if (completionYear) {
+            completionYears.add(completionYear);
+          }
+        });
+
+        const sortAlpha = (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' });
+        const extractLeadingNumber = (value) => {
+          const match = value.match(/\d+(?:\.\d+)?/);
+          return match ? Number(match[0]) : Number.POSITIVE_INFINITY;
+        };
+
+        const propertyTypeOptions = Array.from(propertyTypes).sort(sortAlpha);
+        const bedroomOptions = Array.from(bedrooms).sort((a, b) => {
+          const aNum = extractLeadingNumber(a);
+          const bNum = extractLeadingNumber(b);
+
+          if (Number.isFinite(aNum) && Number.isFinite(bNum) && aNum !== bNum) {
+            return aNum - bNum;
+          }
+
+          return a.localeCompare(b, undefined, { sensitivity: 'base' });
+        });
+        const locationOptions = Array.from(locations).sort(sortAlpha);
+        const completionYearOptions = Array.from(completionYears).sort(sortAlpha);
+
+        populateSelectOptions(filterElements.propertyType, propertyTypeOptions, 'Any type');
+        populateSelectOptions(filterElements.bedrooms, bedroomOptions, 'Any bedrooms');
+        populateSelectOptions(filterElements.completionYear, completionYearOptions, 'Any year');
+        populateDatalistOptions(locationDatalist, locationOptions);
+      };
+
+      const applyActiveFilters = (properties) => {
+        if (!Array.isArray(properties)) {
+          return [];
+        }
+
+        const { filters } = state;
+        const projectNameFilter = normaliseFilterText(filters.projectName);
+        const locationFilter = normaliseFilterText(filters.location);
+        const propertyTypeFilter = normaliseFilterText(filters.propertyType);
+        const bedroomsFilter = normaliseFilterText(filters.bedrooms);
+        const searchLocationFilter = normaliseFilterText(filters.searchLocation);
+        const completionYearFilter = normaliseFilterText(filters.completionYear);
+        const minPriceFilter = toFiniteNumber(filters.minPrice);
+        const maxPriceFilter = toFiniteNumber(filters.maxPrice);
+
+        return properties.filter((property) => {
+          if (!property || typeof property !== 'object') {
+            return false;
+          }
+
+          if (projectNameFilter) {
+            const candidates = [
+              property.project_name,
+              property.projectName,
+              property.display_name,
+              property.title,
+            ];
+
+            const matchesProject = candidates.some((candidate) =>
+              normaliseFilterText(candidate).includes(projectNameFilter)
+            );
+
+            if (!matchesProject) {
+              return false;
+            }
+          }
+
+          if (locationFilter) {
+            const locationCandidates = [property.location_highlight, property.location, property.locationHighlight];
+            const matchesLocation = locationCandidates.some((candidate) =>
+              normaliseFilterText(candidate).includes(locationFilter)
+            );
+
+            if (!matchesLocation) {
+              return false;
+            }
+          }
+
+          if (searchLocationFilter) {
+            const searchCandidates = [
+              property.location_highlight,
+              property.location,
+              property.locationHighlight,
+              property.project_name,
+              property.projectName,
+              property.display_name,
+              property.title,
+            ];
+
+            const matchesSearch = searchCandidates.some((candidate) =>
+              normaliseFilterText(candidate).includes(searchLocationFilter)
+            );
+
+            if (!matchesSearch) {
+              return false;
+            }
+          }
+
+          if (propertyTypeFilter) {
+            const propertyTypeValue = normaliseFilterText(property.property_type || property.propertyType);
+            if (!propertyTypeValue || !propertyTypeValue.includes(propertyTypeFilter)) {
+              return false;
+            }
+          }
+
+          if (bedroomsFilter) {
+            const bedroomsValue = normaliseFilterText(property.bedrooms || property.bedroomCount);
+            if (!bedroomsValue || !bedroomsValue.includes(bedroomsFilter)) {
+              return false;
+            }
+          }
+
+          if (completionYearFilter) {
+            const completionValue = normaliseFilterText(getCompletionYear(property));
+            if (!completionValue || !completionValue.includes(completionYearFilter)) {
+              return false;
+            }
+          }
+
+          if (minPriceFilter !== null || maxPriceFilter !== null) {
+            const numericPrice = parsePriceValue(property.price ?? property.starting_price ?? property.startingPrice);
+
+            if (minPriceFilter !== null && (numericPrice === null || numericPrice < minPriceFilter)) {
+              return false;
+            }
+
+            if (maxPriceFilter !== null && (numericPrice === null || numericPrice > maxPriceFilter)) {
+              return false;
+            }
+          }
+
+          return true;
+        });
+      };
+
       const renderLegend = () => {
         legend.innerHTML = '';
         legend.setAttribute('aria-hidden', 'false');
@@ -766,29 +1106,33 @@
 
       const renderProperties = () => {
         const category = state.activeCategory;
-        const filtered = getPropertiesForCategory(category);
-        const pinnedProperties =
-          category === 'all'
-            ? state.properties.filter(hasValidCoordinates)
-            : filtered.filter(hasValidCoordinates);
+        const categoryProperties = getPropertiesForCategory(category);
+        const filtered = applyActiveFilters(categoryProperties);
+        const pinnedProperties = filtered.filter(hasValidCoordinates);
 
         resultsCount.textContent =
-          filtered.length === 1
-            ? '1 property shown'
-            : `${filtered.length} properties shown`;
+          filtered.length === 1 ? '1 property shown' : `${filtered.length} properties shown`;
 
         const activeCategoryConfig = CATEGORY_CONFIG[category];
+        const categoryLabel = (activeCategoryConfig && activeCategoryConfig.label) || category;
+        const filterCount = Object.values(state.filters).filter((value) => value).length;
+
         resultsInfo.textContent =
           category === 'all'
-            ? `Displaying Buy, Rent, and Off-Plan listings · ${pinnedProperties.length} pinned on the map`
-            : `Category: ${(activeCategoryConfig && activeCategoryConfig.label) || category}`;
+            ? `Displaying Buy, Rent, and Off-Plan listings · ${pinnedProperties.length} pinned on the map` +
+              (filterCount > 0 ? ` · ${filterCount} active filter${filterCount > 1 ? 's' : ''}` : '')
+            : `Category: ${categoryLabel} · ${pinnedProperties.length} pinned on the map` +
+              (filterCount > 0 ? ` · ${filterCount} active filter${filterCount > 1 ? 's' : ''}` : '');
 
         propertyGrid.innerHTML = '';
 
         if (filtered.length === 0) {
           const empty = document.createElement('div');
           empty.className = 'empty-state';
-          empty.textContent = 'No properties available for the selected category yet.';
+          empty.textContent =
+            filterCount > 0
+              ? 'No properties match the current filters. Try adjusting your selections.'
+              : 'No properties available for the selected category yet.';
           propertyGrid.appendChild(empty);
         } else {
           filtered.forEach((property) => {
@@ -869,6 +1213,13 @@
               details.appendChild(bedroomInfo);
             }
 
+            const completionYear = getCompletionYear(property);
+            if (completionYear) {
+              const completionInfo = document.createElement('span');
+              completionInfo.textContent = `Completion: ${completionYear}`;
+              details.appendChild(completionInfo);
+            }
+
             if (property.price) {
               const price = document.createElement('span');
               price.className = 'price';
@@ -944,13 +1295,21 @@
       };
 
       const setActiveCategory = (category) => {
-        state.activeCategory = category;
+        const resolvedCategory = Object.prototype.hasOwnProperty.call(CATEGORY_CONFIG, category)
+          ? category
+          : 'all';
+
+        state.activeCategory = resolvedCategory;
 
         tabs.forEach((tab) => {
-          const isActive = tab.dataset.category === category;
+          const isActive = tab.dataset.category === resolvedCategory;
           tab.classList.toggle('active', isActive);
           tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
+
+        if (categorySelect) {
+          categorySelect.value = resolvedCategory;
+        }
 
         renderProperties();
       };
@@ -1018,6 +1377,7 @@
             })
             .filter(Boolean);
 
+          populateFilterOptions();
           renderLegend();
           setActiveCategory('all');
         } catch (error) {
@@ -1036,6 +1396,67 @@
           }
         }
       };
+
+      const registerFilterInput = (key, element, eventName = 'input') => {
+        if (!element) {
+          return;
+        }
+
+        element.addEventListener(eventName, () => {
+          state.filters[key] = element.value;
+          renderProperties();
+        });
+      };
+
+      const clearAllFilters = () => {
+        Object.entries(filterElements).forEach(([key, element]) => {
+          if (!element) {
+            return;
+          }
+
+          if (element.tagName === 'SELECT') {
+            element.value = '';
+          } else {
+            element.value = '';
+          }
+
+          state.filters[key] = '';
+        });
+
+        setActiveCategory('all');
+      };
+
+      registerFilterInput('projectName', filterElements.projectName);
+      registerFilterInput('location', filterElements.location);
+      registerFilterInput('propertyType', filterElements.propertyType, 'change');
+      registerFilterInput('bedrooms', filterElements.bedrooms, 'change');
+      registerFilterInput('searchLocation', filterElements.searchLocation);
+      registerFilterInput('completionYear', filterElements.completionYear, 'change');
+      registerFilterInput('minPrice', filterElements.minPrice);
+      registerFilterInput('maxPrice', filterElements.maxPrice);
+
+      if (applyFiltersButton) {
+        applyFiltersButton.addEventListener('click', () => {
+          renderProperties();
+        });
+      }
+
+      if (clearFiltersButton) {
+        clearFiltersButton.addEventListener('click', () => {
+          clearAllFilters();
+        });
+      }
+
+      if (categorySelect) {
+        categorySelect.addEventListener('change', () => {
+          const selectedValue = categorySelect.value || 'all';
+          if (selectedValue !== state.activeCategory) {
+            setActiveCategory(selectedValue);
+          } else {
+            renderProperties();
+          }
+        });
+      }
 
       tabs.forEach((tab) => {
         tab.addEventListener('click', () => {

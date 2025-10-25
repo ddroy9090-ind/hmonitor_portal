@@ -283,6 +283,10 @@ foreach ($sources as $source) {
         $columns[] = 'project_name';
     }
 
+    if ($columnExists($pdo, $table, 'completion_year')) {
+        $columns[] = 'completion_year';
+    }
+
     if ($columnExists($pdo, $table, 'hero_banner')) {
         $columns[] = 'hero_banner';
     }
@@ -319,6 +323,7 @@ foreach ($sources as $source) {
         $price = $normaliseString($row['starting_price'] ?? '');
         $bedrooms = $normaliseString($row['bedroom'] ?? '');
         $propertyType = $normaliseString($row['property_type'] ?? '');
+        $completionYear = $normaliseString($row['completion_year'] ?? '');
         $locationMap = $normaliseString($row['location_map'] ?? '');
         $locationHighlight = $normaliseString($row['location_highlight'] ?? '');
         if ($location === '' && $locationHighlight !== '') {
@@ -388,6 +393,8 @@ foreach ($sources as $source) {
             'price' => $price,
             'bedrooms' => $bedrooms,
             'property_type' => $propertyType,
+            'completion_year' => $completionYear,
+            'completionYear' => $completionYear,
             'details_url' => $buildDetailsUrl($source['details_page'], $id),
             'latitude' => $coordinates['lat'] ?? null,
             'longitude' => $coordinates['lng'] ?? null,

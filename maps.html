@@ -422,7 +422,21 @@
       font-size: 13px;
     }
 
-    .property-card .details .price {
+    .property-card .details .project-name {
+      font-weight: 600;
+      color: var(--heading);
+    }
+
+    .property-card .details .property-type {
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+
+    .property-card .details .secondary-name {
+      font-weight: 500;
+    }
+
+    .property-card .details .starting-price {
       font-size: 16px;
       font-weight: 600;
       color: var(--primary);
@@ -717,6 +731,54 @@
         return `/${trimmed}`.replace(/\/+/, '/');
       };
 
+      const normaliseDisplayText = (value) => {
+        if (typeof value !== 'string') {
+          return '';
+        }
+
+        const trimmed = value.trim();
+        return trimmed;
+      };
+
+      const resolveDisplayData = (property) => {
+        if (!property || typeof property !== 'object') {
+          return {
+            primary: 'Project name unavailable',
+            secondary: '',
+            projectName: '',
+            location: '',
+          };
+        }
+
+        const normalise = normaliseDisplayText;
+        const projectName = normalise(property.project_name ?? property.projectName);
+        const candidateValues = [
+          projectName,
+          normalise(property.display_name ?? property.displayName),
+          normalise(property.project_title ?? property.projectTitle),
+          normalise(property.property_title ?? property.propertyTitle),
+          normalise(property.title),
+          normalise(property.name),
+        ].filter(Boolean);
+
+        const locationValue =
+          normalise(property.location_highlight ?? property.locationHighlight) ||
+          normalise(property.location);
+
+        const primary =
+          candidateValues.find((value) => value) || locationValue || 'Project name unavailable';
+
+        const secondary =
+          locationValue || candidateValues.find((value) => value && value !== primary) || '';
+
+        return {
+          primary,
+          secondary,
+          projectName,
+          location: locationValue,
+        };
+      };
+
       const resolvePropertyImage = (property) => {
         if (!property || typeof property !== 'object') {
           return null;
@@ -966,6 +1028,11 @@
               property.project_name,
               property.projectName,
               property.display_name,
+              property.displayName,
+              property.project_title,
+              property.projectTitle,
+              property.property_title,
+              property.propertyTitle,
               property.title,
             ];
 
@@ -997,6 +1064,11 @@
               property.project_name,
               property.projectName,
               property.display_name,
+              property.displayName,
+              property.project_title,
+              property.projectTitle,
+              property.property_title,
+              property.propertyTitle,
               property.title,
             ];
 
@@ -1140,12 +1212,10 @@
             const card = document.createElement('a');
             card.className = 'property-card';
             card.href = property.details_url || '#';
-            const projectName = property.project_name || property.projectName || '';
-            const fallbackDisplayName =
-              property.location_highlight || property.location || '';
-            const displayTitle =
-              projectName || fallbackDisplayName || 'Project name unavailable';
-            card.setAttribute('aria-label', `View details for ${displayTitle}`);
+            const displayData = resolveDisplayData(property);
+            const displayTitle = displayData.primary;
+            const preferredTitle = displayData.projectName || displayTitle;
+            card.setAttribute('aria-label', `View details for ${preferredTitle}`);
 
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
@@ -1202,30 +1272,62 @@
             card.appendChild(badges);
 
             const title = document.createElement('h4');
-            title.textContent = displayTitle;
+            title.textContent = preferredTitle;
             card.appendChild(title);
 
             const details = document.createElement('div');
             details.className = 'details';
 
-            if (property.bedrooms) {
-              const bedroomInfo = document.createElement('span');
-              bedroomInfo.textContent = property.bedrooms;
-              details.appendChild(bedroomInfo);
+            const propertyTypeValue = property.property_type || property.propertyType || '';
+            if (displayData.projectName) {
+              const projectNameInfo = document.createElement('span');
+              projectNameInfo.className = 'project-name';
+              projectNameInfo.textContent = displayData.projectName;
+              details.appendChild(projectNameInfo);
             }
 
-            const completionYear = getCompletionYear(property);
-            if (completionYear) {
-              const completionInfo = document.createElement('span');
-              completionInfo.textContent = `Completion: ${completionYear}`;
-              details.appendChild(completionInfo);
+            const propertyType = typeof propertyTypeValue === 'string' ? propertyTypeValue.trim() : '';
+            if (propertyType) {
+              const typeInfo = document.createElement('span');
+              typeInfo.className = 'property-type';
+              typeInfo.textContent = propertyType;
+              details.appendChild(typeInfo);
             }
 
-            if (property.price) {
-              const price = document.createElement('span');
-              price.className = 'price';
-              price.textContent = property.price;
-              details.appendChild(price);
+            const secondaryName =
+              displayData.location || (displayData.secondary !== displayTitle ? displayData.secondary : '');
+            if (secondaryName && secondaryName !== displayTitle && secondaryName !== displayData.projectName) {
+              const secondaryInfo = document.createElement('span');
+              secondaryInfo.className = 'secondary-name';
+              secondaryInfo.textContent = secondaryName;
+              details.appendChild(secondaryInfo);
+            }
+
+            const rawStartingPrice =
+              property.starting_price ||
+              property.startingPrice ||
+              property.price ||
+              property.price_display ||
+              property.priceDisplay ||
+              '';
+
+            let startingPriceText = '';
+            if (typeof rawStartingPrice === 'number' && Number.isFinite(rawStartingPrice)) {
+              startingPriceText = `Starting Price: AED ${rawStartingPrice.toLocaleString('en-US')}`;
+            } else if (typeof rawStartingPrice === 'string') {
+              const trimmedPrice = rawStartingPrice.trim();
+              if (trimmedPrice) {
+                startingPriceText = /starting/i.test(trimmedPrice)
+                  ? trimmedPrice
+                  : `Starting Price: ${trimmedPrice}`;
+              }
+            }
+
+            if (startingPriceText) {
+              const startingPrice = document.createElement('span');
+              startingPrice.className = 'starting-price';
+              startingPrice.textContent = startingPriceText;
+              details.appendChild(startingPrice);
             }
 
             if (details.childNodes.length > 0) {
@@ -1269,16 +1371,14 @@
             icon: createMarkerIcon(categoryColor, property.category_label || property.category_key),
           });
 
-          const projectName = property.project_name || property.projectName || '';
-          const fallbackDisplayName =
-            property.location_highlight || property.location || '';
-          const popupTitle =
-            projectName || fallbackDisplayName || 'Project name unavailable';
+          const displayData = resolveDisplayData(property);
+          const popupTitle = displayData.primary;
+          const popupLocation = displayData.location || displayData.secondary;
 
           const popupContent = `
             <div style="min-width:180px;">
               <strong>${escapeHtml(popupTitle)}</strong><br />
-              <span>${escapeHtml(property.location || '')}</span><br />
+              <span>${escapeHtml(popupLocation || property.location || '')}</span><br />
               <a href="${escapeHtml(property.details_url || '#')}" style="color:${categoryColor};font-weight:600;display:inline-block;margin-top:8px;">View details</a>
             </div>
           `;

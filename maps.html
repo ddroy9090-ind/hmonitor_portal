@@ -797,8 +797,9 @@
             card.href = property.details_url || '#';
             const projectName = property.project_name || property.projectName || '';
             const fallbackDisplayName =
-              property.display_name || property.displayName || property.location || '';
-            const displayTitle = projectName || fallbackDisplayName || 'View property';
+              property.location_highlight || property.location || '';
+            const displayTitle =
+              projectName || fallbackDisplayName || 'Project name unavailable';
             card.setAttribute('aria-label', `View details for ${displayTitle}`);
 
             const thumbnail = document.createElement('div');
@@ -918,8 +919,9 @@
 
           const projectName = property.project_name || property.projectName || '';
           const fallbackDisplayName =
-            property.display_name || property.displayName || property.location || '';
-          const popupTitle = projectName || fallbackDisplayName || 'View property';
+            property.location_highlight || property.location || '';
+          const popupTitle =
+            projectName || fallbackDisplayName || 'Project name unavailable';
 
           const popupContent = `
             <div style="min-width:180px;">

@@ -47,7 +47,7 @@
     .page {
       display: flex;
       gap: 32px;
-      padding: 30px clamp(16px, 4vw, 0px);
+      padding: 10px clamp(16px, 4vw, 0px);
       min-height: 100vh;
     }
 
@@ -96,7 +96,7 @@
     .input-group {
       display: flex;
       gap: 10px;
-      align-items: center;
+      flex-direction: column;
     }
 
     .input-group input,
@@ -108,6 +108,7 @@
       font-family: inherit;
       font-size: 14px;
       background: #f8fafc;
+      
     }
 
     .input-group button {
@@ -119,6 +120,7 @@
       color: var(--primary);
       cursor: pointer;
       transition: background 0.2s ease;
+      text-align: left;
     }
 
     .input-group button:hover {
@@ -466,11 +468,7 @@
   <main class="page">
     <aside class="sidebar">
       <div class="brand">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path
-            d="M12 2L2 9l1.5 2L6 9.7V19a3 3 0 003 3h6a3 3 0 003-3V9.7l2.5 1.3L22 9 12 2zm3 17a1 1 0 01-1 1H10a1 1 0 01-1-1v-7.12l3-1.56 3 1.56V19z" />
-        </svg>
-        <h1>EstateMap</h1>
+        <h1>HouzzHunt </h1>
       </div>
 
       <section class="location-search">
@@ -492,24 +490,23 @@
       <section class="filters">
         <h2>Basic Filters</h2>
         <div class="filter-group">
-          <label><input type="checkbox" checked /> Property Details</label>
+          <label><input type="checkbox" /> Property Details</label>
           <label><input type="checkbox" /> Amenities</label>
           <label><input type="checkbox" /> Advanced</label>
           <label><input type="checkbox" /> Developers</label>
         </div>
-        <div class="filter-actions">
-          <button class="secondary" type="button">Clear All</button>
-          <button class="primary" type="button">Apply Filters</button>
-        </div>
-      </section>
-
-      <section class="filters">
+        <section class="filters">
         <h2>Popular Communities</h2>
         <div class="filter-group">
-          <label><input type="checkbox" checked /> Dubai Hills Estate</label>
+          <label><input type="checkbox" /> Dubai Hills Estate</label>
           <label><input type="checkbox" /> Palm Jumeirah</label>
           <label><input type="checkbox" /> Downtown Dubai</label>
           <label><input type="checkbox" /> Dubai Marina</label>
+        </div>
+      </section>
+        <div class="filter-actions">
+          <button class="secondary" type="button">Clear All</button>
+          <button class="primary" type="button">Apply Filters</button>
         </div>
       </section>
     </aside>

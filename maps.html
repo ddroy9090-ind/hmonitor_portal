@@ -422,6 +422,11 @@
       font-size: 13px;
     }
 
+    .property-card .details .project-name {
+      font-weight: 600;
+      color: var(--heading);
+    }
+
     .property-card .details .property-type {
       font-weight: 500;
       color: var(--primary-dark);
@@ -1199,7 +1204,8 @@
             card.href = property.details_url || '#';
             const displayData = resolveDisplayData(property);
             const displayTitle = displayData.primary;
-            card.setAttribute('aria-label', `View details for ${displayTitle}`);
+            const preferredTitle = displayData.projectName || displayTitle;
+            card.setAttribute('aria-label', `View details for ${preferredTitle}`);
 
             const thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
@@ -1256,13 +1262,20 @@
             card.appendChild(badges);
 
             const title = document.createElement('h4');
-            title.textContent = displayTitle;
+            title.textContent = preferredTitle;
             card.appendChild(title);
 
             const details = document.createElement('div');
             details.className = 'details';
 
             const propertyTypeValue = property.property_type || property.propertyType || '';
+            if (displayData.projectName) {
+              const projectNameInfo = document.createElement('span');
+              projectNameInfo.className = 'project-name';
+              projectNameInfo.textContent = displayData.projectName;
+              details.appendChild(projectNameInfo);
+            }
+
             const propertyType = typeof propertyTypeValue === 'string' ? propertyTypeValue.trim() : '';
             if (propertyType) {
               const typeInfo = document.createElement('span');
@@ -1273,7 +1286,7 @@
 
             const secondaryName =
               displayData.location || (displayData.secondary !== displayTitle ? displayData.secondary : '');
-            if (secondaryName && secondaryName !== displayTitle) {
+            if (secondaryName && secondaryName !== displayTitle && secondaryName !== displayData.projectName) {
               const secondaryInfo = document.createElement('span');
               secondaryInfo.className = 'secondary-name';
               secondaryInfo.textContent = secondaryName;

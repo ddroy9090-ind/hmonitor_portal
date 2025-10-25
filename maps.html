@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EstateMap &mdash; Property Explorer</title>
   <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin="anonymous"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
   <style>
     :root {
       --primary: #006666;
@@ -52,7 +47,7 @@
     .page {
       display: flex;
       gap: 32px;
-      padding: 30px clamp(16px, 4vw, 40px);
+      padding: 30px clamp(16px, 4vw, 0px);
       min-height: 100vh;
     }
 
@@ -283,9 +278,10 @@
 
     .property-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
+
 
     .property-card {
       background: rgba(255, 255, 255, 0.95);
@@ -465,12 +461,14 @@
     }
   </style>
 </head>
+
 <body>
   <main class="page">
     <aside class="sidebar">
       <div class="brand">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M12 2L2 9l1.5 2L6 9.7V19a3 3 0 003 3h6a3 3 0 003-3V9.7l2.5 1.3L22 9 12 2zm3 17a1 1 0 01-1 1H10a1 1 0 01-1-1v-7.12l3-1.56 3 1.56V19z" />
+          <path
+            d="M12 2L2 9l1.5 2L6 9.7V19a3 3 0 003 3h6a3 3 0 003-3V9.7l2.5 1.3L22 9 12 2zm3 17a1 1 0 01-1 1H10a1 1 0 01-1-1v-7.12l3-1.56 3 1.56V19z" />
         </svg>
         <h1>EstateMap</h1>
       </div>
@@ -543,11 +541,8 @@
       </div>
     </section>
   </main>
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin="anonymous"
-  ></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
   <script>
     (function () {
       const CATEGORY_CONFIG = {
@@ -691,8 +686,8 @@
         const galleryCandidates = Array.isArray(property.gallery_images)
           ? property.gallery_images
           : Array.isArray(property.galleryImages)
-          ? property.galleryImages
-          : [];
+            ? property.galleryImages
+            : [];
 
         for (const item of galleryCandidates) {
           if (typeof item === 'string') {
@@ -1052,4 +1047,5 @@
     })();
   </script>
 </body>
+
 </html>

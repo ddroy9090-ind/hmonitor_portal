@@ -422,7 +422,16 @@
       font-size: 13px;
     }
 
-    .property-card .details .price {
+    .property-card .details .property-type {
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+
+    .property-card .details .secondary-name {
+      font-weight: 500;
+    }
+
+    .property-card .details .starting-price {
       font-size: 16px;
       font-weight: 600;
       color: var(--primary);
@@ -1141,10 +1150,12 @@
             card.className = 'property-card';
             card.href = property.details_url || '#';
             const projectName = property.project_name || property.projectName || '';
+            const projectTitle =
+              property.project_title || property.projectTitle || property.property_title || property.propertyTitle || '';
             const fallbackDisplayName =
-              property.location_highlight || property.location || '';
+              property.location_highlight || property.location || projectTitle || '';
             const displayTitle =
-              projectName || fallbackDisplayName || 'Project name unavailable';
+              projectName || projectTitle || fallbackDisplayName || 'Project name unavailable';
             card.setAttribute('aria-label', `View details for ${displayTitle}`);
 
             const thumbnail = document.createElement('div');
@@ -1208,24 +1219,49 @@
             const details = document.createElement('div');
             details.className = 'details';
 
-            if (property.bedrooms) {
-              const bedroomInfo = document.createElement('span');
-              bedroomInfo.textContent = property.bedrooms;
-              details.appendChild(bedroomInfo);
+            const propertyTypeValue = property.property_type || property.propertyType || '';
+            const propertyType = typeof propertyTypeValue === 'string' ? propertyTypeValue.trim() : '';
+            if (propertyType) {
+              const typeInfo = document.createElement('span');
+              typeInfo.className = 'property-type';
+              typeInfo.textContent = propertyType;
+              details.appendChild(typeInfo);
             }
 
-            const completionYear = getCompletionYear(property);
-            if (completionYear) {
-              const completionInfo = document.createElement('span');
-              completionInfo.textContent = `Completion: ${completionYear}`;
-              details.appendChild(completionInfo);
+            const secondaryName =
+              projectTitle || projectName || fallbackDisplayName || '';
+            if (secondaryName) {
+              const secondaryInfo = document.createElement('span');
+              secondaryInfo.className = 'secondary-name';
+              secondaryInfo.textContent = secondaryName;
+              details.appendChild(secondaryInfo);
             }
 
-            if (property.price) {
-              const price = document.createElement('span');
-              price.className = 'price';
-              price.textContent = property.price;
-              details.appendChild(price);
+            const rawStartingPrice =
+              property.starting_price ||
+              property.startingPrice ||
+              property.price ||
+              property.price_display ||
+              property.priceDisplay ||
+              '';
+
+            let startingPriceText = '';
+            if (typeof rawStartingPrice === 'number' && Number.isFinite(rawStartingPrice)) {
+              startingPriceText = `Starting Price: AED ${rawStartingPrice.toLocaleString('en-US')}`;
+            } else if (typeof rawStartingPrice === 'string') {
+              const trimmedPrice = rawStartingPrice.trim();
+              if (trimmedPrice) {
+                startingPriceText = /starting/i.test(trimmedPrice)
+                  ? trimmedPrice
+                  : `Starting Price: ${trimmedPrice}`;
+              }
+            }
+
+            if (startingPriceText) {
+              const startingPrice = document.createElement('span');
+              startingPrice.className = 'starting-price';
+              startingPrice.textContent = startingPriceText;
+              details.appendChild(startingPrice);
             }
 
             if (details.childNodes.length > 0) {
